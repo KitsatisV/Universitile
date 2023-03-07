@@ -9,7 +9,7 @@
 @using LibraryManagement.Models
 @inject ILibraryService LibraryService
 
-<SfGrid DataSource="@LibraryBooks" Toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Cancel", "Update" })" TValue="Book">
+<SfGrid DataSource="@LibraryBooks" Toolbar="@(new List<string>() { "Adds", "Edit", "Delete", "Cancel", "Update" })" TValue="Book">
     <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
     <GridEvents OnActionBegin="ActionBeginHandler" OnActionComplete="ActionCompleteHandler" TValue="Book"></GridEvents>
     <GridColumns>
