@@ -12,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Radzen.Blazor" Version="4.7.9" />
     <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.1.0.56" />
   </ItemGroup>
 
