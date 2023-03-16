@@ -15,6 +15,7 @@
                 <RadzenDayView />
                 <RadzenWeekView />
                 <RadzenMonthView />
+                <RadzenYearView />
             </RadzenScheduler>
             @code {
                 class DataItem
@@ -26,147 +27,83 @@
 
                 DataItem[] data = new DataItem[]
                 {
-            new DataItem
-            {
-            Start = DateTime.Today,
-            End = DateTime.Today.AddDays(1),
-            Text = "Birthday"
-            },
+                    new DataItem
+                    {
+                        Start = DateTime.Today,
+                        End = DateTime.Today.AddDays(1),
+                        Text = "Birthday"
+                    }
                 };
             }
 		</div>
 
 		<div class="i2">
-            <div class="card_container">
-                <div class="card">
-                    <h3 class="title">Card 1</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 class="title">Card 2</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 class="title">Card 3</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 class="title">Card 4</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            <section id="slider">
+                <input type="radio" name="slider" id="s1">
+                <input type="radio" name="slider" id="s2">
+                <input type="radio" name="slider" id="s3" checked>
+                <input type="radio" name="slider" id="s4">
+                <input type="radio" name="slider" id="s5">
+                <label for="s1" id="slide1"></label>
+                <label for="s2" id="slide2"></label>
+                <label for="s3" id="slide3"></label>
+                <label for="s4" id="slide4"></label>
+                <label for="s5" id="slide5"></label>
+            </section>
 		</div>
 
-		<div class="i3">
-@*            @using System.Linq.Dynamic.Core
-
-            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@orders" Count="@count" TItem="Order" LoadData="@LoadData">
-                <Template Context="order">
-                    <div>Company:</div>
-                    <b>@order.Customer?.CompanyName</b>
+        <div class="i3" style="color:white;">
+            <RadzenDataList WrapItems="false" AllowPaging="true" PageSize="4" Data="@announcements" Count="@announcements.Count()" TItem="Announcement">
+                <Template Context="announcement">
+                    <div>@announcement.Title</div>
+                    <b>@announcement.Details</b>
                 </Template>
             </RadzenDataList>
 
-            @code {
-                IEnumerable<Customer> customers;
-                int count;
-
-                void LoadData(LoadDataArgs args)
+            @code 
+            {
+                List<Announcement> announcements = new List<Announcement>
                 {
-                    // This demo is using https://dynamic-linq.net
-                    var query = dbContext.Customers.AsQueryable();
+                        new Announcement("My Dick", "My dick is huge!"),
+                        new Announcement("My Cock", "My cock is huge!"),
+                        new Announcement("My Wiener", "My wiener is huge!"),
+                        new Announcement("My Dong", "My dong is huge!"),
+                        new Announcement("My Prick", "My prick is huge!"),
+                        new Announcement("My Dick", "My dick is huge!"),
+                        new Announcement("My Cock", "My cock is huge!"),
+                        new Announcement("My Wiener", "My wiener is huge!"),
+                        new Announcement("My Dong", "My dong is huge!"),
+                        new Announcement("My Prick", "My prick is huge!")
 
-                    count = query.Count();
+                };
 
-                    // Perform paging via Skip and Take.
-                    customers = query.Skip(args.Skip.Value).Take(args.Top.Value).ToList();
+                class Announcement
+                {
+                    public string Title { get; set; }
+                    public string Details { get; set; }
+
+                    public Announcement(string title, string details)
+                    {
+                        Title = title;
+                        Details = details;
+                    }
                 }
             }
-*@		</div>
+		</div>
 
 		<div class="i4">
-            <div class="card_container">
-                <div class="card">
-                    <h3 class="title">Card 1</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 class="title">Card 2</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 class="title">Card 3</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 class="title">Card 4</h3>
-                    <div class="bar">
-                        <div class="emptybar"></div>
-                        <div class="filledbar"></div>
-                    </div>
-                    <div class="circle">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <circle class="stroke" cx="60" cy="60" r="50" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            <section id="slider">
+                <input type="radio" name="slider" id="s6">
+                <input type="radio" name="slider" id="s7">
+                <input type="radio" name="slider" id="s8" checked>
+                <input type="radio" name="slider" id="s9">
+                <input type="radio" name="slider" id="s10">
+                <label for="s6" id="slide6"></label>
+                <label for="s7" id="slide7"></label>
+                <label for="s8" id="slide8"></label>
+                <label for="s9" id="slide9"></label>
+                <label for="s10" id="slide10"></label>
+            </section>
 		</div>
 
 	</div>
