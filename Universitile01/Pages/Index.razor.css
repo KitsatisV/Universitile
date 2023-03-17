@@ -29,6 +29,8 @@
     grid-template-rows: 1fr;
     gap: 0px 0px;
     grid-auto-flow: row;
+    align-items: end;
+    min-height: 45vh;
 }
 
 .i4 {
