@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Universitile01", "Universitile01\Universitile01.csproj", "{3241FBC0-64B8-48EF-97FE-C49CA0D5D3EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminPage", "AdminPage\AdminPage.csproj", "{100B2D0C-D051-4189-98BA-73025F748D63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminPage", "AdminPage\AdminPage.csproj", "{100B2D0C-D051-4189-98BA-73025F748D63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
