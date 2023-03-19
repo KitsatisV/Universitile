@@ -1,0 +1,81 @@
+﻿
+
+<h3>Select a student:</h3>
+<select @bind="selectedStudent">
+    @foreach (var student in students)
+    {
+        <option>@student.Name</option>
+    }
+</select>
+
+@if (selectedStudent != null)
+{
+    <h3>Modules for @selectedStudent:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Module Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var module in GetModulesForStudent(selectedStudent))
+            {
+                <tr>
+                    <td>@module.ModuleName</td>
+                    <td>@GetPassOrFailText(module.Passed)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    // Define the data structure to hold student and module information
+    public class StudentModules
+    {
+        public string Name { get; set; }
+        public Dictionary<string, bool> Modules { get; set; }
+    }
+
+    // Define a list of students and the modules they are attached to
+    private List<StudentModules> students = new List<StudentModules>
+    {
+        new StudentModules { Name = "Emma Johnson", Modules = new Dictionary<string, bool> { { "Introduction to Psychology", true }, { "Abnormal Psychology", false }, { "Social Psychology", false } } },
+        new StudentModules { Name = "James Lee", Modules = new Dictionary<string, bool> { { "Drawing and Sketching", true }, { "Painting Techniques", true }, { "Art History", true } } },
+        new StudentModules { Name = "Sophia Patel", Modules = new Dictionary<string, bool> { { "Programming Fundamentals", false }, { "Algorithms and Data Structures", false }, { "Web Development", false } } },
+        new StudentModules { Name = "Oliver Garcia", Modules = new Dictionary<string, bool> { { "How to become Bob Ross", false }, { "Photography", false }, { "Drawing and Sketching", false } } },
+        new StudentModules { Name = "Ava Williams", Modules = new Dictionary<string, bool> { { "Introduction to Computer Science", true }, { "Artificial Intelligence", false }, { "Web Development", true } } },
+    };
+
+    // Define a property to hold the selected student
+    private string selectedStudent;
+
+    // Define a method to retrieve a list of modules for a selected student
+    private List<(string ModuleName, bool Passed)> GetModulesForStudent(string studentName)
+    {
+        var student = students.FirstOrDefault(s => s.Name == studentName);
+        var modules = new List<(string, bool)>();
+
+        foreach (var module in student.Modules)
+        {
+            modules.Add((module.Key, module.Value));
+        }
+
+        return modules;
+    }
+
+    // Define a helper method to format pass/fail text and add colors
+    private MarkupString GetPassOrFailText(bool passed)
+    {
+        if (passed)
+        {
+            return new MarkupString("<span style=\"color: green;\">Pass</span>");
+        }
+        else
+        {
+            return new MarkupString("<span style=\"color: red;\">Fail</span>");
+        }
+    }
+}

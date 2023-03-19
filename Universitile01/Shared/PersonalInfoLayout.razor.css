@@ -1,0 +1,134 @@
+﻿.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar {
+    background-image: linear-gradient(180deg, rgb(72, 72, 72) 0%, #222 100%);
+}
+
+.top-row {
+    background-image: linear-gradient(90deg, rgb(72, 72, 72) 0%, #222 100%);
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+    .top-row ::deep a, .top-row .btn-link {
+        white-space: nowrap;
+        margin-left: 1.5rem;
+    }
+
+    .top-row a:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+@media (max-width: 640.98px) {
+    .top-row:not(.auth) {
+        display: none;
+    }
+
+    .top-row.auth {
+        justify-content: space-between;
+    }
+
+    .top-row a, .top-row .btn-link {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 641px) {
+    .page {
+        flex-direction: row;
+    }
+
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .top-row, article {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+.container {
+    display: flex;
+    flex: 1;
+    padding: 0px;
+    margin: 0px;
+    max-width: 100% !important;
+}
+
+.containerleft {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 30%;
+    padding: 0;
+    margin: 0;
+    border-left: solid black 1px;
+}
+
+.containerright {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.notification {
+    display: flex;
+    height: inherit;
+    width: 3%;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 4;
+    padding: 0.5%;
+}
+
+.mail {
+    display: flex;
+    height: inherit;
+    width: 3%;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 4;
+    padding: 0.5%;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 0.6fr 1.4fr;
+    grid-auto-columns: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        ". . ."
+        "i4 i4 i4";
+}
+
+.i4 {
+    grid-area: i4;
+}
+
