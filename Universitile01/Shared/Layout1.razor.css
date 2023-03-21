@@ -2,6 +2,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
 main {
@@ -125,22 +127,24 @@ main {
     gap: 0px 0px;
     grid-template-areas:
         ". .";
+    
 }
 
 .Filters {
     display: grid;
     grid-auto-columns: 1fr;
     grid-template-columns: 1fr;
-    grid-template-rows: 0.6fr 1.4fr;
+    /*grid-template-rows: 0.6fr 1.4fr;*/
     gap: 0px 0px;
     grid-template-areas:
         "i4"
         ".";
+    
 }
 
 .i4 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr 1fr;
     gap: 0px 0px;
     grid-template-areas:
@@ -152,19 +156,77 @@ main {
 .i1 {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 0.3fr 1.7fr;
+    grid-template-rows: 0.2fr 1.6fr 0.2fr;
     gap: 0px 0px;
-    grid-template-areas:
-        "."
-        ".";
+    grid-template-areas: "." "." ".";
+    max-height: 73vh;
 }
 
 .i5 {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 0.2fr 1.8fr;
+    grid-template-rows: 0.1fr 1.9fr;
     gap: 0px 0px;
-    grid-template-areas:
-        "."
-        ".";
+    grid-template-areas: "." ".";
+}
+
+.radiobuttons {
+    padding: 0px;
+    
+    white-space: nowrap;
+}
+
+.fromto {
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 1.5rem;
+    column-gap: 5px;
+}
+
+.dpicker {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    align-items: center;
+}
+
+.mlisttitle {
+display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+.modulelist {
+    display: flex;
+    justify-content: flex-end;
+    align-items: start;
+    padding-right: 1.3rem;
+    overflow: auto;
+    max-height: 62vh;
+}
+
+.modulesearch {
+   display: flex;
+   justify-content: flex-end;
+}
+
+.magglass {
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.modulesresult {
+
 }

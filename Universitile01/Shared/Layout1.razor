@@ -3,6 +3,7 @@
 @using System.Collections;
 @using System.Collections.Generic;
 @using System.Linq;
+
 @inherits LayoutComponentBase
 
 <PageTitle>Universitile</PageTitle>
@@ -27,30 +28,98 @@
         <div class="container">
             <div class="Filters">
                 <div class="i4">
-                    <div>
+                    <div class="title">
                         <h3>Filters</h3>
                     </div>
                     <div>
-                        <div class="rz-p-12 rz-text-align-center">
-                            <RadzenRadioButtonList @bind-Value=@value TValue="int" Orientation=Orientation.Vertical class="mb-5">
+                        <div class="radiobuttons rz-text-align-center">
+                            <RadzenRadioButtonList @bind-Value=@value TValue="int" Orientation=Orientation.Vertical class="mb-4">
                                 <Items>
-                                    <RadzenRadioButtonListItem Text="Orders" Value="1" />
-                                    <RadzenRadioButtonListItem Text="Employees" Value="2" />
+                                    <RadzenRadioButtonListItem Text="Show Completed" Value="1" />
+                                    <RadzenRadioButtonListItem Text="Show Graded" Value="2" />
                                 </Items>
                             </RadzenRadioButtonList>
                         </div>
                     </div>
-                    <div></div>
-                    <div></div>
+                    <div class="fromto">
+                        <h4>From:</h4>
+                        <h4>To:</h4>
+                    </div>
+                    <div class="dpicker">
+                        <RadzenDatePicker TValue="DateTime?" InitialViewDate="new DateTime(2023,06,01)" YearRange="1900:2100" />
+                        <RadzenDatePicker TValue="DateTime?" InitialViewDate="new DateTime(2023,06,01)" YearRange="1900:2100" />
+                    </div>
                 </div>
                 <div class="i1">
-                    <div></div>
-                    <div></div>
+                    <div class="mlisttitle">
+                        <h4>Modules List:</h4>
+                    </div>
+                    <div class="modulelist">
+                        <RadzenCheckBoxList @bind-Value=@listvalue TValue="int" Orientation=Orientation.Vertical class="mb-1">
+                            <Items>
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                                <RadzenCheckBoxListItem Text="Module1" Value="1" />
+                                <RadzenCheckBoxListItem Text="Module2" Value="2" />
+                                <RadzenCheckBoxListItem Text="Module3" Value="3" />
+                            </Items>
+                        </RadzenCheckBoxList>
+                    </div>
+                    <div class="magglass">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 8 8"><path fill="currentColor" d="M3.5 0C1.57 0 0 1.57 0 3.5S1.57 7 3.5 7c.59 0 1.17-.14 1.66-.41a1 1 0 0 0 .13.13l1 1a1.02 1.02 0 1 0 1.44-1.44l-1-1a1 1 0 0 0-.16-.13c.27-.49.44-1.06.44-1.66c0-1.93-1.57-3.5-3.5-3.5zm0 1C4.89 1 6 2.11 6 3.5c0 .66-.24 1.27-.66 1.72l-.03.03a1 1 0 0 0-.13.13c-.44.4-1.04.63-1.69.63c-1.39 0-2.5-1.11-2.5-2.5s1.11-2.5 2.5-2.5z" /></svg>
+                    </div>
                 </div>
             </div>
             <div class="i5">
-                <div></div>
-                <div></div>
+                <div class="modulesearch">
+                    <form action="">
+                        <input type="text" id="modulesearch" name="fsearch" placeholder="Search...">
+                    </form>
+                </div>
+                <div class="modulesresult"></div>
             </div>
         </div>
     </main>
@@ -63,4 +132,8 @@
 
 @code {
     int value = 1;
+
+    //int value for module list
+    IEnumerable<int> listvalue = new int[] { 0 }; 
+
 }
