@@ -1,0 +1,179 @@
+﻿@page "/Dashboard"
+
+<PageTitle>dashboard</PageTitle>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
+</head>
+
+
+<body>
+    <div class="layout_container">
+
+        <div class="i1">
+            <RadzenScheduler Data="@data" TItem="DataItem" StartProperty="Start" EndProperty="End" TextProperty="Text">
+                <RadzenDayView />
+                <RadzenWeekView />
+                <RadzenMonthView />
+                <RadzenYearView />
+            </RadzenScheduler>
+            @code {
+                class DataItem
+                {
+                    public DateTime Start { get; set; }
+                    public DateTime End { get; set; }
+                    public string Text { get; set; }
+                }
+
+                DataItem[] data = new DataItem[]
+                {
+            new DataItem
+            {
+            Start = DateTime.Today,
+            End = DateTime.Today.AddDays(1),
+            Text = "Birthday"
+            }
+                };
+            }
+        </div>
+
+        <div class="i2">
+            <section id="slider">
+
+                @*@code
+                {
+                class CarEle
+                {
+                public string ShortID { get; set; }
+                public string LongID { get; set; }
+                public CarEle(string shortID, string longID)
+                {
+                ShortID = shortID;
+                LongID = longID;
+                }
+                }
+
+                List<CarEle> elements = new List<CarEle>
+                {
+                new CarEle("s1", "slide1"),
+                new CarEle("s2", "slide2"),
+                new CarEle("s3", "slide3"),
+                new CarEle("s4", "slide4"),
+                new CarEle("s5", "slide5")
+                };
+                }
+
+
+                @foreach (CarEle ele in elements)
+                {
+                @if (ele.ShortID == "s1")
+                {
+                <input type="radio" name="slider" id="@ele.ShortID" checked>
+                }
+                else
+                {
+                <input type="radio" name="slider" id="@ele.ShortID">
+                }
+                <label for="@ele.ShortID" id="@ele.LongID"></label>
+                Console.WriteLine($"ShortID: {ele.ShortID}, LongID: {ele.LongID}");
+                }*@
+
+                <input type="radio" name="slider" id="s1">
+                <input type="radio" name="slider" id="s2">
+                <input type="radio" name="slider" id="s3" checked>
+                <input type="radio" name="slider" id="s4">
+                <input type="radio" name="slider" id="s5">
+                <label for="s1" id="slide1"></label>
+                <label for="s2" id="slide2"></label>
+                <label for="s3" id="slide3"></label>
+                <label for="s4" id="slide4"></label>
+                <label for="s5" id="slide5"></label>
+            </section>
+        </div>
+
+        <div class="i3" style="color:white;">
+            <RadzenDataList WrapItems="false" AllowPaging="true" PageSize="4" Data="@announcements" Count="@announcements.Count()" TItem="Announcement">
+                <Template Context="announcement">
+                    <div>@announcement.Title</div>
+                    <b>@announcement.Details</b>
+                </Template>
+            </RadzenDataList>
+
+            @code
+            {
+                List<Announcement> announcements = new List<Announcement>
+            {
+            new Announcement("My Dick", "My dick is huge!"),
+            new Announcement("My Cock", "My cock is huge!"),
+            new Announcement("My Wiener", "My wiener is huge!"),
+            new Announcement("My Dong", "My dong is huge!"),
+            new Announcement("My Prick", "My prick is huge!"),
+            new Announcement("My Dick", "My dick is huge!"),
+            new Announcement("My Cock", "My cock is huge!"),
+            new Announcement("My Wiener", "My wiener is huge!"),
+            new Announcement("My Dong", "My dong is huge!"),
+            new Announcement("My Prick", "My prick is huge!")
+            };
+
+                class Announcement
+                {
+                    public string Title { get; set; }
+                    public string Details { get; set; }
+
+                    public Announcement(string title, string details)
+                    {
+                        Title = title;
+                        Details = details;
+                    }
+                }
+            }
+        </div>
+
+        <div class="i4">
+            <section id="slider">
+                <input type="radio" name="slider" id="s6">
+                <input type="radio" name="slider" id="s7">
+                <input type="radio" name="slider" id="s8" checked>
+                <input type="radio" name="slider" id="s9">
+                <input type="radio" name="slider" id="s10">
+                <label for="s6" id="slide6">I'm Gay'</label>
+                <label for="s7" id="slide7">
+
+                    <RadzenCard class="m-3" style="color:white;">
+                        <h3 class="h5">Contact</h3>
+                        <div class="d-flex flex-row">
+                            @*                            <RadzenImage Path="@order.Employee?.Photo" Class="rounded-circle float-left mr-3" Style="width: 100px; height: 100px;" />
+                            *@                            <div>
+                                <div>Professor</div>
+                                <b>Ioannis Masmanidis</b>
+                                <div class="mt-3">Module</div>
+                                <b>Team Project</b>
+                            </div>
+                        </div>
+                    </RadzenCard>
+
+                </label>
+                <label for="s8" id="slide8">
+
+                    @inject DialogService DialogService
+
+                    <RadzenButton Text=@($"Show OrderID: details") Click=@OpenOrder />
+
+                    @code
+                    {
+                        public async Task OpenOrder()
+                        {
+                            await DialogService.OpenAsync<Quizes_Tests>($"Order");
+                            new DialogOptions() { Width = "700px", Height = "530px", Resizable = true, Draggable = true };
+                        }
+
+                    }
+
+                </label>
+                <label for="s9" id="slide9"></label>
+                <label for="s10" id="slide10"></label>
+            </section>
+        </div>
+
+    </div>
+</body>
