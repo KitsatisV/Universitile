@@ -48,7 +48,7 @@ select {
 .filter-item .date-input {
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-gap: 10px; 
+    grid-gap: 10px; /* gap between the columns */
     align-items: center;
     margin-left: 15px;
 }
