@@ -1,4 +1,71 @@
-﻿<h3>Attendance</h3>
+﻿@page "/attendance"
+
+<PageTitle>Attendance</PageTitle>
+
+<div class="filter-bar">
+    <form>
+        <div class="filter-item">
+            <div class="date-filter">
+                <label for="specific-date">Specific Date</label>
+                <input type="checkbox" id="specific-date" name="date-filter" unchecked>
+            </div>
+            <div class="date-range">
+                <div class="date-input">
+                    <label for="from-date">From:</label>
+                    <input type="date" id="from-date" name="from-date" min="2012-01-01">
+                </div>
+                <div class="date-input">
+                    <label for="to-date" id="label-to">To:</label>
+                    <input type="date" id="to-date" name="to-date" min="2012-01-01">
+                </div>
+            </div>
+        </div>
+        <div class="filter-item">
+            <label for="drop-down-1">Course:</label>
+            <select id="drop-down-1" name="drop-down-1">
+                <option value="option-1">Option 1</option>
+                <option value="option-2">Option 2</option>
+                <option value="option-3">Option 3</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="drop-down-2">Class:</label>
+            <select id="drop-down-2" name="drop-down-2">
+                <option value="option-1">Class 1</option>
+                <option value="option-2">Class 2</option>
+                <option value="option-3">Class 3</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="drop-down-3">Year:</label>
+            <select id="drop-down-3" name="drop-down-3">
+                <option value="option-1">Year 1</option>
+                <option value="option-2">Year 2</option>
+                <option value="option-3">Year 3</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="drop-down-4">Semester:</label>
+            <select id="drop-down-4" name="drop-down-4">
+                <option value="option-1">Fall Semester</option>
+                <option value="option-2">Spring Semester</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="drop-down-5">Module:</label>
+            <select id="drop-down-5" name="drop-down-5">
+                <option value="option-1">Course 1</option>
+                <option value="option-2">Course 2</option>
+                <option value="option-3">Course 3</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <button type="submit" class="search-button"></button>
+        </div>
+    </form>
+</div>
+<div class="attendance">
+</div>
 
 @code {
 
