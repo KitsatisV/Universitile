@@ -4,7 +4,7 @@
     grid-template-rows: auto;
     grid-gap: 10px;
     padding: 10px;
-    background-color: rgb(26, 8, 118, 0.2);
+    background-color: white;
     border-radius: 15px;
     position: relative;
 }
@@ -48,7 +48,7 @@ select {
 .filter-item .date-input {
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-gap: 5px; /* gap between the columns */
+    grid-gap: 10px; 
     align-items: center;
     margin-left: 15px;
 }
