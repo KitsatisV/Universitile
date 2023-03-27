@@ -1,44 +1,26 @@
 ﻿.layout_container {
     display: grid;
-    grid-template-columns: 1.4fr 0.8fr;
-    grid-template-rows: 1fr 1fr;
-    grid-auto-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(41vw, 1fr));
+    grid-auto-rows: 1fr;
     gap: 0px 0px;
     grid-auto-flow: row;
 }
 
 .i1 {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
+
 }
 
 .i2 {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
+
 }
 
 .i3 {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
     align-items: end;
     min-height: 45vh;
 }
 
 .i4 {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
+
 }
 
 * {
