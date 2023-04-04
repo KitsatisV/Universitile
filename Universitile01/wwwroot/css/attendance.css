@@ -13,12 +13,31 @@
     margin-right: 0;
 }
 
-    .filter-item:last-child button {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        margin: 0;
+@media only screen and (max-width: 1000px)
+{
+    .filter-bar form {
+        display: grid;
+        grid-auto-columns: 1fr;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-template-areas:
+            "."
+            "."
+            "."
+            "."
+            "."
+            "."
+            ".";
     }
+}
+
+.filter-item:last-child button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+}
 
 .filter-item {
     display: initial;

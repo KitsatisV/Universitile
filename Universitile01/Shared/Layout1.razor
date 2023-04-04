@@ -33,7 +33,7 @@
                     </div>
                     <div>
                         <div class="radiobuttons rz-text-align-center">
-                            <RadzenRadioButtonList @bind-Value=@value TValue="int" Orientation=Orientation.Vertical class="mb-4">
+                            <RadzenRadioButtonList @bind-Value=@value TValue="int" Orientation=Radzen.Orientation.Vertical class="mb-4">
                                 <Items>
                                     <RadzenRadioButtonListItem Text="Show Completed" Value="1" />
                                     <RadzenRadioButtonListItem Text="Show Graded" Value="2" />
@@ -55,7 +55,7 @@
                         <h4>Modules List:</h4>
                     </div>
                     <div class="modulelist">
-                        <RadzenCheckBoxList @bind-Value=@listvalue TValue="int" Orientation=Orientation.Vertical class="mb-1">
+                        <RadzenCheckBoxList @bind-Value=@listvalue TValue="int" Orientation=Radzen.Orientation.Vertical class="mb-1">
                             <Items>
                                 <RadzenCheckBoxListItem Text="Module1" Value="1" />
                                 <RadzenCheckBoxListItem Text="Module2" Value="2" />
