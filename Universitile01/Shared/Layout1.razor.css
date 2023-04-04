@@ -162,6 +162,30 @@ main {
     max-height: 73vh;
 }
 
+@media only screen and (max-width: 1000px) 
+{
+    .container {
+        display: grid;
+        grid-auto-columns: 1fr;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-template-areas:
+            "."
+            "."
+            "."
+            ".";
+    }
+
+    .page {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        max-height: 100vh;
+        overflow: auto;
+    }
+}
+
 .i5 {
     display: grid;
     grid-template-columns: 1fr;

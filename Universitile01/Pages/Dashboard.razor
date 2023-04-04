@@ -3,12 +3,145 @@
 <PageTitle>dashboard</PageTitle>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
 </head>
 
-
 <body>
-    <div class="layout_container">
+    <div class="row">
+
+        <div class="col-8">
+
+            <RadzenScheduler Data="@data" TItem="DataItem" StartProperty="Start" EndProperty="End" TextProperty="Text">
+                <RadzenDayView />
+                <RadzenWeekView />
+                <RadzenMonthView />
+                <RadzenYearView />
+            </RadzenScheduler>
+            @code {
+                class DataItem
+                {
+                    public DateTime Start { get; set; }
+                    public DateTime End { get; set; }
+                    public string Text { get; set; }
+                }
+
+                DataItem[] data = new DataItem[]
+                {
+            new DataItem
+            {
+            Start = DateTime.Today,
+            End = DateTime.Today.AddDays(1),
+            Text = "Birthday"
+            }
+                };
+}
+
+        </div>
+
+        <div class="col-4" style="color: white">
+
+            <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@_source" @bind-SelectedIndex="selectedIndex" Style="height:200px; background-color:black" ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture" AutoCycle="@_autocycle">
+                <ItemTemplate>
+                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                        <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                        <MudText Align="@Align.Center" Class="mx-auto">@context</MudText>
+                    </div>
+                </ItemTemplate>
+            </MudCarousel>
+            <MudSwitch @bind-Checked="@_arrows" Color="Color.Primary">Show Arrows</MudSwitch>
+            <MudSwitch @bind-Checked="@_bullets" Color="Color.Primary">Show Bullets</MudSwitch>
+            <MudSwitch @bind-Checked="@_enableSwipeGesture" Color="Color.Primary">Enable Swap Gesture</MudSwitch>
+            <MudSwitch @bind-Checked="@_autocycle" Color="Color.Primary">Auto Cycle (Default: 5 secs)</MudSwitch>
+            <br />
+
+            @code {
+                private MudCarousel<string> _carousel;
+                private bool _arrows = true;
+                private bool _bullets = true;
+                private bool _enableSwipeGesture = true;
+                private bool _autocycle = true;
+                private IList<string> _source = new List<string>() { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+                private int selectedIndex = 2;
+
+            }
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-8" style="color:white">
+
+            <RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
+                <Template Context="announcement">
+                    <div>@announcement.Title</div>
+                    <b>@announcement.Details</b>
+                </Template>
+            </RadzenDataList>
+
+            @code
+            {
+                List<Announcement> announcements = new List<Announcement>
+            {
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen."),
+            new Announcement("Announcement Example Title", "Announcement Example Text one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen.")
+            };
+
+                class Announcement
+                {
+                    public string Title { get; set; }
+                    public string Details { get; set; }
+
+                    public Announcement(string title, string details)
+                    {
+                        Title = title;
+                        Details = details;
+                    }
+                }
+            }
+
+        </div>
+
+        <div class="col-4" style="color: white">
+
+            <MudCarousel Class="mud-width-full" @ref="_carousel2" ItemsSource="@_source2" @bind-SelectedIndex="selectedIndex2" Style="height:400px; background-color:black" ShowArrows="@_arrows2" ShowBullets="@_bullets2" EnableSwipeGesture="@_enableSwipeGesture2" AutoCycle="@_autocycle2">
+                <ItemTemplate>
+                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                        <MudIcon Class="mx-auto" Icon="@Icons.Custom.Brands.MudBlazor" Size="@Size.Large" />
+                        <MudText Align="@Align.Center" Class="mx-auto">@context</MudText>
+                    </div>
+                </ItemTemplate>
+            </MudCarousel>
+            <br />
+
+            @code {
+                private MudCarousel<string> _carousel2;
+                private bool _arrows2 = true;
+                private bool _bullets2 = true;
+                private bool _enableSwipeGesture2 = true;
+                private bool _autocycle2 = true;
+                private IList<string> _source2 = new List<string>() { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+                private int selectedIndex2 = 2;
+
+            }
+
+        </div>
+
+    </div>
+
+
+@*    <div class="layout_container">
 
         <div class="i1">
             <RadzenScheduler Data="@data" TItem="DataItem" StartProperty="Start" EndProperty="End" TextProperty="Text">
@@ -40,43 +173,6 @@
         <div class="i2">
             <section id="slider">
 
-                @*@code
-                {
-                class CarEle
-                {
-                public string ShortID { get; set; }
-                public string LongID { get; set; }
-                public CarEle(string shortID, string longID)
-                {
-                ShortID = shortID;
-                LongID = longID;
-                }
-                }
-
-                List<CarEle> elements = new List<CarEle>
-                {
-                new CarEle("s1", "slide1"),
-                new CarEle("s2", "slide2"),
-                new CarEle("s3", "slide3"),
-                new CarEle("s4", "slide4"),
-                new CarEle("s5", "slide5")
-                };
-                }
-
-
-                @foreach (CarEle ele in elements)
-                {
-                @if (ele.ShortID == "s1")
-                {
-                <input type="radio" name="slider" id="@ele.ShortID" checked>
-                }
-                else
-                {
-                <input type="radio" name="slider" id="@ele.ShortID">
-                }
-                <label for="@ele.ShortID" id="@ele.LongID"></label>
-                Console.WriteLine($"ShortID: {ele.ShortID}, LongID: {ele.LongID}");
-                }*@
 
                 <input type="radio" name="slider" id="s1">
                 <input type="radio" name="slider" id="s2">
@@ -142,8 +238,7 @@
                     <RadzenCard class="m-3" style="color:white;">
                         <h3 class="h5">Contact</h3>
                         <div class="d-flex flex-row">
-                            @*                            <RadzenImage Path="@order.Employee?.Photo" Class="rounded-circle float-left mr-3" Style="width: 100px; height: 100px;" />
-                            *@                            <div>
+                            <div>
                                 <div>Professor</div>
                                 <b>Ioannis Masmanidis</b>
                                 <div class="mt-3">Module</div>
@@ -176,4 +271,4 @@
         </div>
 
     </div>
-</body>
+*@</body>
