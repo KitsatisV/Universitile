@@ -1,29 +1,4 @@
-﻿/*.layout_container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(41vw, 1fr));
-    grid-auto-rows: 1fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
-}
-
-.i1 {
-
-}
-
-.i2 {
-
-}
-
-.i3 {
-    align-items: end;
-    min-height: 45vh;
-}
-
-.i4 {
-
-}*/
-
-.row::after {
+﻿.row::after {
     content: "";
     clear: both;
     display: grid;
