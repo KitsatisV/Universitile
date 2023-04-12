@@ -142,7 +142,7 @@
                     var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
                     var parameters = new DialogParameters();
                     parameters.Add("ContentText", args.Data.Description);
-                    DialogService.Show<TestDialog>(args.Data.Title, parameters, options);
+                    DialogService.Show<CalendarDialog>(args.Data.Title, parameters, options);
                 }
 
                 private void isread(Announcement announcement)
