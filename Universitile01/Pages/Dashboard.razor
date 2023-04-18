@@ -13,34 +13,40 @@
 
 <body>
     <div class="row">
+        <AuthorizeView>
+            <Authorized>
+				<div class="col-8">
+					<RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="Start" EndProperty="End" TextProperty="Title" AppointmentSelect=@OpenDialogCalendar>
+						<RadzenDayView />
+						<RadzenWeekView />
+						<RadzenMonthView />
+						<RadzenYearView />
+					</RadzenScheduler>
+					@code
+					{
+		                private List<CalendarEvent> events = new List<CalendarEvent>()
+					    {
+					        new CalendarEvent("Exams", "Exams for spring", DateTime.Parse("12/05/2023"), DateTime.Parse("20/05/2023")),
+					        new CalendarEvent("Graduation", "Summer Graduation", DateTime.Parse("12/06/2023"), DateTime.Parse("14/06/2023")),
+					        new CalendarEvent("Enrollment", "Enrollment for the academic year 2023-2024", DateTime.Parse("01/07/2023"), DateTime.Parse("31/08/2023")),
+					        new CalendarEvent("Re-examination", "Re-examination for those who failed to pass some of their classes", DateTime.Parse("10/08/2023"), DateTime.Parse("10/09/2023"))
+					    };
 
-        <div class="col-8">
-            <RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="Start" EndProperty="End" TextProperty="Title" AppointmentSelect=@OpenDialogCalendar>
-                <RadzenDayView />
-                <RadzenWeekView />
-                <RadzenMonthView />
-                <RadzenYearView />
-            </RadzenScheduler>
-            @code 
-            {
-                private List<CalendarEvent> events = new List<CalendarEvent>()
-                {
-                    new CalendarEvent("Exams", "Exams for spring", DateTime.Parse("12/05/2023"), DateTime.Parse("20/05/2023")),
-                    new CalendarEvent("Graduation", "Summer Graduation", DateTime.Parse("12/06/2023"), DateTime.Parse("14/06/2023")),
-                    new CalendarEvent("Enrollment", "Enrollment for the academic year 2023-2024", DateTime.Parse("01/07/2023"), DateTime.Parse("31/08/2023")),
-                    new CalendarEvent("Re-examination", "Re-examination for those who failed to pass some of their classes", DateTime.Parse("10/08/2023"), DateTime.Parse("10/09/2023"))
-                };
-
-                private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
-                {
-                    var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
-                    var parameters = new DialogParameters();
-                    parameters.Add("ContentText", args.Data.Description);
-                    DialogService.Show<CalendarDialog>(args.Data.Title, parameters, options);
-                }
-            }
-
-        </div>
+		                private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
+		                {
+		                    var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
+		                    var parameters = new DialogParameters();
+		                    parameters.Add("ContentText", args.Data.Description);
+		                    DialogService.Show<CalendarDialog>(args.Data.Title, parameters, options);
+		                }
+					}
+				</div>
+            </Authorized>
+            <NotAuthorized>
+                It's working!
+            </NotAuthorized>
+        </AuthorizeView>
+        
 
         <div class="col-4" style="color: white">
 
