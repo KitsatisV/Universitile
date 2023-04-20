@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\DigiCertGlobalRootCA.crt.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\DigiCertGlobalRootCA.crt.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
@@ -17,7 +25,7 @@
     </PackageReference>
     <PackageReference Include="MudBlazor" Version="6.2.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="4.9.2" />
+    <PackageReference Include="Radzen.Blazor" Version="4.10.0" />
   </ItemGroup>
 
 </Project>
