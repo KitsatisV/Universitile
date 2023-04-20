@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System.ComponentModel.DataAnnotations;
 
 namespace Universitile01.Areas.Identity.Pages.Account
@@ -29,6 +30,8 @@ namespace Universitile01.Areas.Identity.Pages.Account
 				{
 					return LocalRedirect(ReturnUrl);
 				}
+
+				ModelState.AddModelError("", "Email and/or Password incorrect!");
 			}
 
 			return Page();
