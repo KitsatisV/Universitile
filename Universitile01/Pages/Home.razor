@@ -1,0 +1,18 @@
+﻿@page "/"
+
+@layout HomeLayout
+
+@using Universitile01.Data;
+
+@inject NavigationManager NavigationManager;
+
+<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Style="height:20vh">
+    <MudText Style="font-size:3.75rem; color:aliceblue">Uni-Versitile</MudText>
+</RadzenRow>
+<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Style="height:80vh">
+    <MudButtonGroup Color="Color.Error" Variant="MudBlazor.Variant.Text">
+        <MudButton style="height:7vh; width:20vw"><MudText Style="font-size:1.5rem;">IDK</MudText></MudButton>
+        <MudButton Href="/Identity/Account/Login" style="height:7vh; width:20vw"><MudText Style="font-size:1.5rem;">Login</MudText></MudButton>
+        <MudButton style="height:7vh; width:20vw"><MudText Style="font-size:1.5rem;">About</MudText></MudButton>
+    </MudButtonGroup>
+</RadzenRow>

@@ -4,13 +4,15 @@
 	ViewData["Title"] = "Login";
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row" style="margin:50px">
-	<div class="col-md-4">
+<div class="row" style="align-content:center; justify-content:center; font-size:3.75rem; color:aliceblue; margin-left:5vw; margin-right:5vw;">
+	Uni-Versitile
+</div>
+<div class="row" style="margin-top:12vh; margin-left:5vw; margin-right:5vw; align-content:center; justify-content:center;">
+	<div class="col-xl-4" style="max-width:60vw">
 		<section>
 			<form id="account" method="post">
-				<h2>Use a local account to log in.</h2>
-				<hr />
+				<div style="color:aliceblue; font-size:1.75rem">Use your academic account to log in.</div>
+				<hr style="color:aliceblue; height:0.3vh"/>
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 				<div class="form-floating" style="margin:10px">
 					<input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />

@@ -17,14 +17,9 @@ namespace Universitile01.Areas.Identity.Pages.Account
 		public InputModel Input { get; set; }
 		public string ReturnUrl { get; set; }
 
-		public void OnGet()
-		{
-			ReturnUrl = Url.Content("~/");
-		}
-
 		public async Task<IActionResult> OnPostAsync()
 		{
-			ReturnUrl = Url.Content("~/");
+			ReturnUrl = Url.Content("~/dashboard");
 
 			if (ModelState.IsValid)
 			{
