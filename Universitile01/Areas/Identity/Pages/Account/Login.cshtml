@@ -1,0 +1,33 @@
+﻿@page
+@model LoginModel
+@{
+	ViewData["Title"] = "Login";
+}
+
+<div class="row" style="align-content:center; justify-content:center; font-size:3.75rem; color:aliceblue; margin-left:5vw; margin-right:5vw;">
+	Uni-Versitile
+</div>
+<div class="row" style="margin-top:12vh; margin-left:5vw; margin-right:5vw; align-content:center; justify-content:center;">
+	<div class="col-xl-4" style="max-width:60vw">
+		<section>
+			<form id="account" method="post">
+				<div style="color:aliceblue; font-size:1.75rem">Use your academic account to log in.</div>
+				<hr style="color:aliceblue; height:0.3vh"/>
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-floating" style="margin:20px">
+					<input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+					<label asp-for="Input.Email" class="form-label"></label>
+					<span asp-validation-for="Input.Email" class="text-danger"></span>
+				</div>
+				<div class="form-floating" style="margin:20px">
+					<input asp-for="Input.Password" class="form-control" autocomplete="username" aria-required="true" />
+					<label asp-for="Input.Password" class="form-label"></label>
+					<span asp-validation-for="Input.Password" class="text-danger"></span>
+				</div>
+				<div style="margin:10px">
+					<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log In</button>
+				</div>
+			</form>
+		</section>
+	</div>
+</div>

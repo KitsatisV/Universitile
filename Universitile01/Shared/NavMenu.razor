@@ -1,26 +1,26 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Uni-Versitile</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <a class="navbar-brand" href="dashboard">Uni-Versitile</a>
     </div>
 </div>
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-0">
-            <NavLink class="nav-link" href="dashboard" >
+            <NavLink class="nav-link" href="dashboard">
                 <span class="oi oi-monitor" aria-hidden="true"></span> Dashboard
             </NavLink>
         </div>
         <div class="nav-item px-0">
-            <NavLink class="nav-link" href="attendance">
+            <NavLink class="nav-link" href="PersonalInfo">
                 <span class="oi oi-person" aria-hidden="true"></span> Personal Info
             </NavLink>
         </div>
         <div class="nav-item px-0">
-            <NavLink class="nav-link" href="">
+            <NavLink class="nav-link" href="attendance">
                 <span class="oi oi-book" aria-hidden="true"></span> Supporting Material
             </NavLink>
         </div>

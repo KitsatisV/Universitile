@@ -1,9 +1,11 @@
-﻿
-
-<div class="search-bar">
-    <input type="text" @bind-value="searchTerm" placeholder="Search..." />
-    <button @onclick="Search">Search</button>
-</div>
+﻿<AuthorizeView>
+    <Authorized>
+		<div class="search-bar">
+			<input type="text" @bind-value="searchTerm" placeholder="Search..." />
+			<button @onclick="Search">Search</button>
+		</div>
+    </Authorized>
+</AuthorizeView>
 
 @code {
     private string searchTerm;
