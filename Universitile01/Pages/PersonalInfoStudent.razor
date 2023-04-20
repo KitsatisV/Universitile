@@ -10,26 +10,30 @@
 
 <body>
 
-    <RadzenRow JustifyContent="JustifyContent.Center"  AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-        <RadzenColumn Size="3" Style="background-color:black;">
-            <MudAvatar Style="height:100px; width:100px;">VK</MudAvatar>
-        </RadzenColumn>
-        <RadzenColumn Size="9" Style="background-color:black">
-            Info
-        </RadzenColumn>
-    </RadzenRow>
-    <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-        <RadzenColumn Size="12" Style="background-color:black">
-            <MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
-                <MudTabPanel Text="Attendance">
-                    <MudText>Content One</MudText>
-                </MudTabPanel>
-                <MudTabPanel Text="Grades">
-                    <MudText>Content Two</MudText>
-                </MudTabPanel>
-            </MudTabs>
-        </RadzenColumn>
-    </RadzenRow>
+    <AuthorizeView>
+        <Authorized>
+            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+                <RadzenColumn Size="3" Style="background-color:black;">
+                    <MudAvatar Style="height:100px; width:100px;">VK</MudAvatar>
+                </RadzenColumn>
+                <RadzenColumn Size="9" Style="background-color:black">
+                    Info
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+                <RadzenColumn Size="12" Style="background-color:black">
+                    <MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
+                        <MudTabPanel Text="Attendance">
+                            <MudText>Content One</MudText>
+                        </MudTabPanel>
+                        <MudTabPanel Text="Grades">
+                            <MudText>Content Two</MudText>
+                        </MudTabPanel>
+                    </MudTabs>
+                </RadzenColumn>
+            </RadzenRow>
+        </Authorized>
+    </AuthorizeView>
 
 </body>
 

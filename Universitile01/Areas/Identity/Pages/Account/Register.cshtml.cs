@@ -27,7 +27,7 @@ namespace Universitile01.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-			ReturnUrl = Url.Content("~/");
+			ReturnUrl = Url.Content("~/dashboard");
 
             if (ModelState.IsValid)
             {

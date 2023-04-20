@@ -1,34 +1,36 @@
-﻿
+﻿<AuthorizeView>
+    <Authorized>
+		<h3>Select a student:</h3>
+		<select @bind="selectedStudent">
+			@foreach (var student in students)
+			{
+				<option>@student.Name</option>
+			}
+		</select>
 
-<h3>Select a student:</h3>
-<select @bind="selectedStudent">
-    @foreach (var student in students)
-    {
-        <option>@student.Name</option>
-    }
-</select>
-
-@if (selectedStudent != null)
-{
-    <h3>Modules for @selectedStudent:</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Module Name</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var module in GetModulesForStudent(selectedStudent))
-            {
-                <tr>
-                    <td>@module.ModuleName</td>
-                    <td>@GetPassOrFailText(module.Passed)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+		@if (selectedStudent != null)
+		{
+			<h3>Modules for @selectedStudent:</h3>
+			<table>
+				<thead>
+					<tr>
+						<th>Module Name</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var module in GetModulesForStudent(selectedStudent))
+					{
+						<tr>
+							<td>@module.ModuleName</td>
+							<td>@GetPassOrFailText(module.Passed)</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+    </Authorized>
+</AuthorizeView>
 
 @code {
 

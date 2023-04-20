@@ -12,45 +12,39 @@
 </head>
 
 <body>
-    <div class="row">
-        <AuthorizeView>
-            <Authorized>
-				<div class="col-8">
-					<RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="Start" EndProperty="End" TextProperty="Title" AppointmentSelect=@OpenDialogCalendar>
-						<RadzenDayView />
-						<RadzenWeekView />
-						<RadzenMonthView />
-						<RadzenYearView />
-					</RadzenScheduler>
-					@code
-					{
-		                private List<CalendarEvent> events = new List<CalendarEvent>()
-					    {
-					        new CalendarEvent("Exams", "Exams for spring", DateTime.Parse("12/05/2023"), DateTime.Parse("20/05/2023")),
-					        new CalendarEvent("Graduation", "Summer Graduation", DateTime.Parse("12/06/2023"), DateTime.Parse("14/06/2023")),
-					        new CalendarEvent("Enrollment", "Enrollment for the academic year 2023-2024", DateTime.Parse("01/07/2023"), DateTime.Parse("31/08/2023")),
-					        new CalendarEvent("Re-examination", "Re-examination for those who failed to pass some of their classes", DateTime.Parse("10/08/2023"), DateTime.Parse("10/09/2023"))
-					    };
+    <AuthorizeView>
+        <Authorized>
+            <div class="row">
+		<div class="col-8">
+			<RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="Start" EndProperty="End" TextProperty="Title" AppointmentSelect=@OpenDialogCalendar>
+				<RadzenDayView />
+				<RadzenWeekView />
+				<RadzenMonthView />
+				<RadzenYearView />
+			</RadzenScheduler>
+			@code
+			{
+		              private List<CalendarEvent> events = new List<CalendarEvent>()
+			    {
+			        new CalendarEvent("Exams", "Exams for spring", DateTime.Parse("12/05/2023"), DateTime.Parse("20/05/2023")),
+			        new CalendarEvent("Graduation", "Summer Graduation", DateTime.Parse("12/06/2023"), DateTime.Parse("14/06/2023")),
+			        new CalendarEvent("Enrollment", "Enrollment for the academic year 2023-2024", DateTime.Parse("01/07/2023"), DateTime.Parse("31/08/2023")),
+			        new CalendarEvent("Re-examination", "Re-examination for those who failed to pass some of their classes", DateTime.Parse("10/08/2023"), DateTime.Parse("10/09/2023"))
+			    };
 
-		                private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
-		                {
-		                    var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
-		                    var parameters = new DialogParameters();
-		                    parameters.Add("ContentText", args.Data.Description);
-		                    DialogService.Show<CalendarDialog>(args.Data.Title, parameters, options);
-		                }
-					}
-				</div>
-            </Authorized>
-            <NotAuthorized>
-                It's working!
-            </NotAuthorized>
-        </AuthorizeView>
-        
+		              private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
+		              {
+		                  var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
+		                  var parameters = new DialogParameters();
+		                  parameters.Add("ContentText", args.Data.Description);
+		                  DialogService.Show<CalendarDialog>(args.Data.Title, parameters, options);
+		              }
+			}
+		</div>
 
         <div class="col-4" style="color: white">
 
-            <MudCarousel Class="mud-width-full" @ref="_carouselModule" ItemsSource="@_sourceModule" @bind-SelectedIndex="selectedIndexModule" Style="height:400px; background-color:#12080c; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false">
+            <MudCarousel Class="mud-width-full" @ref="_carouselModule" ItemsSource="@_sourceModule" @bind-SelectedIndex="selectedIndexModule" Style="height:400px; background-color:#12080c; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
                 <ItemTemplate>
                     <div class="d-flex flex-column flex-column justify-center" style="height:100%">
                         
@@ -58,17 +52,17 @@
                             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
                                 <RadzenStack Gap="0" Style="align-self:center">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Module</b></RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@context.Name</b></RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body2">@context.Teachers</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1"><b>@myContext.Name</b></RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Body2">@myContext.Teachers</RadzenText>
                                 </RadzenStack>
                             </RadzenStack>
                             <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
                                 <RadzenRow RowGap="0">
                                     <RadzenColumn SizeXS="8">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">School</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1">@context.School</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body1">@myContext.School</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1">@context.Direction</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body1">@myContext.Direction</RadzenText>
                                     </RadzenColumn>
                                     <RadzenColumn SizeXS="4">
                                         <RadzenButton Variant="Radzen.Variant.Text" Text="Go to module's page'" Size="ButtonSize.Medium"/>
@@ -161,26 +155,26 @@
 
         <div class="col-4" style="color: white">
 
-            <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@_sourceTeachers" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false">
+                    <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@_sourceTeachers" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
                 <ItemTemplate>
                     <div class="d-flex flex-column flex-column justify-center" style="height:100%">
 
                         <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#000901">
                             <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
-                                <MudAvatar Style="height:100px; width:100px">@context.Name.First()@context.Surname.First()</MudAvatar>
+                                        <MudAvatar Style="height:100px; width:100px">@myContext.Name.First()@myContext.Surname.First()</MudAvatar>
                                 <RadzenStack Gap="0" Style="align-self:center">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Teacher</b></RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@context.Name @context.Surname</b></RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body2">@context.Department</RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Body1"><b>@myContext.Name @myContext.Surname</b></RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Body2">@myContext.Department</RadzenText>
                                 </RadzenStack>
                             </RadzenStack>
                             <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
                                 <RadzenRow RowGap="0">
                                     <RadzenColumn SizeXS="8">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Email</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1" style="color:dodgerblue">@context.Email</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body1" style="color:dodgerblue">@myContext.Email</RadzenText>
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Modules</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1">@context.Modules</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body1">@myContext.Modules</RadzenText>
                                     </RadzenColumn>
                                     <RadzenColumn SizeXS="4">
                                         <RadzenButton Variant="Radzen.Variant.Text" Text="Email" Size="ButtonSize.Small" />
@@ -213,5 +207,9 @@
         </div>
 
     </div>
-
+        </Authorized>
+        <NotAuthorized>
+            Page not available!
+        </NotAuthorized>
+    </AuthorizeView>
 </body>
