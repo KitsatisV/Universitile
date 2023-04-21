@@ -69,7 +69,7 @@
     </div>
 
     <div class="row">
-        <AuthorizeView>
+        <AuthorizeView Roles="Student, Teacher">
             <Authorized>
 				<div class="col-8" style="color:white">
 					<RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">

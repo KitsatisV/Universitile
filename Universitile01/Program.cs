@@ -10,6 +10,8 @@ using Universitile01.Services;
 using Microsoft.Extensions.Configuration;
 using Universitile01.Services;
 using Universitile01.Models;
+using Microsoft.AspNetCore.Components.Authorization;
+using Universitile01.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +36,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 	options.SignIn.RequireConfirmedEmail = false;
 })
 .AddEntityFrameworkStores<UniversitiledatabaseContext>();
+	.AddRoles<IdentityRole>()
+	.AddEntityFrameworkStores<DataContext>();
 
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<IdentityUser>>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
