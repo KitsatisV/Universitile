@@ -6,6 +6,8 @@ using MudBlazor.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Configuration;
+using Microsoft.AspNetCore.Components.Authorization;
+using Universitile01.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +28,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 	options.Password.RequireNonAlphanumeric = false;
 	options.SignIn.RequireConfirmedEmail = false;
 })
+	.AddRoles<IdentityRole>()
 	.AddEntityFrameworkStores<DataContext>();
 
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<IdentityUser>>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
