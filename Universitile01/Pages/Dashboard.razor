@@ -1,8 +1,9 @@
 ﻿@page "/Dashboard"
 @using System.Text;
 @using Universitile01.Data;
+@using Universitile01.Services;
 @inject IDialogService DialogService
-
+@inject DataService DataService
 <PageTitle>Dashboard</PageTitle>
 
 <head>
@@ -44,7 +45,7 @@
 
         <div class="col-4" style="color: white">
 
-            <MudCarousel Class="mud-width-full" @ref="_carouselModule" ItemsSource="@_sourceModule" @bind-SelectedIndex="selectedIndexModule" Style="height:400px; background-color:#12080c; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
+            <MudCarousel Class="mud-width-full" @ref="_carouselModules" ItemsSource="@_sourceModules" @bind-SelectedIndex="selectedIndexModule" Style="height:400px; background-color:#12080c; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
                 <ItemTemplate>
                     <div class="d-flex flex-column flex-column justify-center" style="height:100%">
                         
@@ -53,16 +54,16 @@
                                 <RadzenStack Gap="0" Style="align-self:center">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Module</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Body1"><b>@myContext.Name</b></RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Body2">@myContext.Teachers</RadzenText>
+                                            @*<RadzenText TextStyle="TextStyle.Body2">@myContext.Teachers</RadzenText>*@
                                 </RadzenStack>
                             </RadzenStack>
                             <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
                                 <RadzenRow RowGap="0">
                                     <RadzenColumn SizeXS="8">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">School</RadzenText>
-                                                <RadzenText TextStyle="TextStyle.Body1">@myContext.School</RadzenText>
+                                                @*<RadzenText TextStyle="TextStyle.Body1">@myContext.School</RadzenText>*@
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>
-                                                <RadzenText TextStyle="TextStyle.Body1">@myContext.Direction</RadzenText>
+                                               @* <RadzenText TextStyle="TextStyle.Body1">@myContext.Direction</RadzenText>*@
                                     </RadzenColumn>
                                     <RadzenColumn SizeXS="4">
                                         <RadzenButton Variant="Radzen.Variant.Text" Text="Go to module's page'" Size="ButtonSize.Medium"/>
@@ -78,17 +79,18 @@
             </MudCarousel>
 
             @code {
-                private MudCarousel<Module> _carouselModule;
-                private IList<Module> _sourceModule = new List<Module>()
-                {
-                    new Module("Graphics 1", "Computer Science", "Computer Science", "Grigorios Kalogiannis"),
-                    new Module("Application Development", "Computer Science", "Computer Science", "Andreas Plageras"),
-                    new Module("Networks and Security", "Computer Science", "Computer Science", "Andreas Plageras"),
-                    new Module("Team Project", "Computer Science", "Computer Science", "Ioannis Masmanidis"),
-                    new Module("Ethical Hacking", "Computer Science", "Networks and Security", "Vasileios Memos"),
-                    new Module("English", "Computer Science, Business, Psychology", "-", "Iren Hovanishian, Vicky Zdoukopoulou")
-                };
-                private int selectedIndexModule = 0;
+        private MudCarousel<Module> _carouselModules;
+        private IList<Module> _sourceModules;
+        private int selectedIndexModule = 0;
+
+       
+        protected override async Task OnInitializedAsync()
+        {
+                        _sourceModules = await DataService.GetModuleAsync();
+        }
+         
+        
+            
             }
 
         </div>
