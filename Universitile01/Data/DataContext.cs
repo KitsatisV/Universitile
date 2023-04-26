@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Universitile01.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Universitile01.Models;
 
 namespace Universitile01.Data
 {
