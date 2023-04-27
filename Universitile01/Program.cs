@@ -6,6 +6,8 @@ using MudBlazor.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Configuration;
+//using Universitile01.Services;
+using Microsoft.Extensions.Configuration;
 using Universitile01.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddControllers();
 
 //Adding Identity related services
 var cs = builder.Configuration.GetConnectionString("azure");
-builder.Services.AddDbContext<DataContext>(options => options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
+//builder.Services.AddDbContext<DataContext>(options => options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(Configuration.GetConnectionString("azure")));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -26,15 +31,17 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 	options.Password.RequiredLength = 5;
 	options.Password.RequireNonAlphanumeric = false;
 	options.SignIn.RequireConfirmedEmail = false;
-})
-	.AddEntityFrameworkStores<DataContext>();
+});
+	//.AddEntityFrameworkStores<DataContext>();
 
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddMudServices();
-builder.Services.AddScoped<DataService>();
+builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
+builder.Services.AddScoped<TeacherService, TeacherService>();
+//builder.Services.AddScoped<DataService>();
 
 
 var app = builder.Build();
@@ -61,4 +68,31 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+namespace Universitile01
+{
+    public class Startup
+    {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(_configuration.GetConnectionString("azure")));
+
+            services.AddControllers();
+            
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            
+        }
+    }
+}
 

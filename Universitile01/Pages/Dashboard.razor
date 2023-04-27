@@ -1,14 +1,19 @@
 ﻿@page "/Dashboard"
 @using System.Text;
 @using Universitile01.Data;
-@using Universitile01.Services;
 @inject IDialogService DialogService
-@inject DataService DataService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject ApplicationDbContext Db
+@inject IAnnouncementService AnnouncementService
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+
+
 <PageTitle>Dashboard</PageTitle>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
 </head>
 
@@ -16,202 +21,180 @@
     <AuthorizeView>
         <Authorized>
             <div class="row">
-		<div class="col-8">
-			<RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="Start" EndProperty="End" TextProperty="Title" AppointmentSelect=@OpenDialogCalendar>
-				<RadzenDayView />
-				<RadzenWeekView />
-				<RadzenMonthView />
-				<RadzenYearView />
-			</RadzenScheduler>
-			@code
-			{
-		              private List<CalendarEvent> events = new List<CalendarEvent>()
-			    {
-@*                    new CalendarEvent("Exams", "Exams for spring", DateTime.ParseExact("12-05-2023", "dd/MM/yyyy", null), DateTime.ParseExact("15-05-2023", "dd/MM/yyyy", null)),
-			        new CalendarEvent("Graduation", "Summer Graduation", DateTime.Parse("12-06-2023"), DateTime.Parse("14/06/2023")),
-			        new CalendarEvent("Enrollment", "Enrollment for the academic year 2023-2024", DateTime.Parse("01/07/2023"), DateTime.Parse("31/08/2023")),
-			        new CalendarEvent("Re-examination", "Re-examination for those who failed to pass some of their classes", DateTime.Parse("10/08/2023"), DateTime.Parse("10/09/2023"))
-*@			    };
+                <div class="col-8">
+                    <RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Title" AppointmentSelect=@OpenDialogCalendar>
+                        <RadzenDayView />
+                        <RadzenWeekView />
+                        <RadzenMonthView />
+                        <RadzenYearView />
+                    </RadzenScheduler>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+</body>
 
-		              private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
-		              {
-		                  var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
-		                  var parameters = new DialogParameters();
-		                  parameters.Add("ContentText", args.Data.Description);
-		                  DialogService.Show<CalendarDialog>(args.Data.Title, parameters, options);
-		              }
-			}
-		</div>
+@code {
+    private List<CalendarEvent> events = new List<CalendarEvent>();
+    private List<Module> modules = new List<Module>();
+    private int selectedIndexModule;
+    private MudCarousel<Module> _carouselmodules;
+    private List<Announcement> announcements = new List<Announcement>();
+    private List<UsersHasAnnouncement> usersHasAnnouncements = new List<UsersHasAnnouncement>();
+    private List<PerosnalInfo> _sourceTeachers;
+    private MudCarousel<PerosnalInfo> _carouselTeachers;
+    private int selectedIndexTeachers = 0;
 
-        <div class="col-4" style="color: white">
 
-            <MudCarousel Class="mud-width-full" @ref="_carouselModules" ItemsSource="@_sourceModules" @bind-SelectedIndex="selectedIndexModule" Style="height:400px; background-color:#12080c; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
-                <ItemTemplate>
-                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-                        
-                        <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#12080c">
-                            <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
-                                <RadzenStack Gap="0" Style="align-self:center">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Module</b></RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1"><b>@myContext.Name</b></RadzenText>
-                                            @*<RadzenText TextStyle="TextStyle.Body2">@myContext.Teachers</RadzenText>*@
-                                </RadzenStack>
-                            </RadzenStack>
-                            <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
-                                <RadzenRow RowGap="0">
-                                    <RadzenColumn SizeXS="8">
-                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">School</RadzenText>
-                                                @*<RadzenText TextStyle="TextStyle.Body1">@myContext.School</RadzenText>*@
-                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>
-                                               @* <RadzenText TextStyle="TextStyle.Body1">@myContext.Direction</RadzenText>*@
-                                    </RadzenColumn>
-                                    <RadzenColumn SizeXS="4">
-                                        <RadzenButton Variant="Radzen.Variant.Text" Text="Go to module's page'" Size="ButtonSize.Medium"/>
-                                    </RadzenColumn>
-                                </RadzenRow>
-                            </RadzenCard>
-                            <br />
-                            <br />
-                        </RadzenCard>
 
-                    </div>
-                </ItemTemplate>
-            </MudCarousel>
 
-            @code {
-        private MudCarousel<Module> _carouselModules;
-        private IList<Module> _sourceModules;
-        private int selectedIndexModule = 0;
 
-       
-        protected override async Task OnInitializedAsync()
-        {
-                        _sourceModules = await DataService.GetModuleAsync();
-        }
-         
+    protected override async Task OnInitializedAsync()
+    {
+        events = await Db.CalendarEvents.ToListAsync();
+        modules = await Db.Modules.ToListAsync();
+        announcements = AnnouncementService.GetAllAnnouncements();
+        _sourceTeachers = TeacherService.GetAllTeachers();
         
-            
-            }
+       
+    }
 
-        </div>
 
-    </div>
+
+    private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
+    {
+        
+    }
+}
+
+       <div class="col-4" style="color: white">
+    <MudCarousel Class="mud-width-full" @ref="_carouselmodules" ItemsSource="@modules" @bind-SelectedIndex="selectedIndexModule" Style="height:400px; background-color:#12080c; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
+        <ItemTemplate>
+            <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#12080c">
+                    <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
+                        <RadzenStack Gap="0" Style="align-self:center">
+                            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Module</b></RadzenText>
+                            <RadzenText TextStyle="TextStyle.Body1"><b>@myContext.ModuleName</b></RadzenText>
+                        </RadzenStack>
+                    </RadzenStack>
+                    <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
+                        <RadzenRow RowGap="0">
+                            <RadzenColumn SizeXS="8">
+                                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">School</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>
+                            </RadzenColumn>
+                            <RadzenColumn SizeXS="4">
+                                <RadzenButton Variant="Radzen.Variant.Text" Text="Go to module's page'" Size="ButtonSize.Medium"/>
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenCard>
+                    <br />
+                    <br />
+                </RadzenCard>
+            </div>
+        </ItemTemplate>
+    </MudCarousel>
+</div>
+
+           @code {
+  
+
+    
+}
+
 
     <div class="row">
 
         <div class="col-8" style="color:white">
 
-            <RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
-                <Template Context="announcement">
-                    <MudCard Style="background-color:#13181b; color:aliceblue">
-                        <MudCardContent>
-                            @if (announcement.Importance)
-                            {
-                                <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="@announcement.IsNotRead">
-                                    <MudText><b>@announcement.Title</b></MudText>
-                                </MudBadge>
-                            }
-                            else
-                            {
-                                <MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="@announcement.IsNotRead">
-                                    <MudText><b>@announcement.Title</b></MudText>
-                                </MudBadge>
-                            }
-                            <MudText Typo="Typo.body2" >@announcement.Description</MudText>
-                        </MudCardContent>
-                    </MudCard>                    
-                </Template>
-            </RadzenDataList>
+        <RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
+            <Template Context="announcement">
+                <MudCard Style="background-color:#13181b; color:aliceblue">
+                    <MudCardContent>
+                        @if (announcement.Importance)
+                        {
+                            <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="@announcement.IsRead">
+                                <MudText><b>@announcement.Message</b></MudText>
+                            </MudBadge>
+                        }
+                        else
+                        {
+                            <MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="@announcement.IsRead">
+                                <MudText><b>@announcement.Message</b></MudText>
+                            </MudBadge>
+                        }
+                        <MudText Typo="Typo.body2">@announcement.Message</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </Template>
+        </RadzenDataList>
 
             @code
             {
-                List<Announcement> announcements = new List<Announcement>
-                {
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   true,   true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   false,  true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   true,   true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   false,  true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   false,  true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   false,  true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   true,   true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   false,  false),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   false,  true),
-                    new Announcement("Debate about the impact of AI on people.", "There is a debate between the schools of Computer Science and Psychology, which will take place on 20/04/23.", "10/04/23", "Computer Science, Psychology", "Computer Science, Networks and Security, Game Development",   false,  true)
-                };
-
-                private void OpenDialogList(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
-                {
-                    var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
-                    var parameters = new DialogParameters();
-                    parameters.Add("ContentText", args.Data.Description);
-                    DialogService.Show<CalendarDialog>(args.Data.Title, parameters, options);
-                }
-
-                private void isread(Announcement announcement)
-                {
-                    announcement.IsNotRead = false;
-                }
+            private void MarkAsRead(Announcement announcement)
+            {
+               
+                string userId = "your_user_id";
+                AnnouncementService.MarkAsRead(announcement.AnnouncementsId, userId);
+                announcement.IsRead = false;
+            }
             }
 
         </div>
 
         <div class="col-4" style="color: white">
 
-                    <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@_sourceTeachers" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
-                <ItemTemplate>
-                    <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+        <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@_sourceTeachers" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
+            <ItemTemplate>
+                <div class="d-flex flex-column flex-column justify-center" style="height:100%">
 
-                        <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#000901">
-                            <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
-                                        <MudAvatar Style="height:100px; width:100px">@myContext.Name.First()@myContext.Surname.First()</MudAvatar>
-                                <RadzenStack Gap="0" Style="align-self:center">
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Teacher</b></RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Body1"><b>@myContext.Name @myContext.Surname</b></RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Body2">@myContext.Department</RadzenText>
-                                </RadzenStack>
+                    <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#000901">
+                        <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
+                            <MudAvatar Style="height:100px; width:100px">@myContext.FirstName.First()@myContext.LastName.First()</MudAvatar>
+                            <RadzenStack Gap="0" Style="align-self:center">
+                                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Teacher</b></RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@myContext.FirstName @myContext.LastName</b></RadzenText>
+                                @*<RadzenText TextStyle="TextStyle.Body2">@myContext.Department</RadzenText>*@
                             </RadzenStack>
-                            <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
-                                <RadzenRow RowGap="0">
-                                    <RadzenColumn SizeXS="8">
-                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Email</RadzenText>
-                                                <RadzenText TextStyle="TextStyle.Body1" style="color:dodgerblue">@myContext.Email</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Modules</RadzenText>
-                                                <RadzenText TextStyle="TextStyle.Body1">@myContext.Modules</RadzenText>
-                                    </RadzenColumn>
-                                    <RadzenColumn SizeXS="4">
-                                        <RadzenButton Variant="Radzen.Variant.Text" Text="Email" Size="ButtonSize.Small" />
-                                        <RadzenButton Variant="Radzen.Variant.Text" Text="Live Chat" Size="ButtonSize.Small" />
-                                    </RadzenColumn>
-                                </RadzenRow>
-                            </RadzenCard>
-                            <br />
-                            <br />
+                        </RadzenStack>
+                        <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
+                            <RadzenRow RowGap="0">
+                                <RadzenColumn SizeXS="8">
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Email</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" style="color:dodgerblue">@myContext.Aspnetusers.Email</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Modules</RadzenText>
+                                    @*<RadzenText TextStyle="TextStyle.Body1">@myContext.Modules</RadzenText>*@
+                                </RadzenColumn>
+                                <RadzenColumn SizeXS="4">
+                                    <RadzenButton Variant="Radzen.Variant.Text" Text="Email" Size="ButtonSize.Small" />
+                                    <RadzenButton Variant="Radzen.Variant.Text" Text="Live Chat" Size="ButtonSize.Small" />
+                                </RadzenColumn>
+                            </RadzenRow>
                         </RadzenCard>
-
-                    </div>
-                </ItemTemplate>
-            </MudCarousel>
-
-            @code {
-                private MudCarousel<Teacher> _carouselTeachers;
-                private IList<Teacher> _sourceTeachers = new List<Teacher>()
-            {
-            new Teacher("Ioannis", "Masmanidis", "Databases, Team Project", "Computer Science", "io.masmanidis@mc-class.gr", "6969696969"),
-            new Teacher("Alexandros", "Berberis", "Introduction to Computer Science, Foundations of Computer Science", "Computer Science", "al.berberis@mc-class.gr", "1111111111"),
-            new Teacher("Grigorios", "Kalogiannis", "Graphics 1", "Computer Science", "g.kalogiannis@mc-class.gr", "2222222222"),
-            new Teacher("Iren", "Hovanishian", "English", "English", "i.hovanishian@mc-class.gr", "3333333333"),
-            new Teacher("Kostas", "Karaklas", "Programming 1, Programming 2", "Computer Science", "k.karaklas@mc-class.gr", "444444444"),
-            new Teacher("Vasileios", "Memos", "Software Engineering", "Computer Science", "vas.memos@mc-class.gr", "555555555")
-            };
-                private int selectedIndexTeachers = 0;
-            }
-
+                        <br />
+                        <br />
+                    </RadzenCard>
+                </div>
+            </ItemTemplate>
+        </MudCarousel>
         </div>
 
-    </div>
-        </Authorized>
-        <NotAuthorized>
-            Page not available!
-        </NotAuthorized>
-    </AuthorizeView>
-</body>
+   
+
+            @code {
+             }
+
+        </div>
+    <body>
+        <AuthorizeView>
+            <Authorized>
+                <div>
+                    
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                Page not available!
+            </NotAuthorized>
+        </AuthorizeView>
+    </body>
