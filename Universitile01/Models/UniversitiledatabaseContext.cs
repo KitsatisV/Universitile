@@ -47,7 +47,7 @@ public partial class UniversitiledatabaseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=universtile.mysql.database.azure.com;user id=azureuser;password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;database=universitiledatabase;sslmode=Required;sslca=C:\\Users\\tsimpuki\\Documents\\GitHub\\SIS_TP\\Universitile01\\Program.cs;tlsversion=\"TLS 1.2\"", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
+        => optionsBuilder.UseMySql("server=universtile.mysql.database.azure.com;user id=azureuser;password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;database=universitiledatabase;sslmode=Required;sslca=C:\\Users\\tsimpuki\\Documents\\GitHub\\SIS_TP\\Universitile01\\DigiCertGlobalRootCA.crt.pem;tlsversion=\"TLS 1.2\"", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -477,10 +477,7 @@ public partial class UniversitiledatabaseContext : DbContext
                 .HasColumnName("aspnetusers_Id")
                 .UseCollation("utf8mb4_0900_ai_ci")
                 .HasCharSet("utf8mb4");
-            entity.Property(e => e.IsRead)
-                .HasMaxLength(1)
-                .IsFixedLength()
-                .HasColumnName("is_read");
+            entity.Property(e => e.IsRead).HasColumnName("is_read");
 
             entity.HasOne(d => d.AnnouncementsAnnouncements).WithMany(p => p.UsersHasAnnouncements)
                 .HasForeignKey(d => d.AnnouncementsAnnouncementsId)

@@ -104,25 +104,23 @@
 }
 
 
-    <div class="row">
-
-        <div class="col-8" style="color:white">
-
+<div class="row">
+    <div class="col-8" style="color:white">
         <RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
             <Template Context="announcement">
-                <MudCard Style="background-color:#13181b; color:aliceblue">
+                <MudCard Style="background-color:#13181b; color:aliceblue" @onclick="() => MarkAsRead(announcement)">
                     <MudCardContent>
                         @if (announcement.Importance)
                         {
-                            <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="@announcement.IsRead">
+                            @*<MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
                                 <MudText><b>@announcement.Message</b></MudText>
-                            </MudBadge>
+                            </MudBadge>*@
                         }
                         else
                         {
-                            <MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="@announcement.IsRead">
+                            @*<MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
                                 <MudText><b>@announcement.Message</b></MudText>
-                            </MudBadge>
+                            </MudBadge>*@
                         }
                         <MudText Typo="Typo.body2">@announcement.Message</MudText>
                     </MudCardContent>
@@ -130,18 +128,21 @@
             </Template>
         </RadzenDataList>
 
-            @code
-            {
+        @code
+        {
             private void MarkAsRead(Announcement announcement)
             {
-               
                 string userId = "your_user_id";
                 AnnouncementService.MarkAsRead(announcement.AnnouncementsId, userId);
-                announcement.IsRead = false;
+               @* announcement.IsRead = true;*@
             }
-            }
+        }
+    </div>
+</div>
 
-        </div>
+
+<div>
+
 
         <div class="col-4" style="color: white">
 

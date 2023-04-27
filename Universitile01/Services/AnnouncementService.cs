@@ -2,6 +2,7 @@
 using System.Linq;
 using Universitile01.Data;
 using Universitile01.Models;
+using Universitile01.Services;
 
 public class AnnouncementService : IAnnouncementService
 {
@@ -22,7 +23,7 @@ public class AnnouncementService : IAnnouncementService
            Date = a.Date,
            Message = a.Message,
            Importance = a.Importance,
-           IsRead = !a.UsersHasAnnouncements.Any(uha => uha.AspnetusersId == userId && uha.IsRead[0] == 1)
+           //IsRead = !a.UsersHasAnnouncements.Any(uha => uha.AspnetusersId == userId && uha.IsRead[0] == 1)
        })
        .ToList();
     }
@@ -38,13 +39,13 @@ public class AnnouncementService : IAnnouncementService
             {
                 AnnouncementsAnnouncementsId = announcementId,
                 AspnetusersId = userId,
-                IsRead = new byte[] { 1 } 
+                IsRead = true
             };
             _dbContext.UsersHasAnnouncements.Add(userHasAnnouncement);
         }
         else
         {
-            userHasAnnouncement.IsRead = new byte[] { 1 }; 
+            userHasAnnouncement.IsRead = false;
         }
 
         _dbContext.SaveChanges();

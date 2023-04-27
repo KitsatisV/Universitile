@@ -14,5 +14,4 @@ public partial class Announcement
     public bool Importance { get; set; }
 
     public virtual ICollection<UsersHasAnnouncement> UsersHasAnnouncements { get; set; } = new List<UsersHasAnnouncement>();
-    public bool IsRead { get; internal set; }
 }
