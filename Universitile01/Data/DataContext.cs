@@ -15,5 +15,6 @@ namespace Universitile01.Data
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<UsersHasAnnouncement> UsersHasAnnouncements { get; set; }
         public DbSet<PerosnalInfo> PerosnalInfo { get; set;}
+
     }
 }

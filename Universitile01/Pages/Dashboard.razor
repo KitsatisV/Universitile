@@ -5,7 +5,6 @@
 @using Universitile01.Models;
 @using Universitile01.Services;
 @inject ApplicationDbContext Db
-@inject IAnnouncementService AnnouncementService
 @inject TeacherService TeacherService
 @using Microsoft.EntityFrameworkCore
 
@@ -39,8 +38,6 @@
     private List<Module> modules = new List<Module>();
     private int selectedIndexModule;
     private MudCarousel<Module> _carouselmodules;
-    private List<Announcement> announcements = new List<Announcement>();
-    private List<UsersHasAnnouncement> usersHasAnnouncements = new List<UsersHasAnnouncement>();
     private List<PerosnalInfo> _sourceTeachers;
     private MudCarousel<PerosnalInfo> _carouselTeachers;
     private int selectedIndexTeachers = 0;
@@ -53,8 +50,8 @@
     {
         events = await Db.CalendarEvents.ToListAsync();
         modules = await Db.Modules.ToListAsync();
-        announcements = AnnouncementService.GetAllAnnouncements();
         _sourceTeachers = TeacherService.GetAllTeachers();
+        
         
        
     }
@@ -104,7 +101,7 @@
 }
 
 
-<div class="row">
+@*<div class="row">
     <div class="col-8" style="color:white">
         <RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
             <Template Context="announcement">
@@ -112,33 +109,28 @@
                     <MudCardContent>
                         @if (announcement.Importance)
                         {
-                            @*<MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
+                            <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
                                 <MudText><b>@announcement.Message</b></MudText>
-                            </MudBadge>*@
+                            </MudBadge>
                         }
                         else
                         {
-                            @*<MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
+                            <MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
                                 <MudText><b>@announcement.Message</b></MudText>
-                            </MudBadge>*@
+                            </MudBadge>
                         }
                         <MudText Typo="Typo.body2">@announcement.Message</MudText>
                     </MudCardContent>
                 </MudCard>
             </Template>
         </RadzenDataList>
-
-        @code
-        {
-            private void MarkAsRead(Announcement announcement)
-            {
-                string userId = "your_user_id";
-                AnnouncementService.MarkAsRead(announcement.AnnouncementsId, userId);
-               @* announcement.IsRead = true;*@
-            }
-        }
     </div>
 </div>
+
+@code {
+    
+}*@
+}
 
 
 <div>

@@ -7,7 +7,7 @@ public partial class UsersHasAnnouncement
 {
     public int AnnouncementsAnnouncementsId { get; set; }
 
-    public bool IsRead { get; set; }
+    public byte[] IsRead { get; set; } = null!;
 
     public string AspnetusersId { get; set; } = null!;
 

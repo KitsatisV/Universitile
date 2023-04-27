@@ -477,7 +477,10 @@ public partial class UniversitiledatabaseContext : DbContext
                 .HasColumnName("aspnetusers_Id")
                 .UseCollation("utf8mb4_0900_ai_ci")
                 .HasCharSet("utf8mb4");
-            entity.Property(e => e.IsRead).HasColumnName("is_read");
+            entity.Property(e => e.IsRead)
+                .HasMaxLength(1)
+                .IsFixedLength()
+                .HasColumnName("is_read");
 
             entity.HasOne(d => d.AnnouncementsAnnouncements).WithMany(p => p.UsersHasAnnouncements)
                 .HasForeignKey(d => d.AnnouncementsAnnouncementsId)

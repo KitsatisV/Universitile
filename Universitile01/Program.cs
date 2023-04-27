@@ -39,7 +39,7 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddMudServices();
-builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
+//builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
 builder.Services.AddScoped<TeacherService, TeacherService>();
 //builder.Services.AddScoped<DataService>();
 
@@ -69,30 +69,5 @@ app.MapFallbackToPage("/_Host");
 
 app.Run();
 
-namespace Universitile01
-{
-    public class Startup
-    {
-        private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(_configuration.GetConnectionString("azure")));
-
-            services.AddControllers();
-            
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            
-        }
-    }
-}
 
