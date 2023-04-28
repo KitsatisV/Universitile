@@ -12,9 +12,9 @@ namespace Universitile01.Controllers
     [ApiController]
     public class CalendarEventController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly UniversitiledatabaseContext _context;
 
-        public CalendarEventController(ApplicationDbContext context)
+        public CalendarEventController(UniversitiledatabaseContext context)
         {
             _context = context;
         }

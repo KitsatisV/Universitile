@@ -9,6 +9,7 @@ using System.Configuration;
 //using Universitile01.Services;
 using Microsoft.Extensions.Configuration;
 using Universitile01.Services;
+using Universitile01.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +20,8 @@ builder.Services.AddControllers();
 
 //Adding Identity related services
 var cs = builder.Configuration.GetConnectionString("azure");
-//builder.Services.AddDbContext<DataContext>(options => options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(Configuration.GetConnectionString("azure")));
+builder.Services.AddDbContext<DbContext>(options => options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
+
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -31,17 +31,19 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 	options.Password.RequiredLength = 5;
 	options.Password.RequireNonAlphanumeric = false;
 	options.SignIn.RequireConfirmedEmail = false;
-});
-	//.AddEntityFrameworkStores<DataContext>();
+})
+.AddEntityFrameworkStores<DbContext>();
 
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddMudServices();
-//builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
 builder.Services.AddScoped<TeacherService, TeacherService>();
-//builder.Services.AddScoped<DataService>();
+builder.Services.AddScoped<UniversitiledatabaseContext>();
+builder.Services.AddScoped<DataService>();
+
+
 
 
 var app = builder.Build();

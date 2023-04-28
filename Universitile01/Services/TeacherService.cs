@@ -5,9 +5,9 @@ namespace Universitile01.Services
 {
     public class TeacherService
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly UniversitiledatabaseContext _dbContext;
 
-        public TeacherService(ApplicationDbContext dbContext)
+        public TeacherService(UniversitiledatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -15,7 +15,7 @@ namespace Universitile01.Services
         public List<PerosnalInfo> GetAllTeachers()
         {
 
-            return _dbContext.PerosnalInfo.ToList();
+            return _dbContext.PerosnalInfos.ToList();
         }
     }
 }

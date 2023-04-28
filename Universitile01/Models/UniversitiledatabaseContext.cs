@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Universitile01.Models;
@@ -13,6 +15,13 @@ public partial class UniversitiledatabaseContext : DbContext
     public UniversitiledatabaseContext(DbContextOptions<UniversitiledatabaseContext> options)
         : base(options)
     {
+    }
+    public class UniversiteledatabaseContext : IdentityDbContext
+    {
+        public UniversiteledatabaseContext(DbContextOptions options) : base(options)
+        {
+
+        }
     }
 
     public virtual DbSet<Addresss> Addressses { get; set; }
@@ -44,6 +53,7 @@ public partial class UniversitiledatabaseContext : DbContext
     public virtual DbSet<PerosnalInfo> PerosnalInfos { get; set; }
 
     public virtual DbSet<UsersHasAnnouncement> UsersHasAnnouncements { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
