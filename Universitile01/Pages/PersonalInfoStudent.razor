@@ -12,187 +12,209 @@
 
 <body>
 
-    <AuthorizeView Roles="Student">
+
+@*
+////////////////////////
+////////////////////////
+////////////////////////
+AVATAR AND PERSONAL INFO
+////////////////////////
+////////////////////////
+////////////////////////
+*@
+<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+
+    <AuthorizeView Roles="Student, Teacher">
         <Authorized>
+		    <RadzenColumn Size="2" Style="background-color:black;">
+		    	<MudAvatar Style="height:7rem; width:7rem;">VK</MudAvatar>
+		    </RadzenColumn>
+		    <RadzenColumn Size="10" Style="background-color:black">
+		    	Info
+		    </RadzenColumn>
+        </Authorized>
+    </AuthorizeView>
+
+</RadzenRow>
+
+<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+    <RadzenColumn Size="12" Style="background-color:black">
+        <MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
+		    
             @*
-            ////////////////////////
-            ////////////////////////
-            ////////////////////////
-            AVATAR AND PERSONAL INFO
-            ////////////////////////
-            ////////////////////////
-            ////////////////////////
+            //////////////////////////////////////////////////////
+            ///////////////////////STUDENTS///////////////////////
+            //////////////////////////////////////////////////////
             *@
-            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-                <RadzenColumn Size="2" Style="background-color:black;">
-                    <MudAvatar Style="height:7rem; width:7rem;">VK</MudAvatar>
-                </RadzenColumn>
-                <RadzenColumn Size="10" Style="background-color:black">
-                    Info
-                </RadzenColumn>
-            </RadzenRow>
+            <AuthorizeView Roles="Student">
+                <Authorized>
+				    @*
+				    ////////////////////////
+				          SESSIONS TAB
+				    ////////////////////////
+				    *@
+				    <MudTabPanel Text="Sessions">
+				    	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+				    		<RadzenColumn Size="12">
+				    			<MudDataGrid T="Session" Items="@sessions" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+				    				<ToolBarContent>
+				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
+				    				</ToolBarContent>
+				    				<Columns>
+				    					<PropertyColumn Property="x => x.Date" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.Module" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.CurrentSession" Title="Current Session" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.TotalSessions" Title="Total Sessions" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.Attendance" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+				    						<CellTemplate>
+				    							<MudStack Row Style="width:max-content; height:30px">
+				    								@if (ctx.Item.Files != "" && ctx.Item.Files != null)
+				    								{
+				    									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Primary">Files</MudButton>
+				    								}
+				    								else
+				    								{
+				    									<p style="justify-self:center"></p>
+				    								}
+				    							</MudStack>
+				    						</CellTemplate>
+				    					</TemplateColumn>
+				    				</Columns>
+				    			</MudDataGrid>
+				    		</RadzenColumn>
+				    		<RadzenColumn Size="12">
+				    			<RadzenChart>
+				    				<RadzenDonutSeries Data="@revenue" CategoryProperty="Type" ValueProperty="Amount">
+				    					<ChildContent>
+				    						<RadzenSeriesDataLabels Visible="@showDataLabels" />
+				    					</ChildContent>
+				    					<TitleTemplate>
+				    						<div class="rz-donut-content">
+				    							<div style="color:white; font-size:1rem"><b>Attendance</b></div>
+				    						</div>
+				    					</TitleTemplate>
+				    				</RadzenDonutSeries>
+				    			</RadzenChart>
+				    		</RadzenColumn>
+				    	</RadzenRow>
+				    </MudTabPanel>
+				    @*
+				    ////////////////////////
+				           GRADES TAB
+				    ////////////////////////
+				    *@
+				    <MudTabPanel Text="Grades">
+				    	<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0">
+				    		@foreach (Grades grade in grades)
+				    		{
+				    			<div style="border:solid; border-color:darkslategrey; width:400px; height:250px">
+				    				<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+				    					<RadzenColumn Size="12" Style="justify-self:center; align-self:center; margin-bottom:-2vh">
+				    						<RadzenText Style="width:100%; font-size:1rem"><center>@grade.Module<br /><span style="font-size:1.5rem"><b>@grade.Grade</b></span></center></RadzenText>
+				    					</RadzenColumn>
+				    					<RadzenColumn Size="12" Style="justify-self:center; align-self:center">
+				    						<RadzenRadialGauge Style="width: 100%; height: 200px;">
+				    							<RadzenRadialGaugeScale StartAngle="-150" EndAngle="150" Step="20" Min="0" Max="100" TickPosition=@tickPosition>
+				    								<RadzenRadialGaugeScalePointer Value=@grade.Grade Length="0.6" ShowValue=@showValue />
+				    								<RadzenRadialGaugeScaleRange From="0" To="30" Fill="red" />
+				    								<RadzenRadialGaugeScaleRange From="30" To="40" Fill="orange" />
+				    								<RadzenRadialGaugeScaleRange From="40" To="100" Fill="green" />
+				    							</RadzenRadialGaugeScale>
+				    						</RadzenRadialGauge>
+				    					</RadzenColumn>
+				    				</RadzenRow>
+				    			</div>
+				    		}
+				    	</RadzenRow>
+				    </MudTabPanel>
+                </Authorized>
+            </AuthorizeView>
+            @*
+            //////////////////////////////////////////////////////
+            ///////////////////////STUDENTS///////////////////////
+            //////////////////////////////////////////////////////
+            *@
 
-            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-                <RadzenColumn Size="12" Style="background-color:black">
-                    <MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
-                        @*
-                        ////////////////////////
-                        ////////////////////////
-                        ////////////////////////
-                              SESSIONS TAB
-                        ////////////////////////
-                        ////////////////////////
-                        ////////////////////////
-                        *@
-                        <MudTabPanel Text="Sessions">
-                            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-                                <RadzenColumn Size="12">
-									<MudDataGrid T="Session" Items="@sessions" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
-										<ToolBarContent>
-											<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
-										</ToolBarContent>
-										<Columns>
-											<PropertyColumn Property="x => x.Date" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.Module" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.CurrentSession" Title="Current Session" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.TotalSessions" Title="Total Sessions" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.Attendance" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-                                                <CellTemplate>
-                                                    <MudStack Row Style="width:max-content; height:30px">
-                                                        @if (ctx.Item.Files != "" && ctx.Item.Files != null)
-                                                        {
-                                                            <MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Primary">Files</MudButton>
-                                                        }
-                                                        else
-                                                        {
-                                                            <p style="justify-self:center"></p>
-                                                        }
-                                                    </MudStack>
-                                                </CellTemplate>
-                                            </TemplateColumn>
-										</Columns>
-									</MudDataGrid>
-                                </RadzenColumn>
-                                <RadzenColumn Size="12">
-                                    <RadzenChart>
-                                        <RadzenDonutSeries Data="@revenue" CategoryProperty="Type" ValueProperty="Amount">
-                                            <ChildContent>
-                                                <RadzenSeriesDataLabels Visible="@showDataLabels" />
-                                            </ChildContent>
-                                            <TitleTemplate>
-                                                <div class="rz-donut-content">
-                                                    <div style="color:white; font-size:1rem"><b>Attendance</b></div>
-                                                </div>
-                                            </TitleTemplate>
-                                        </RadzenDonutSeries>
-                                    </RadzenChart>
-                                </RadzenColumn>
-                            </RadzenRow>
-                        </MudTabPanel>
-                        @*
-                        ////////////////////////
-                        ////////////////////////
-                        ////////////////////////
-                               GRADES TAB
-                        ////////////////////////
-                        ////////////////////////
-                        ////////////////////////
-                        *@
-                        <MudTabPanel Text="Grades">
-                            <RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0">
-                                @foreach (Grades grade in grades)
-                                {
-                                    <div style="border:solid; border-color:darkslategrey; width:400px; height:250px">
-										<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-                                            <RadzenColumn Size="12" Style="justify-self:center; align-self:center; margin-bottom:-2vh">
-                                                <RadzenText Style="width:100%; font-size:1rem"><center>@grade.Module<br /><span style="font-size:1.5rem"><b>@grade.Grade</b></span></center></RadzenText>
-                                            </RadzenColumn>
-                                            <RadzenColumn Size="12" Style="justify-self:center; align-self:center">
-												<RadzenRadialGauge Style="width: 100%; height: 200px;">
-													<RadzenRadialGaugeScale StartAngle="-150" EndAngle="150" Step="20" Min="0" Max="100" TickPosition=@tickPosition>
-														<RadzenRadialGaugeScalePointer Value=@grade.Grade Length="0.6" ShowValue=@showValue />
-														<RadzenRadialGaugeScaleRange From="0" To="30" Fill="red" />
-														<RadzenRadialGaugeScaleRange From="30" To="40" Fill="orange" />
-														<RadzenRadialGaugeScaleRange From="40" To="100" Fill="green" />
-													</RadzenRadialGaugeScale>
-												</RadzenRadialGauge>
-                                            </RadzenColumn>
-										</RadzenRow>
-                                    </div>
-                                }
-                            </RadzenRow>
-                        </MudTabPanel>
-                    </MudTabs>
-                </RadzenColumn>
-            </RadzenRow>
-        </Authorized>
-    </AuthorizeView>
-    
-    <AuthorizeView Roles="Teacher">
-        <Authorized>
-            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-                <RadzenColumn Size="2" Style="background-color:black;">
-                    <MudAvatar Style="height:7rem; width:7rem;">VK</MudAvatar>
-                </RadzenColumn>
-                <RadzenColumn Size="10" Style="background-color:black">
-                    Info
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-                <RadzenColumn Size="12" Style="background-color:black">
-                    <MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
-                        <MudTabPanel Text="Attendance">
-                            <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-                                <RadzenColumn Size="12">
-                                    <MudDataGrid T="Session" Items="@sessions" MultiSelection="true" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
-                                        <ToolBarContent>
-                                            <MudText Typo="Typo.h5" Style="color:white">Attendance Table</MudText>
-                                        </ToolBarContent>
-                                        <Columns>
-                                            <SelectColumn T="Session" />
-                                            <PropertyColumn Property="x => x.Date" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.Module" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.CurrentSession" Title="Current Session" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.TotalSessions" Title="Total Sessions" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                            <PropertyColumn Property="x => x.Attendance" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                                        </Columns>
-                                    </MudDataGrid>
-                                </RadzenColumn>
-                                <RadzenColumn Size="12">
+            @*
+            //////////////////////////////////////////////////////
+            ///////////////////////TEACHERS///////////////////////
+            //////////////////////////////////////////////////////
+            *@
+            <AuthorizeView Roles="Teacher">
+                <Authorized>
+                    @*
+                    ////////////////////////
+                          STUDENTS TAB
+                    ////////////////////////
+                    *@
+                    <MudTabPanel Text="Students">
+                        <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+				    		<RadzenColumn Size="12">
+				    			<MudDataGrid T="Student" Items="@students" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+				    				<ToolBarContent>
+				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
+				    				</ToolBarContent>
+				    				<Columns>
+				    					<PropertyColumn Property="x => x.Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.Surname" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.School" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.Year" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					@*<PropertyColumn Property="x => x.Module" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />*@
+				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+				    						<CellTemplate>
+				    							<MudStack Row Style="width:max-content; height:30px">
+				    								<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
+				    							</MudStack>
+				    						</CellTemplate>
+				    					</TemplateColumn>
+				    				</Columns>
+				    			</MudDataGrid>
+				    		</RadzenColumn>
+                        </RadzenRow>
+                    </MudTabPanel>
+					@*
+					////////////////////////
+					      TEACHERS TAB
+					////////////////////////
+					*@
+					<MudTabPanel Text="Teachers">
+                        <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+				    		<RadzenColumn Size="12">
+				    			<MudDataGrid T="Teacher" Items="@teachers" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+				    				<ToolBarContent>
+				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
+				    				</ToolBarContent>
+				    				<Columns>
+				    					<PropertyColumn Property="x => x.Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.Surname" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.Department" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					<PropertyColumn Property="x => x.Email" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+				    					@*<PropertyColumn Property="x => x.Role" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />*@
+				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+				    						<CellTemplate>
+				    							<MudStack Row Style="width:max-content; height:30px">
+				    								<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
+				    							</MudStack>
+				    						</CellTemplate>
+				    					</TemplateColumn>
+				    				</Columns>
+				    			</MudDataGrid>
+				    		</RadzenColumn>
+                        </RadzenRow>
+                    </MudTabPanel>
+                </Authorized>
+            </AuthorizeView>
+            @*
+            //////////////////////////////////////////////////////
+            ///////////////////////TEACHERS///////////////////////
+            //////////////////////////////////////////////////////
+            *@
+            
+        </MudTabs>
+    </RadzenColumn>
+</RadzenRow>
 
-                                </RadzenColumn>
-                            </RadzenRow>
-                        </MudTabPanel>
-                        <MudTabPanel Text="Grades">
-                            <RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0">
-                                @foreach (Grades grade in grades)
-                                {
-                                    <div style="border:solid; border-color:darkslategrey; width:400px; height:250px">
-                                        <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-                                            <RadzenColumn Size="12" Style="justify-self:center; align-self:center; margin-bottom:-2vh">
-                                                <RadzenText Style="width:100%; font-size:1rem"><center>@grade.Module<br /><span style="font-size:1.5rem"><b>@grade.Grade</b></span></center></RadzenText>
-                                            </RadzenColumn>
-                                            <RadzenColumn Size="12" Style="justify-self:center; align-self:center">
-                                                <RadzenRadialGauge Style="width: 100%; height: 200px;">
-                                                    <RadzenRadialGaugeScale StartAngle="-150" EndAngle="150" Step="20" Min="0" Max="100" TickPosition=@tickPosition>
-                                                        <RadzenRadialGaugeScalePointer Value=@grade.Grade Length="0.6" ShowValue=@showValue />
-                                                        <RadzenRadialGaugeScaleRange From="0" To="30" Fill="red" />
-                                                        <RadzenRadialGaugeScaleRange From="30" To="40" Fill="orange" />
-                                                        <RadzenRadialGaugeScaleRange From="40" To="100" Fill="green" />
-                                                    </RadzenRadialGaugeScale>
-                                                </RadzenRadialGauge>
-                                            </RadzenColumn>
-                                        </RadzenRow>
-                                    </div>
-                                }
-                            </RadzenRow>
-                        </MudTabPanel>
-                    </MudTabs>
-                </RadzenColumn>
-            </RadzenRow>
-        </Authorized>
-    </AuthorizeView>
 </body>
 
 @code
@@ -257,6 +279,30 @@
     double value = 100;
     IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
     GaugeTickPosition tickPosition = GaugeTickPosition.Inside;
+
+	List<Student> students = new List<Student>
+		{
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998")
+		};
+
+	private List<Teacher> teachers = new List<Teacher>()
+	{
+		new Teacher("Ioannis", "Masmanidis", "Databases, Team Project", "Computer Science", "io.masmanidis@mc-class.gr", "6969696969"),
+		new Teacher("Alexandros", "Berberis", "Introduction to Computer Science, Foundations of Computer Science", "Computer Science", "al.berberis@mc-class.gr", "1111111111"),
+		new Teacher("Grigorios", "Kalogiannis", "Graphics 1", "Computer Science", "g.kalogiannis@mc-class.gr", "2222222222"),
+		new Teacher("Iren", "Hovanishian", "English", "English", "i.hovanishian@mc-class.gr", "3333333333"),
+		new Teacher("Kostas", "Karaklas", "Programming 1, Programming 2", "Computer Science", "k.karaklas@mc-class.gr", "444444444"),
+		new Teacher("Vasileios", "Memos", "Software Engineering", "Computer Science", "vas.memos@mc-class.gr", "555555555")
+	};
 }
 
 
