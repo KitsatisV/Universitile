@@ -7,6 +7,7 @@
 @inject UniversitiledatabaseContext Db
 @inject TeacherService TeacherService
 @using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
 
 
 <PageTitle>Dashboard</PageTitle>
@@ -20,6 +21,7 @@
     <AuthorizeView>
         <Authorized>
             <div class="row">
+          
                 <div class="col-8">
                     <RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Tittle" AppointmentSelect=@OpenDialogCalendar>
                         <RadzenDayView />
@@ -43,6 +45,8 @@
     private MudCarousel<PerosnalInfo> _carouselTeachers;
     private int selectedIndexTeachers = 0;
     private List<Announcement> announcements = new List<Announcement>();
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
 
 
@@ -52,17 +56,31 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var userId = "κωλοτρυπιδα 99";
+        var userId = getUserId();
         events = await Db.CalendarEvents.ToListAsync();
         modules = await Db.Modules.ToListAsync();
         _sourceTeachers = TeacherService.GetAllTeachers();
-         
+
 
         announcements = await Db.Announcements
             .Include(a => a.UsersHasAnnouncements)
-            .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId))
+            .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId.ToString()))
             .ToListAsync();
 
+
+
+        async Task<string> getUserName()
+        {
+            var user = (await authenticationStateTask).User;
+            return user.Identity.Name;
+        }
+        async Task<string> getUserId()
+        {
+            var user = (await authenticationStateTask).User;
+            var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+            return userid;
+        }
+        Console.WriteLine(userId.Result.ToString());
 
         
        
