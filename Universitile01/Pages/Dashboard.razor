@@ -21,7 +21,7 @@
         <Authorized>
             <div class="row">
                 <div class="col-8">
-                    <RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Title" AppointmentSelect=@OpenDialogCalendar>
+                    <RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Tittle" AppointmentSelect=@OpenDialogCalendar>
                         <RadzenDayView />
                         <RadzenWeekView />
                         <RadzenMonthView />
@@ -34,6 +34,7 @@
 </body>
 
 @code {
+    private string userId;
     private List<CalendarEvent> events = new List<CalendarEvent>();
     private List<Module> modules = new List<Module>();
     private int selectedIndexModule;
@@ -46,12 +47,16 @@
 
 
 
+
+
     protected override async Task OnInitializedAsync()
     {
+
         events = await Db.CalendarEvents.ToListAsync();
         modules = await Db.Modules.ToListAsync();
         _sourceTeachers = TeacherService.GetAllTeachers();
-        
+
+
         
        
     }
@@ -103,33 +108,33 @@
 
 @*<div class="row">
     <div class="col-8" style="color:white">
-        <RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
-            <Template Context="announcement">
-                <MudCard Style="background-color:#13181b; color:aliceblue" @onclick="() => MarkAsRead(announcement)">
+        <RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="AnnouncementViewModel" Style="height:400px; overflow-y:scroll;">
+            <Template Context="announcementViewModel">
+                <MudCard Style="background-color:#13181b; color:aliceblue" @onclick="() => MarkAsRead(announcementViewModel.Announcement,userId)">
                     <MudCardContent>
-                        @if (announcement.Importance)
+                        @if (announcementViewModel.Announcement.Importance)
                         {
-                            <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
-                                <MudText><b>@announcement.Message</b></MudText>
+                            <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="announcementViewModel.IsRead=0">
+                                <MudText><b>@announcementViewModel.Announcement.Message</b></MudText>
                             </MudBadge>
                         }
                         else
                         {
-                            <MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="!announcement.IsRead">
-                                <MudText><b>@announcement.Message</b></MudText>
+                            <MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="announcementViewModel.IsRead=0">
+                                <MudText><b>@announcementViewModel.Announcement.Message</b></MudText>
                             </MudBadge>
                         }
-                        <MudText Typo="Typo.body2">@announcement.Message</MudText>
+                        <MudText Typo="Typo.body2">@announcementViewModel.Announcement.Message</MudText>
                     </MudCardContent>
                 </MudCard>
             </Template>
         </RadzenDataList>
     </div>
-</div>
+</div>*@
 
 @code {
     
-}*@
+}
 }
 
 
@@ -155,7 +160,7 @@
                             <RadzenRow RowGap="0">
                                 <RadzenColumn SizeXS="8">
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Email</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" style="color:dodgerblue">@myContext.Aspnetusers.Email</RadzenText>
+                                    @*<RadzenText TextStyle="TextStyle.Body1" style="color:dodgerblue">@myContext.Aspnetusers.Email</RadzenText>*@
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Modules</RadzenText>
                                     @*<RadzenText TextStyle="TextStyle.Body1">@myContext.Modules</RadzenText>*@
                                 </RadzenColumn>

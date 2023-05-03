@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Universitile01.Models;
 
-public partial class UniversitiledatabaseContext : DbContext
+public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUser>
+
 {
     public UniversitiledatabaseContext()
     {
@@ -16,13 +17,9 @@ public partial class UniversitiledatabaseContext : DbContext
         : base(options)
     {
     }
-    public class UniversiteledatabaseContext : IdentityDbContext
-    {
-        public UniversiteledatabaseContext(DbContextOptions options) : base(options)
-        {
-
-        }
-    }
+    
+   
+ 
 
     public virtual DbSet<Addresss> Addressses { get; set; }
 
@@ -502,6 +499,50 @@ public partial class UniversitiledatabaseContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_users_has_announcements_aspnetusers1");
         });
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<IdentityUser>(b =>
+        {
+           
+            b.HasKey(u => u.Id);
+        });
+
+        modelBuilder.Entity<IdentityRole>(b =>
+        {
+            
+            b.HasKey(r => r.Id);
+        });
+
+        modelBuilder.Entity<IdentityUserLogin<string>>(b =>
+        {
+            
+            b.HasKey(l => new { l.LoginProvider, l.ProviderKey });
+        });
+
+        modelBuilder.Entity<IdentityUserRole<string>>(b =>
+        {
+            
+            b.HasKey(ur => new { ur.UserId, ur.RoleId });
+        });
+
+        modelBuilder.Entity<IdentityUserClaim<string>>(b =>
+        {
+           
+            b.HasKey(uc => uc.Id);
+        });
+
+        modelBuilder.Entity<IdentityRoleClaim<string>>(b =>
+        {
+            
+            b.HasKey(rc => rc.Id);
+        });
+
+        modelBuilder.Entity<IdentityUserToken<string>>(b =>
+        {
+            
+            b.HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }

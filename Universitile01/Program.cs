@@ -6,7 +6,7 @@ using MudBlazor.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Configuration;
-//using Universitile01.Services;
+using Universitile01.Services;
 using Microsoft.Extensions.Configuration;
 using Universitile01.Services;
 using Universitile01.Models;
@@ -20,7 +20,8 @@ builder.Services.AddControllers();
 
 //Adding Identity related services
 var cs = builder.Configuration.GetConnectionString("azure");
-builder.Services.AddDbContext<DbContext>(options => options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
+builder.Services.AddDbContext<UniversitiledatabaseContext>(options => options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
+
 
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -32,7 +33,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 	options.Password.RequireNonAlphanumeric = false;
 	options.SignIn.RequireConfirmedEmail = false;
 })
-.AddEntityFrameworkStores<DbContext>();
+.AddEntityFrameworkStores<UniversitiledatabaseContext>();
 
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
