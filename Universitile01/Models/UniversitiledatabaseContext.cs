@@ -54,7 +54,7 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=universtile.mysql.database.azure.com;user id=azureuser;password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;database=universitiledatabase;sslmode=Required;sslca=C:\\Users\\tsimpuki\\Documents\\GitHub\\SIS_TP\\Universitile01\\DigiCertGlobalRootCA.crt.pem;tlsversion=\"TLS 1.2\"", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
+        => optionsBuilder.UseMySql("server=universtile.mysql.database.azure.com;user id=azureuser;password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;database=universitiledatabase;sslmode=Required;sslca=DigiCertGlobalRootCA.crt.pem;tlsversion=\"TLS 1.2\"", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
