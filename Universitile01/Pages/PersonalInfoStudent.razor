@@ -151,7 +151,7 @@ AVATAR AND PERSONAL INFO
                     <MudTabPanel Text="Students">
                         <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 				    		<RadzenColumn Size="12">
-				    			<MudDataGrid T="Student" Items="@students" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+				    			@*<MudDataGrid T="Student" Items="@students" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
 				    				<ToolBarContent>
 				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
 				    				</ToolBarContent>
@@ -160,7 +160,7 @@ AVATAR AND PERSONAL INFO
 				    					<PropertyColumn Property="x => x.Surname" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 				    					<PropertyColumn Property="x => x.School" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 				    					<PropertyColumn Property="x => x.Year" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					@*<PropertyColumn Property="x => x.Module" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />*@
+				    					<PropertyColumn Property="x => x.Module" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
 				    						<CellTemplate>
 				    							<MudStack Row Style="width:max-content; height:30px">
@@ -169,7 +169,7 @@ AVATAR AND PERSONAL INFO
 				    						</CellTemplate>
 				    					</TemplateColumn>
 				    				</Columns>
-				    			</MudDataGrid>
+				    			</MudDataGrid>*@
 				    		</RadzenColumn>
                         </RadzenRow>
                     </MudTabPanel>
@@ -181,7 +181,7 @@ AVATAR AND PERSONAL INFO
 					<MudTabPanel Text="Teachers">
                         <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 				    		<RadzenColumn Size="12">
-				    			<MudDataGrid T="Teacher" Items="@teachers" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+				    			@*<MudDataGrid T="Teacher" Items="@teachers" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
 				    				<ToolBarContent>
 				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
 				    				</ToolBarContent>
@@ -190,7 +190,7 @@ AVATAR AND PERSONAL INFO
 				    					<PropertyColumn Property="x => x.Surname" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 				    					<PropertyColumn Property="x => x.Department" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 				    					<PropertyColumn Property="x => x.Email" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					@*<PropertyColumn Property="x => x.Role" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />*@
+				    					<PropertyColumn Property="x => x.Role" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
 				    						<CellTemplate>
 				    							<MudStack Row Style="width:max-content; height:30px">
@@ -199,7 +199,7 @@ AVATAR AND PERSONAL INFO
 				    						</CellTemplate>
 				    					</TemplateColumn>
 				    				</Columns>
-				    			</MudDataGrid>
+				    			</MudDataGrid>*@
 				    		</RadzenColumn>
                         </RadzenRow>
                     </MudTabPanel>
@@ -280,29 +280,29 @@ AVATAR AND PERSONAL INFO
     IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
     GaugeTickPosition tickPosition = GaugeTickPosition.Inside;
 
-	List<Student> students = new List<Student>
-		{
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-			new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998")
-		};
+	//List<Student> students = new List<Student>
+	//	{
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
+	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998")
+	//	};
 
-	private List<Teacher> teachers = new List<Teacher>()
-	{
-		new Teacher("Ioannis", "Masmanidis", "Databases, Team Project", "Computer Science", "io.masmanidis@mc-class.gr", "6969696969"),
-		new Teacher("Alexandros", "Berberis", "Introduction to Computer Science, Foundations of Computer Science", "Computer Science", "al.berberis@mc-class.gr", "1111111111"),
-		new Teacher("Grigorios", "Kalogiannis", "Graphics 1", "Computer Science", "g.kalogiannis@mc-class.gr", "2222222222"),
-		new Teacher("Iren", "Hovanishian", "English", "English", "i.hovanishian@mc-class.gr", "3333333333"),
-		new Teacher("Kostas", "Karaklas", "Programming 1, Programming 2", "Computer Science", "k.karaklas@mc-class.gr", "444444444"),
-		new Teacher("Vasileios", "Memos", "Software Engineering", "Computer Science", "vas.memos@mc-class.gr", "555555555")
-	};
+	//private List<Teacher> teachers = new List<Teacher>()
+	//{
+	//	new Teacher("Ioannis", "Masmanidis", "Databases, Team Project", "Computer Science", "io.masmanidis@mc-class.gr", "6969696969"),
+	//	new Teacher("Alexandros", "Berberis", "Introduction to Computer Science, Foundations of Computer Science", "Computer Science", "al.berberis@mc-class.gr", "1111111111"),
+	//	new Teacher("Grigorios", "Kalogiannis", "Graphics 1", "Computer Science", "g.kalogiannis@mc-class.gr", "2222222222"),
+	//	new Teacher("Iren", "Hovanishian", "English", "English", "i.hovanishian@mc-class.gr", "3333333333"),
+	//	new Teacher("Kostas", "Karaklas", "Programming 1, Programming 2", "Computer Science", "k.karaklas@mc-class.gr", "444444444"),
+	//	new Teacher("Vasileios", "Memos", "Software Engineering", "Computer Science", "vas.memos@mc-class.gr", "555555555")
+	//};
 }
 
 

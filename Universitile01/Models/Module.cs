@@ -5,7 +5,20 @@ namespace Universitile01.Models;
 
 public partial class Module
 {
-    public int ModuleId { get; set; }
+	public Module(int moduleId, string moduleName, string moduleDescription, int moduleDuration, int coursesCourseId)
+	{
+		ModuleId = moduleId;
+		ModuleName = moduleName;
+		ModuleDescription = moduleDescription;
+		ModuleDuration = moduleDuration;
+		CoursesCourseId = coursesCourseId;
+	}
+
+	public Module()
+	{
+	}
+
+	public int ModuleId { get; set; }
 
     public string ModuleName { get; set; } = null!;
 

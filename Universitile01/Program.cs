@@ -8,10 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Universitile01.Services;
 using Microsoft.Extensions.Configuration;
-using Universitile01.Services;
 using Universitile01.Models;
 using Microsoft.AspNetCore.Components.Authorization;
-using Universitile01.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,9 +33,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 	options.Password.RequireNonAlphanumeric = false;
 	options.SignIn.RequireConfirmedEmail = false;
 })
-.AddEntityFrameworkStores<UniversitiledatabaseContext>();
+.AddEntityFrameworkStores<UniversitiledatabaseContext>()
 	.AddRoles<IdentityRole>()
-	.AddEntityFrameworkStores<DataContext>();
+	.AddEntityFrameworkStores<UniversitiledatabaseContext>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<IdentityUser>>();
 builder.Services.AddScoped<DialogService>();
