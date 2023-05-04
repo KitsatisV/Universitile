@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using System.Configuration;
 using Universitile01.Services;
 using Microsoft.Extensions.Configuration;
-using Universitile01.Services;
 using Universitile01.Models;
 
 var builder = WebApplication.CreateBuilder(args);
