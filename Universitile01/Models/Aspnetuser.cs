@@ -49,6 +49,8 @@ public partial class Aspnetuser
 
     public virtual ICollection<CalendarEvent> CalendarEventsEvents { get; set; } = new List<CalendarEvent>();
 
+    public virtual ICollection<Course> CoursesCourses { get; set; } = new List<Course>();
+
     public virtual ICollection<Module> ModulesModules { get; set; } = new List<Module>();
 
     public virtual ICollection<Aspnetrole> Roles { get; set; } = new List<Aspnetrole>();
