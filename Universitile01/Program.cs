@@ -10,7 +10,6 @@ using Universitile01.Services;
 using Microsoft.Extensions.Configuration;
 using Universitile01.Models;
 using Microsoft.AspNetCore.Components.Authorization;
-using Universitile01.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
