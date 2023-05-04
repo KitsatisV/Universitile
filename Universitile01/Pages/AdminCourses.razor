@@ -24,7 +24,7 @@
         <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
         <CellTemplate>
             <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
-            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItem(@context.Item))" />
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
         </CellTemplate>
         </TemplateColumn>
     </Columns>
@@ -88,26 +88,7 @@
                 throw;
             }
         }
-        async Task Delete(Module mod)
-        {
-            try
-            {
-                MySqlConnection connection = new MySqlConnection("Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2");
-                string sql = "DELETE FROM modules WHERE module_id = @moduleId";
-                using (MySqlCommand command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@moduleId", mod.ModuleId);
-                    connection.Open();
-                    await command.ExecuteNonQueryAsync();
-                    connection.Close();
-                }
-                Modules.Remove(mod);
-            }
-            catch
-            {
-                throw;
-            }
-        }
+
 
     }
     async Task CommittedItemChanges(Module mod)
@@ -187,7 +168,27 @@
     //        Db.SaveChanges();
     //    }
     //}
-
+    void Delete(Module mod)
+    {
+        try
+        {
+            MySqlConnection connection = new MySqlConnection("Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2");
+            string sql = "DELETE FROM modules WHERE module_id = @moduleId";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@moduleId", mod.ModuleId);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            Modules.Remove(mod);
+        }
+        catch
+        {
+            throw;
+        }
+    }
 
     void DeleteItem(Module mod)
     {
