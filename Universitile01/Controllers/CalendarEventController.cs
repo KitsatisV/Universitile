@@ -21,19 +21,19 @@ namespace Universitile01.Controllers
 
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CalendarEvent>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<Session>>> GetEvents()
         {
-            return await _context.CalendarEvents.ToListAsync();
+            return await _context.Sessions.ToListAsync();
         }
 
         
         
-        public async Task<ActionResult<CalendarEvent>> PostEvent(CalendarEvent calendarEvent)
+        public async Task<ActionResult<Session>> PostEvent(Session session)
         {
-            _context.CalendarEvents.Add(calendarEvent);
+            _context.Sessions.Add(session);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEvents", new { id = calendarEvent.EventId }, calendarEvent);
+            return CreatedAtAction("GetEvents", new { id = session.EventId }, session);
         }
 
         

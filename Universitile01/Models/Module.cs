@@ -15,7 +15,11 @@ public partial class Module
 
     public int CoursesCourseId { get; set; }
 
+    public string? Grade { get; set; }
+
     public virtual Course CoursesCourse { get; set; } = null!;
+
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 
     public virtual ICollection<Aspnetuser> Aspnetusers { get; set; } = new List<Aspnetuser>();
 }
