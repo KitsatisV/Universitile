@@ -1,13 +1,23 @@
-﻿@page "/modules"
+﻿@page "/Modules"
 @using Universitile01.Models;
+@using System.Text;
+@using Universitile01.Data;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
 
 <body>
 
 	<AuthorizeView>
 		<Authorized>
-			<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)">
+			<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%) ">
 				@foreach (Module module in stModules)
 				{
+
+
+					PerosnalInfo teacher = moduleTeacherMap.ContainsKey(module.ModuleId) ? moduleTeacherMap[module.ModuleId] : null;
 					<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 						<RadzenColumn Size="12" Style="justify-self:center; align-self:center">
 							<RadzenCard Class="rz-my-12 rz-mx-auto" Style="width:480px; height:350; background-color:#12080c">
@@ -21,10 +31,18 @@
 								<RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:185px; width:100%">
 									<RadzenRow RowGap="0">
 										<RadzenColumn SizeXS="8">
-											<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>@*Display Instructor's name*@
-											@*<RadzenText TextStyle="TextStyle.Body1">@module.CoursesCourse.CourseName</RadzenText>*@
-											@*<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>*@
-											<RadzenText TextStyle="TextStyle.Body1">@module.ModuleDescription</RadzenText>
+											
+												@*<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
+											<RadzenText TextStyle="TextStyle.Body1">@module.CoursesCourse.CourseName</RadzenText>*@
+											
+											
+												
+													<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>
+													<RadzenText TextStyle="TextStyle.Body1">@teacher.FirstName @teacher.LastName</RadzenText>
+												
+											
+											
+											
 										</RadzenColumn>
 										<RadzenColumn SizeXS="4">
 											<MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%" Color="Color.Secondary">Take Quiz</MudButton>
@@ -46,17 +64,20 @@
 
 </body>
 
-@code
-{
-	private string userId;
-	private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
-	[CascadingParameter]
-	private Task<AuthenticationState> authenticationStateTask { get; set; }
-	private List<Module> stModules = new List<Module>();
-	private List<PerosnalInfo> teachInfo = new List<PerosnalInfo>();
+@code{
+    private string userId;
+    private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private List<Module> stModules = new List<Module>();
+    private List<PerosnalInfo> teachInfo = new List<PerosnalInfo>();
+	private Dictionary<int, PerosnalInfo> moduleTeacherMap = new Dictionary<int, PerosnalInfo>();
 
-	protected override async Task OnInitializedAsync()
-	{
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
 		var userId = getUserId();
 		async Task<string> getUserName()
 		{
@@ -67,40 +88,50 @@
 		{
 			var user = (await authenticationStateTask).User;
 			var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-			return userid;
+			return userid;	
 		}
-		string modstsql = "SELECT m.*, pi.first_name , pi.last_name  FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN personal_info pi ON pi.aspnetusers_Id = t.aspnetusers_Id WHERE u.Id = @userId";
-		MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connect);
-		using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(modstsql, connection))
+		MySqlConnection connection = new MySqlConnection(connect);
+		string combinedSql = "SELECT m.*, pi.first_name, pi.last_name, pi2.first_name AS teacher_first_name, pi2.last_name AS teacher_last_name FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN perosnal_info pi ON pi.aspnetusers_Id = s.aspnetusers_Id INNER JOIN perosnal_info pi2 ON pi2.aspnetusers_Id = t.aspnetusers_Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+		using (MySqlCommand command = new MySqlCommand(combinedSql, connection))
 		{
-			command.Parameters.AddWithValue("@userId", userId.Result.ToString());
 			connection.Open();
-			MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(modstsql, connection);
-			sqlcmd.CommandText = modstsql;
+			MySqlCommand sqlcmd = new MySqlCommand(combinedSql, connection);
+			sqlcmd.CommandText = combinedSql;
 			sqlcmd.CommandType = CommandType.Text;
-			MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
-
-
+			MySqlDataReader rdr = sqlcmd.ExecuteReader();
 			while (rdr.Read())
 			{
 				Module mod = new Module();
+				mod.ModuleId = (Int32)rdr["module_id"];
 				mod.ModuleName = rdr["module_name"].ToString();
+				mod.ModuleDescription = rdr["module_description"].ToString();
+				mod.ModuleDuration = (Int32)rdr["module_duration"];
+				mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+				stModules.Add(mod);
 
 				PerosnalInfo prsinf = new PerosnalInfo();
 				prsinf.FirstName = rdr["teacher_first_name"].ToString();
 				prsinf.LastName = rdr["teacher_last_name"].ToString();
-				stModules.Add(mod);
+
+				if (!moduleTeacherMap.ContainsKey(mod.ModuleId))
+				{
+					moduleTeacherMap.Add(mod.ModuleId, prsinf);
+				}
+
+				
+				if (!teachInfo.Any(personalInfo => personalInfo.FirstName == prsinf.FirstName && personalInfo.LastName == prsinf.LastName))
+					teachInfo.Add(prsinf);
 			}
+
 			rdr.Close();
 			connection.Close();
 		}
 
 
 
-
-
-
-
+		
 
 	}
+
 }
+
