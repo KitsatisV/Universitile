@@ -40,6 +40,7 @@
     private bool _editTriggerRowClick;
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
     private List<Module> Modules = new List<Module>();
     private List<Course> Courses = new List<Course>();
@@ -50,7 +51,7 @@
     protected override async Task OnInitializedAsync()
     {
 
-        MySqlConnection connection = new MySqlConnection("Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2");
+        MySqlConnection connection = new MySqlConnection(connectionString);
         string sqlModules = "SELECT m.*, c.course_name FROM modules m INNER JOIN courses c ON m.courses_course_id = c.course_id;";
         using (MySqlCommand command = new MySqlCommand(sqlModules, connection))
         {
@@ -96,7 +97,6 @@
 
         try
         {
-            string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
             using MySqlConnection connection = new MySqlConnection(connectionString);
             connection.Open();
 
@@ -155,24 +155,11 @@
         }
     }
 
-    //void CommittedItemChanges(Module mod)
-    //{
-    //    var existingMod = Db.Modules.Include(m => m.CoursesCourse).FirstOrDefault(m => m.ModuleId == mod.ModuleId);
-    //    if (existingMod != null)
-    //    {
-    //        existingMod.ModuleName = mod.ModuleName;
-    //        existingMod.ModuleDescription = mod.ModuleDescription;
-    //        existingMod.ModuleDuration = mod.ModuleDuration;
-    //        existingMod.CoursesCourse = Db.Courses.FirstOrDefault(c => c.CourseName == mod.CoursesCourse.CourseName);
-
-    //        Db.SaveChanges();
-    //    }
-    //}
     void Delete(Module mod)
     {
         try
         {
-            MySqlConnection connection = new MySqlConnection("Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2");
+            MySqlConnection connection = new MySqlConnection(connectionString);
             string sql = "DELETE FROM modules WHERE module_id = @moduleId";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
@@ -190,24 +177,6 @@
         }
     }
 
-    void DeleteItem(Module mod)
-    {
-        Modules.Remove(mod);
-        Db.Modules.Remove(mod);
-        Db.SaveChanges();
-    }
-
-    //Module newModule = new Module()
-    //{
-    //    ModuleId = modid + 1,
-    //    ModuleName = "",
-    //    ModuleDescription = "",
-    //    ModuleDuration = 0,
-    //    CoursesCourseId = 0,
-    //    CoursesCourse = new Course { CourseName = "" }
-    //};
-
-
     async Task AddEmptyRow()
     {
         modid = modid + 1;
@@ -221,8 +190,6 @@
             CoursesCourse = new Course { CourseName = "" }
             };
         Modules.Add(mod); // add the empty Module to the list
-
-        string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
