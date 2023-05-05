@@ -50,39 +50,11 @@ AVATAR AND PERSONAL INFO
                 <Authorized>
 				    @*
 				    ////////////////////////
-				          SESSIONS TAB
+				         ATTENCANCE TAB
 				    ////////////////////////
 				    *@
-				    <MudTabPanel Text="Sessions">
+				    <MudTabPanel Text="Attendance">
 				    	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-				    		<RadzenColumn Size="12">
-				    			<MudDataGrid T="Session" Items="@sessions" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
-				    				<ToolBarContent>
-				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
-				    				</ToolBarContent>
-				    				<Columns>
-				    					<PropertyColumn Property="x => x.Date" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Module" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.CurrentSession" Title="Current Session" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.TotalSessions" Title="Total Sessions" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Attendance" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-				    						<CellTemplate>
-				    							<MudStack Row Style="width:max-content; height:30px">
-				    								@if (ctx.Item.Files != "" && ctx.Item.Files != null)
-				    								{
-				    									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Primary">Files</MudButton>
-				    								}
-				    								else
-				    								{
-				    									<p style="justify-self:center"></p>
-				    								}
-				    							</MudStack>
-				    						</CellTemplate>
-				    					</TemplateColumn>
-				    				</Columns>
-				    			</MudDataGrid>
-				    		</RadzenColumn>
 				    		<RadzenColumn Size="12">
 				    			<RadzenChart>
 				    				<RadzenDonutSeries Data="@revenue" CategoryProperty="Type" ValueProperty="Amount">
@@ -219,23 +191,6 @@ AVATAR AND PERSONAL INFO
 
 @code
 {
-    private List<Session> sessions = new List<Session>
-    {
-        new Session("Team Project", "21/04/2023", 1, 4, "Presence", "files"),
-        new Session("Team Project", "21/04/2023", 2, 4, "Authorized Absence", "files"),
-        new Session("Team Project", "21/04/2023", 3, 4, "Presence", "files"),
-        new Session("Team Project", "21/04/2023", 4, 4, "Presence", "files"),
-        new Session("Application Development", "22/04/2023", 1, 3, "Authorized Absence", ""),
-        new Session("Application Development", "22/04/2023", 2, 3, "Authorized Absence", ""),
-        new Session("Application Development", "22/04/2023", 3, 3, "Authorized Absence", ""),
-        new Session("Software Engineering", "23/04/2023", 1, 2, "Authorized Absence", "files"),
-        new Session("Software Engineering", "23/04/2023", 2, 2, "Authorized Absence", "files"),
-        new Session("English", "24/04/2023", 1, 1, "Unauthorized Absence", ""),
-        new Session("Graphics 1", "25/04/2023", 1, 3, "Unauthorized Absence", "files"),
-        new Session("Graphics 1", "25/04/2023", 2, 3, "Unauthorized Absence", "files"),
-        new Session("Graphics 1", "25/04/2023", 3, 3, "Presence", "files")
-    };
-
     bool showDataLabels = false;
 
     class DataItem

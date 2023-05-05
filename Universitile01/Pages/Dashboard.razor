@@ -212,15 +212,15 @@
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
         }
-        MySqlConnection connection = new MySqlConnection(connect);
+        MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connect);
         string dashteachsql = "SELECT m.* FROM modules m INNER JOIN teachers s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
-        using (MySqlCommand command = new MySqlCommand(dashteachsql, connection))
+        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
             connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(dashteachsql, connection);
+            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection);
             sqlcmd.CommandText = dashteachsql;
             sqlcmd.CommandType = CommandType.Text;
-            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
 
@@ -238,13 +238,13 @@
             connection.Close();
         }
         string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetusers u ON uha.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
-        using (MySqlCommand command = new MySqlCommand(dashteachsql, connection))
+        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
             connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(annsql, connection);
+            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(annsql, connection);
             sqlcmd.CommandText = annsql;
             sqlcmd.CommandType = CommandType.Text;
-            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
                 Announcement ann = new Announcement();
@@ -258,13 +258,13 @@
             connection.Close();
         }
         string dashstsql = "SELECT m.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
-        using (MySqlCommand command = new MySqlCommand(dashstsql, connection))
+        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashstsql, connection))
         {
             connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(dashstsql, connection);
+            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(dashstsql, connection);
             sqlcmd.CommandText = dashstsql;
             sqlcmd.CommandType = CommandType.Text;
-            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
 
@@ -281,13 +281,13 @@
         }
 
         string teachsql = "SELECT pi.* FROM perosnal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
-        using (MySqlCommand command = new MySqlCommand(teachsql, connection))
+        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection))
         {
             connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(teachsql, connection);
+            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection);
             sqlcmd.CommandText = teachsql;
             sqlcmd.CommandType = CommandType.Text;
-            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
                 PerosnalInfo teach = new PerosnalInfo();
