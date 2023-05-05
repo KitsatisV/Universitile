@@ -14,4 +14,6 @@ public partial class Course
     public int CourseDuration { get; set; }
 
     public virtual ICollection<Module> Modules { get; set; } = new List<Module>();
+
+    public virtual ICollection<Aspnetuser> Aspnetusers { get; set; } = new List<Aspnetuser>();
 }
