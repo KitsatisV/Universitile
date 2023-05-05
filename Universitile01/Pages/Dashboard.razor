@@ -23,7 +23,7 @@
         <AuthorizeView>
             <Authorized>
                 <div class="col-8">
-                    <RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Tittle" AppointmentSelect=@OpenDialogCalendar>
+                    <RadzenScheduler Data="@events" TItem="Session" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Tittle">
                         <RadzenDayView />
                         <RadzenWeekView />
                         <RadzenMonthView />
@@ -141,7 +141,7 @@
 
 @code {
     private string userId;
-    private List<CalendarEvent> events = new List<CalendarEvent>();
+    private List<Session> events = new List<Session>();
     private List<Module> modules = new List<Module>();
     private int selectedIndexModule;
     private MudCarousel<Module> _carouselmodules;
@@ -164,7 +164,7 @@
     protected override async Task OnInitializedAsync()
     {
         var userId = getUserId();
-        events = await Db.CalendarEvents.ToListAsync();
+        events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
         announcements = await Db.Announcements
             .Include(a => a.UsersHasAnnouncements)
@@ -270,12 +270,36 @@
                 teach.Mobile = rdr["mobile"].ToString();
                 teach.AspnetusersId = rdr["aspnetusers_Id"].ToString();
                 if(!personalInfo.Any(personalInfo=>personalInfo.InfoId == teach.InfoId))
-                personalInfo.Add(teach);
+                    personalInfo.Add(teach);
             }
             rdr.Close();
             connection.Close();
         }
-        
+        string studsql = "SELECT pi.* FROM perosnal_info pi JOIN teachers t ON pi.aspnetusers_Id = t.aspnetusers_Id JOIN modules m ON t.modules_module_id = m.module_id JOIN courses c ON m.courses_course_id = c.course_id JOIN students s ON c.course_id = s.courses_course_id AND s.aspnetusers_Id ='" + userId.Result.ToString() + "'";//query
+        using (MySqlCommand command = new MySqlCommand(studsql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(studsql, connection);
+            sqlcmd.CommandText = studsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                PerosnalInfo stud = new PerosnalInfo();
+                stud.InfoId = (Int32)rdr["info_id"];
+                stud.DateOfBirth = (DateTime)rdr["date_of_birth"];
+                stud.Sex = (sbyte)rdr["sex"];
+                stud.FirstName = rdr["first_name"].ToString();
+                stud.LastName = rdr["last_name"].ToString();
+                stud.MiddleName = rdr["middle_name"].ToString();
+                stud.Landline = rdr["landline"].ToString();
+                stud.Mobile = rdr["mobile"].ToString();
+                stud.AspnetusersId = rdr["aspnetusers_Id"].ToString();
+                if (!personalInfo.Any(personalInfo => personalInfo.InfoId == stud.InfoId))
+                    personalInfo.Add(stud);
+            }
+            rdr.Close();
+            connection.Close();
+        }
     }
-
 }
