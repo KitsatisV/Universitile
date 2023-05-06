@@ -19,11 +19,18 @@
         <PropertyColumn Property="x => x.ModuleName" Title="Name" IsEditable="true" />
         <PropertyColumn Property="x => x.ModuleDescription" Title="Description" IsEditable="true" />
         <PropertyColumn Property="x => x.ModuleDuration" Title="Semesters" IsEditable="true" />
-        <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Belongs in Course" IsEditable="false" />
-        <PropertyColumn Property="x => x.CoursesCourseId" Title="Belongs in Course" IsEditable="true" Hidden="true" />
+        <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Belongs in Course"  IsEditable="false" >
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.CoursesCourse.CourseName" Required RequiredError="You must select a Position!!!" >
+                @foreach (Course coursed in Courses)
+                {
+                        <MudSelectItem Value="coursed.CourseName"  />
+                }
+                </MudSelect>
+            </EditTemplate>
+         </PropertyColumn>
         <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
         <CellTemplate>
-            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
             <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
         </CellTemplate>
         </TemplateColumn>
@@ -89,23 +96,66 @@
                 throw;
             }
         }
+        string coursessql = "SELECT * FROM courses";
+        using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(coursessql, connection);
+                sqlcmd.CommandText = coursessql;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Course mod = new Course();
+                    mod.CourseId = (Int32)rdr["course_id"];
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.CourseDescription = rdr["course_description"].ToString();
+                    mod.CourseDuration = (Int32)rdr["course_duration"];
+                    Courses.Add(mod);
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
 
     }
     async Task CommittedItemChanges(Module mod)
     {
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + mod.CoursesCourse.CourseName + "'";
+        string courseid = "";
+        using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
+            sqlcmd.CommandText = sqlfindcId;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                courseid = rdr["course_id"].ToString();
+            }
+        }
+
+
 
         try
         {
-            using MySqlConnection connection = new MySqlConnection(connectionString);
-            connection.Open();
-
             string selectExistingModQuery = "SELECT * FROM modules WHERE module_Id = @moduleId";
             using MySqlCommand selectExistingModCommand = new MySqlCommand(selectExistingModQuery, connection);
             selectExistingModCommand.Parameters.AddWithValue("@moduleId", mod.ModuleId);
-
             connection.Close();
-
             connection.Open();
             using MySqlDataReader reader = selectExistingModCommand.ExecuteReader();
             if (reader.Read())
@@ -115,7 +165,7 @@
                 updateExistingModCommand.Parameters.AddWithValue("@moduleName", mod.ModuleName);
                 updateExistingModCommand.Parameters.AddWithValue("@moduleDescription", mod.ModuleDescription);
                 updateExistingModCommand.Parameters.AddWithValue("@moduleDuration", mod.ModuleDuration);
-                updateExistingModCommand.Parameters.AddWithValue("@CoursesCourseId", mod.CoursesCourseId);
+                updateExistingModCommand.Parameters.AddWithValue("@CoursesCourseId", courseid);
                 updateExistingModCommand.Parameters.AddWithValue("@moduleId", mod.ModuleId);
                 connection.Close();
                 connection.Open();
@@ -128,6 +178,7 @@
         {
             throw;
         }
+        
     }
 
     // events
