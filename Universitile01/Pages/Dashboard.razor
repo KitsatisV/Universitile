@@ -2,7 +2,6 @@
 @using System.Text;
 @using MySql.Data.MySqlClient;
 @using System.Data;
-@using Universitile01.Data;
 @inject IDialogService DialogService
 @using Universitile01.Models;
 @using Universitile01.Services;
@@ -307,13 +306,13 @@
             connection.Close();
         }
         string studsql = "SELECT pi.* FROM perosnal_info pi JOIN teachers t ON pi.aspnetusers_Id = t.aspnetusers_Id JOIN modules m ON t.modules_module_id = m.module_id JOIN courses c ON m.courses_course_id = c.course_id JOIN students s ON c.course_id = s.courses_course_id AND s.aspnetusers_Id ='" + userId.Result.ToString() + "'";//query
-        using (MySqlCommand command = new MySqlCommand(studsql, connection))
+        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(studsql, connection))
         {
             connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(studsql, connection);
+            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(studsql, connection);
             sqlcmd.CommandText = studsql;
             sqlcmd.CommandType = CommandType.Text;
-            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
                 PerosnalInfo stud = new PerosnalInfo();
