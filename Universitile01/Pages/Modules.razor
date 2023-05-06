@@ -45,10 +45,12 @@
 
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%" Color="Color.Secondary">Take Quiz</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%" Color="Color.Secondary" OnClick="InfoDialog">Module Info</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:20px" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:20px" Color="Color.Secondary" OnClick="TakeQuizDialog">Take Quiz</MudButton>
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" OnClick="OpenDialog" Color="Color.Secondary">Info</MudButton>
+                                            
                                         </RadzenColumn>
                                     </RadzenRow>
                                 </RadzenCard>
@@ -130,9 +132,26 @@
     }
 
     @*Module Info Modal Dialog*@
-    private void OpenDialog()
+    private void InfoDialog()
     {
         var options = new MudBlazor.DialogOptions { };
         DialogService.Show<InfoDialog>("Module Information", options);
     }
+
+    @*Take Quiz Modal Dialog*@
+    private void TakeQuizDialog()
+    {
+        var options = new MudBlazor.DialogOptions { };
+        DialogService.Show<TakeQuizDialog>("Take Quiz", options);
+    }
+
+    @*Take Quiz Modal Dialog*@
+    private void AssignmentsDialog()
+    {
+        var options = new MudBlazor.DialogOptions { };
+        DialogService.Show<AssignmentsDialog>("Assignments", options);
+    }
+
 }
+    
+
