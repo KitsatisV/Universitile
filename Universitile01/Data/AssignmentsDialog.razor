@@ -2,6 +2,7 @@
     <DialogContent>
         <MudDataGrid Items="@data" T="LinkModel" Style="background-color:#12080c;">
             <Columns>
+                <MudButton Disabled="false" Color="@Color.Error" OnClick="@AddNewLink">Add new Link</MudButton>
                 <PropertyColumn Property="x => x.Name" />
                 <TemplateColumn>
                     <HeaderTemplate>
@@ -16,7 +17,7 @@
                         Edit
                     </HeaderTemplate>
                     <CellTemplate>
-                        <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black"/>
+                        <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
                     </CellTemplate>
                 </TemplateColumn>
                 <TemplateColumn>
@@ -25,10 +26,11 @@
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
+
         </MudDataGrid>
+
     </DialogContent>
     <DialogActions>
-        
         <MudButton Color="Color.Secondary" OnClick="Submit">Ok</MudButton>
     </DialogActions>
 </MudDialog>
@@ -55,4 +57,10 @@
             new LinkModel ("Link 2","https://www.example.com/link2" ),
             new LinkModel ("Link 3","https://www.example.com/link3" )
     };
+
+    void AddNewLink()
+    {
+        data.Add(new LinkModel("New Link", ""));
+    }
+
 }
