@@ -5,6 +5,7 @@ namespace Universitile01.Models;
 
 public partial class Session
 {
+   
     public Session(int eventId, string tittle, DateTime dateStart, DateTime dateEnd, int modulesModuleId)
     {
         EventId = eventId;
@@ -13,9 +14,7 @@ public partial class Session
         DateEnd = dateEnd;
         ModulesModuleId = modulesModuleId;
     }
-
     public int EventId { get; set; }
-
     public string Tittle { get; set; } = null!;
 
     public DateTime DateStart { get; set; }

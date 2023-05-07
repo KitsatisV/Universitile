@@ -42,6 +42,10 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
 
     public virtual DbSet<Grade> Grades { get; set; }
 
+    public virtual DbSet<LinksAssignment> LinksAssignments { get; set; }
+
+    public virtual DbSet<LinksQuiz> LinksQuizzes { get; set; }
+
     public virtual DbSet<Module> Modules { get; set; }
 
     public virtual DbSet<PersonalInfo> PersonalInfos { get; set; }
@@ -55,7 +59,7 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
     public virtual DbSet<UsersHasCalendarEvent> UsersHasCalendarEvents { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=universtile.mysql.database.azure.com;user id=azureuser;password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;database=universitiledatabase;sslmode=Required;sslca=DigiCertGlobalRootCA.crt.pem;tlsversion=\"TLS 1.2\"", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -356,6 +360,56 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .HasConstraintName("fk_students_has_modules_modules1");
         });
 
+        modelBuilder.Entity<LinksAssignment>(entity =>
+        {
+            entity.HasKey(e => new { e.AssignmentId, e.ModulesModuleId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("links_assignments");
+
+            entity.HasIndex(e => e.ModulesModuleId, "fk_links_assignments_modules1_idx");
+
+            entity.Property(e => e.AssignmentId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("assignment_id");
+            entity.Property(e => e.ModulesModuleId).HasColumnName("modules_module_id");
+            entity.Property(e => e.Assignments)
+                .HasMaxLength(225)
+                .HasColumnName("assignments");
+
+            entity.HasOne(d => d.ModulesModule).WithMany(p => p.LinksAssignments)
+                .HasPrincipalKey(p => p.ModuleId)
+                .HasForeignKey(d => d.ModulesModuleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_links_assignments_modules1");
+        });
+
+        modelBuilder.Entity<LinksQuiz>(entity =>
+        {
+            entity.HasKey(e => new { e.LinkId, e.ModulesModuleId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("links_quiz");
+
+            entity.HasIndex(e => e.ModulesModuleId, "fk_links_quiz_modules_idx");
+
+            entity.Property(e => e.LinkId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("link_id");
+            entity.Property(e => e.ModulesModuleId).HasColumnName("modules_module_id");
+            entity.Property(e => e.Quizzes)
+                .HasMaxLength(255)
+                .HasColumnName("quizzes");
+
+            entity.HasOne(d => d.ModulesModule).WithMany(p => p.LinksQuizzes)
+                .HasPrincipalKey(p => p.ModuleId)
+                .HasForeignKey(d => d.ModulesModuleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_links_quiz_modules");
+        });
+
         modelBuilder.Entity<Module>(entity =>
         {
             entity.HasKey(e => new { e.ModuleId, e.CoursesCourseId })
@@ -379,9 +433,6 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .ValueGeneratedOnAdd()
                 .HasColumnName("module_id");
             entity.Property(e => e.CoursesCourseId).HasColumnName("courses_course_id");
-            entity.Property(e => e.Assignments)
-                .HasMaxLength(255)
-                .HasColumnName("assignments");
             entity.Property(e => e.ModuleDescription)
                 .HasMaxLength(250)
                 .HasColumnName("module_description");
@@ -389,9 +440,6 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
             entity.Property(e => e.ModuleName)
                 .HasMaxLength(45)
                 .HasColumnName("module_name");
-            entity.Property(e => e.Quizzes)
-                .HasMaxLength(255)
-                .HasColumnName("quizzes");
 
             entity.HasOne(d => d.CoursesCourse).WithMany(p => p.Modules)
                 .HasForeignKey(d => d.CoursesCourseId)
