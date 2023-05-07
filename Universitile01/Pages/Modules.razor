@@ -45,7 +45,7 @@
 
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%" Color="Color.Secondary" OnClick="InfoDialog">Supporting Material</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%" Color="Color.Secondary" OnClick="SupportingMaterialDialog">Supporting Material</MudButton>
                                             <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
                                             <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Take Quiz</MudButton>
                                         </RadzenColumn>
@@ -132,10 +132,10 @@
     }
 
     @*Module Info Modal Dialog*@
-    private void InfoDialog()
+    private void SupportingMaterialDialog()
     {
         var options = new MudBlazor.DialogOptions { };
-        DialogService.Show<InfoDialog>("Module Information", options);
+        DialogService.Show<SupportingMaterialDialog>("Supporting Material", options);
     }
 
     @*Take Quiz Modal Dialog*@

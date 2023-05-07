@@ -8,7 +8,7 @@
                         <strong>URL</strong>
                     </HeaderTemplate>
                     <CellTemplate>
-                        <MudLink Href="@context.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Assignment Link</MudLink>
+                        <MudLink Href="@context.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Supporting Material Link</MudLink>
                     </CellTemplate>
                 </TemplateColumn>
                 <TemplateColumn>
@@ -16,7 +16,7 @@
                         Edit
                     </HeaderTemplate>
                     <CellTemplate>
-                        <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black"/>
+                        <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
                     </CellTemplate>
                 </TemplateColumn>
                 <TemplateColumn>
@@ -28,7 +28,6 @@
         </MudDataGrid>
     </DialogContent>
     <DialogActions>
-        
         <MudButton Color="Color.Secondary" OnClick="Submit">Ok</MudButton>
     </DialogActions>
 </MudDialog>
