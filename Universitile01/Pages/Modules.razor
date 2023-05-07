@@ -9,14 +9,11 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 
 <body>
-
-    <AuthorizeView>
+    <AuthorizeView Roles="Student, Teacher">
         <Authorized>
             <RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%) ">
                 @foreach (Module module in stModules)
                 {
-
-
                     PersonalInfo teacher = moduleTeacherMap.ContainsKey(module.ModuleId) ? moduleTeacherMap[module.ModuleId] : null;
                     <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
                         <RadzenColumn Size="12" Style="justify-self:center; align-self:center">
@@ -31,25 +28,15 @@
                                 <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:185px; width:100%">
                                     <RadzenRow RowGap="0">
                                         <RadzenColumn SizeXS="8">
-
-                                            @*<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1">@module.CoursesCourse.CourseName</RadzenText>*@
-
-
-
-                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
                                             <RadzenText TextStyle="TextStyle.Body1">@teacher.FirstName @teacher.LastName</RadzenText>
-
-
-
-
+                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText> 
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px" Color="Color.Secondary" OnClick="AssignmentsDialog" Style="margin-bottom:40px">Assignments</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px; margin-bottom:40px" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
                                             <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Take Quiz</MudButton>
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            
                                         </RadzenColumn>
                                     </RadzenRow>
                                 </RadzenCard>

@@ -1,4 +1,5 @@
-﻿<MudDialog Style="background-color:black; color:aliceblue">
+﻿>
+    <MudDialog Style="background-color:black; color:aliceblue">
     <DialogContent>
         <MudDataGrid Items="@data" T="LinkModel" Style="background-color:#12080c;">
             <Columns>
@@ -6,9 +7,9 @@
                 <PropertyColumn Property="x => x.Name" />
                 <TemplateColumn>
                     <HeaderTemplate>
-                        <strong>URL</strong>
+                        URL
                     </HeaderTemplate>
-                    <CellTemplate>
+                            <CellTemplate>
                         <MudLink Href="@context.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Assignment Link</MudLink>
                     </CellTemplate>
                 </TemplateColumn>
@@ -18,18 +19,18 @@
                     </CellTemplate>
                 </TemplateColumn>
                 <TemplateColumn>
-                    <HeaderTemplate>
+                <HeaderTemplate Context="another_name3">
                         Edit
                     </HeaderTemplate>
-                    <CellTemplate>
+                            <CellTemplate>
                         <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
                     </CellTemplate>
                 </TemplateColumn>
                 <TemplateColumn>
-                    <HeaderTemplate>
+                            <HeaderTemplate>
                         Delete
                     </HeaderTemplate>
-                    <CellTemplate>
+                            <CellTemplate>
                         <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(context.Item))"></MudButton>
                     </CellTemplate>
                 </TemplateColumn>
@@ -42,6 +43,9 @@
         <MudButton Color="Color.Secondary" OnClick="Submit">Ok</MudButton>
     </DialogActions>
 </MudDialog>
+
+
+
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
