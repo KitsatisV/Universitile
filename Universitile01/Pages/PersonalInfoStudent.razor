@@ -280,8 +280,8 @@
 			while (rdr.Read())
 			{
 				PersonalInfo pers = new PersonalInfo();
-				pers.FirstName = rdr["student_first_name"].ToString();
-				pers.LastName = rdr["student_last_name"].ToString();
+				pers.FirstName = rdr["first_name"].ToString();
+				pers.LastName = rdr["last_name"].ToString();
 				if (!studInfo.Any(personalInfo => personalInfo.FirstName == pers.FirstName && personalInfo.LastName == pers.LastName))
 					studInfo.Add(pers);
 
