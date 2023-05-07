@@ -43,7 +43,7 @@ public partial class Aspnetuser
 
     public virtual ICollection<Aspnetusertoken> Aspnetusertokens { get; set; } = new List<Aspnetusertoken>();
 
-    public virtual ICollection<PerosnalInfo> PerosnalInfos { get; set; } = new List<PerosnalInfo>();
+    public virtual ICollection<PersonalInfo> PersonalInfos { get; set; } = new List<PersonalInfo>();
 
     public virtual ICollection<UsersHasAnnouncement> UsersHasAnnouncements { get; set; } = new List<UsersHasAnnouncement>();
 

@@ -184,8 +184,8 @@
     private List<Module> modules = new List<Module>();
     private int selectedIndexModule;
     private MudCarousel<Module> _carouselmodules;
-    private List<PerosnalInfo> personalInfo = new List<PerosnalInfo>();
-    private MudCarousel<PerosnalInfo> _carouselTeachers;// idk
+    private List<PersonalInfo> personalInfo = new List<PersonalInfo>();
+    private MudCarousel<PersonalInfo> _carouselTeachers;// idk
     private int selectedIndexTeachers = 0;
     private List<Announcement> announcements = new List<Announcement>();
     private List<Module> myModules = new List<Module>();
@@ -298,7 +298,7 @@
             MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
-                PerosnalInfo teach = new PerosnalInfo();
+                PersonalInfo teach = new PersonalInfo();
                 teach.InfoId = (Int32)rdr["info_id"];
                 teach.DateOfBirth = (DateTime)rdr["date_of_birth"];
                 teach.Sex = (sbyte)rdr["sex"];
@@ -324,7 +324,7 @@
             MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
-                PerosnalInfo stud = new PerosnalInfo();
+                PersonalInfo stud = new PersonalInfo();
                 stud.InfoId = (Int32)rdr["info_id"];
                 stud.DateOfBirth = (DateTime)rdr["date_of_birth"];
                 stud.Sex = (sbyte)rdr["sex"];

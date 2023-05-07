@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Universitile01.Models;
 
-public partial class PerosnalInfo
+public partial class PersonalInfo
 {
     public int InfoId { get; set; }
 

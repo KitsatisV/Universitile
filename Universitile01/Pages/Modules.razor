@@ -17,7 +17,7 @@
                 {
 
 
-                    PerosnalInfo teacher = moduleTeacherMap.ContainsKey(module.ModuleId) ? moduleTeacherMap[module.ModuleId] : null;
+                    PersonalInfo teacher = moduleTeacherMap.ContainsKey(module.ModuleId) ? moduleTeacherMap[module.ModuleId] : null;
                     <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
                         <RadzenColumn Size="12" Style="justify-self:center; align-self:center">
                             <RadzenCard Class="rz-my-12 rz-mx-auto" Style="width:480px; height:350; background-color:#12080c">
@@ -72,8 +72,8 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private List<Module> stModules = new List<Module>();
-    private List<PerosnalInfo> teachInfo = new List<PerosnalInfo>();
-    private Dictionary<int, PerosnalInfo> moduleTeacherMap = new Dictionary<int, PerosnalInfo>();
+    private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
+    private Dictionary<int, PersonalInfo> moduleTeacherMap = new Dictionary<int, PersonalInfo>();
     @inject IDialogService DialogService
 
 
@@ -112,7 +112,7 @@
                 mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
                 stModules.Add(mod);
 
-                PerosnalInfo prsinf = new PerosnalInfo();
+                PersonalInfo prsinf = new PersonalInfo();
                 prsinf.FirstName = rdr["teacher_first_name"].ToString();
                 prsinf.LastName = rdr["teacher_last_name"].ToString();
 

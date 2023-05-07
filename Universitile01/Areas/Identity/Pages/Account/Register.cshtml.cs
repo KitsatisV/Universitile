@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using Universitile01.Pages;
 
 namespace Universitile01.Areas.Identity.Pages.Account
 {
@@ -23,40 +22,33 @@ namespace Universitile01.Areas.Identity.Pages.Account
         public InputModel Input { get; set; }
         public string ReturnUrl { get; set; }
 
-		//public void OnGet()
-		//{
-		//    ReturnUrl = Url.Content("~/");
-		//}
+        public void OnGet()
+        {
+            ReturnUrl = Url.Content("~/");
+        }
 
-		public async Task<IActionResult> OnPostAsync()
-		{
-			//ReturnUrl = Url.Content("~/dashboard");
+        public async Task<IActionResult> OnPostAsync()
+        {
+			ReturnUrl = Url.Content("~/dashboard");
 
-			if (ModelState.IsValid)
-			{
-				var identity = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-				var result = await _userManager.CreateAsync(identity, Input.Password);
+            if (ModelState.IsValid)
+            {
+                var identity = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var result = await _userManager.CreateAsync(identity, Input.Password);
 
-				if (result.Succeeded)
-				{
-					// Assign role to user
-					var roleResult = await _userManager.AddToRoleAsync(identity, Input.Role);
-					if (!roleResult.Succeeded)
-					{
-						ModelState.AddModelError(string.Empty, "Failed to assign role to user.");
-						return Page();
-					}
-					//await _signInManager.SignInAsync(identity, isPersistent: false);
-					//return LocalRedirect(ReturnUrl);
-				}
+                var role = new IdentityRole(Input.Role);
+                var addRoleResult = await _roleManager.CreateAsync(role);
 
-				foreach (var error in result.Errors)
-				{
-					ModelState.AddModelError(string.Empty, error.Description);
-				}
-			}
+                var addUserRoleResult = await _userManager.AddToRoleAsync(identity, Input.Role);
 
-			return Page();
+                if (result.Succeeded && addRoleResult.Succeeded && addUserRoleResult.Succeeded)
+                {
+                    await _signInManager.SignInAsync(identity, isPersistent: false);
+                    return LocalRedirect(ReturnUrl);
+                }
+            }
+
+            return Page();
 		}
 
 		public class InputModel

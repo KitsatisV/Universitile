@@ -12,10 +12,10 @@ namespace Universitile01.Services
             _dbContext = dbContext;
         }
 
-        public List<PerosnalInfo> GetAllTeachers()
+        public List<PersonalInfo> GetAllTeachers()
         {
 
-            return _dbContext.PerosnalInfos.ToList();
+            return _dbContext.PersonalInfos.ToList();
         }
     }
 }

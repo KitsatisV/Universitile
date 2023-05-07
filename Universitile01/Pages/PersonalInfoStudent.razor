@@ -88,7 +88,7 @@
 				
 					
 				
-						<MudTabPanel Text="Grades">
+@*						<MudTabPanel Text="Grades">
 							<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								@foreach (Module grade in modGrade)
 								{
@@ -101,7 +101,7 @@
 											<RadzenColumn Size="12" Style="justify-self:center; align-self:center">
 												<RadzenRadialGauge Style="width: 100%; height: 200px;">
 													<RadzenRadialGaugeScale StartAngle="-150" EndAngle="150" Step="20" Min="0" Max="100" TickPosition="GaugeTickPosition.Outside">
-												@*<RadzenRadialGaugeScalePointer Value=@grade.Grade Length="0.6"  />*@
+												<RadzenRadialGaugeScalePointer Value=@grade.Grade Length="0.6"  />
 														<RadzenRadialGaugeScaleRange From="0" To="30" Fill="red" />
 														<RadzenRadialGaugeScaleRange From="30" To="40" Fill="orange" />
 														<RadzenRadialGaugeScaleRange From="40" To="100" Fill="green" />
@@ -112,7 +112,7 @@
 									</div>
 								}
 							</RadzenRow>
-						</MudTabPanel>
+						</MudTabPanel>*@
 					</Authorized>
 				</AuthorizeView>
 				@*
@@ -136,7 +136,7 @@
 					<MudTabPanel Text="Students">
 							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								<RadzenColumn Size="12">
-									<MudDataGrid T="PerosnalInfo" Items="@studInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+									<MudDataGrid T="PersonalInfo" Items="@studInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
 									<ToolBarContent>
 									<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
 									</ToolBarContent>
@@ -166,7 +166,7 @@
 						<MudTabPanel Text="Teachers">
 							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								<RadzenColumn Size="12">
-									<MudDataGrid T="PerosnalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+									<MudDataGrid T="PersonalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
 									<ToolBarContent>
 									<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
 									</ToolBarContent>
@@ -210,7 +210,7 @@
 	private Task<AuthenticationState> authenticationStateTask { get; set; }
 	private List<Module> modGrade = new List<Module>();
 	private List<Module> stModules = new List<Module>();
-	private List<PerosnalInfo> studInfo = new List<PerosnalInfo>();
+	private List<PersonalInfo> studInfo = new List<PersonalInfo>();
 	private List<RevenueData> revenue = new List<RevenueData>
 	{
 		new RevenueData { Type = "Type 1", Amount = 50 },
@@ -225,7 +225,7 @@
 		public string Type { get; set; }
 		public int Amount { get; set; }
 	}
-	private List<PerosnalInfo> teacherInfo = new List<PerosnalInfo>();
+	private List<PersonalInfo> teacherInfo = new List<PersonalInfo>();
 
 
 
@@ -261,7 +261,7 @@
 				mod.ModuleName = rdr["module_name"].ToString();
 				mod.ModuleDescription = rdr["module_description"].ToString();
 				mod.ModuleDuration = (Int32)rdr["module_duration"];
-				mod.Grade = rdr["grade"].ToString();
+				//mod.Grade = rdr["grade"].ToString();
 				mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
 				modGrade.Add(mod);
 			}
@@ -279,7 +279,7 @@
 			MySqlDataReader rdr = sqlcmd.ExecuteReader();
 			while (rdr.Read())
 			{
-				PerosnalInfo pers = new PerosnalInfo();
+				PersonalInfo pers = new PersonalInfo();
 				pers.FirstName = rdr["student_first_name"].ToString();
 				pers.LastName = rdr["student_last_name"].ToString();
 				if (!studInfo.Any(personalInfo => personalInfo.FirstName == pers.FirstName && personalInfo.LastName == pers.LastName))
@@ -308,7 +308,7 @@
 			MySqlDataReader rdr = sqlcmd.ExecuteReader();
 			while (rdr.Read())
 			{
-				PerosnalInfo teach = new PerosnalInfo();
+				PersonalInfo teach = new PersonalInfo();
 				teach.InfoId = (Int32)rdr["info_id"];
 				teach.DateOfBirth = (DateTime)rdr["date_of_birth"];
 				teach.Sex = (sbyte)rdr["sex"];

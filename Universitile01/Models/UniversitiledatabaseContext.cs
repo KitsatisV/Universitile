@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Universitile01.Models;
 
@@ -39,9 +40,11 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
 
     public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
 
+    public virtual DbSet<Grade> Grades { get; set; }
+
     public virtual DbSet<Module> Modules { get; set; }
 
-    public virtual DbSet<PerosnalInfo> PerosnalInfos { get; set; }
+    public virtual DbSet<PersonalInfo> PersonalInfos { get; set; }
 
     public virtual DbSet<Session> Sessions { get; set; }
 
@@ -322,6 +325,37 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
             entity.Property(e => e.ProductVersion).HasMaxLength(32);
         });
 
+        modelBuilder.Entity<Grade>(entity =>
+        {
+            entity.HasKey(e => new { e.StudentsAspnetusersId, e.ModulesModuleId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity
+                .ToTable("grades")
+                .HasCharSet("utf8mb3")
+                .UseCollation("utf8mb3_general_ci");
+
+            entity.HasIndex(e => e.ModulesModuleId, "fk_students_has_modules_modules1_idx");
+
+            entity.HasIndex(e => e.StudentsAspnetusersId, "fk_students_has_modules_students1_idx");
+
+            entity.Property(e => e.StudentsAspnetusersId)
+                .HasColumnName("students_aspnetusers_Id")
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
+            entity.Property(e => e.ModulesModuleId).HasColumnName("modules_module_id");
+            entity.Property(e => e.Grade1)
+                .HasDefaultValueSql("'-1'")
+                .HasColumnName("grade");
+
+            entity.HasOne(d => d.ModulesModule).WithMany(p => p.Grades)
+                .HasPrincipalKey(p => p.ModuleId)
+                .HasForeignKey(d => d.ModulesModuleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_students_has_modules_modules1");
+        });
+
         modelBuilder.Entity<Module>(entity =>
         {
             entity.HasKey(e => new { e.ModuleId, e.CoursesCourseId })
@@ -345,10 +379,9 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .ValueGeneratedOnAdd()
                 .HasColumnName("module_id");
             entity.Property(e => e.CoursesCourseId).HasColumnName("courses_course_id");
-            entity.Property(e => e.Grade)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("'\"N/A\"'")
-                .HasColumnName("grade");
+            entity.Property(e => e.Assignments)
+                .HasMaxLength(255)
+                .HasColumnName("assignments");
             entity.Property(e => e.ModuleDescription)
                 .HasMaxLength(250)
                 .HasColumnName("module_description");
@@ -356,6 +389,9 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
             entity.Property(e => e.ModuleName)
                 .HasMaxLength(45)
                 .HasColumnName("module_name");
+            entity.Property(e => e.Quizzes)
+                .HasMaxLength(255)
+                .HasColumnName("quizzes");
 
             entity.HasOne(d => d.CoursesCourse).WithMany(p => p.Modules)
                 .HasForeignKey(d => d.CoursesCourseId)
@@ -393,14 +429,14 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                     });
         });
 
-        modelBuilder.Entity<PerosnalInfo>(entity =>
+        modelBuilder.Entity<PersonalInfo>(entity =>
         {
             entity.HasKey(e => new { e.InfoId, e.AspnetusersId })
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
             entity
-                .ToTable("perosnal_info")
+                .ToTable("personal_info")
                 .HasCharSet("utf8mb3")
                 .UseCollation("utf8mb3_general_ci");
 
@@ -435,7 +471,7 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .HasColumnName("mobile");
             entity.Property(e => e.Sex).HasColumnName("sex");
 
-            entity.HasOne(d => d.Aspnetusers).WithMany(p => p.PerosnalInfos)
+            entity.HasOne(d => d.Aspnetusers).WithMany(p => p.PersonalInfos)
                 .HasForeignKey(d => d.AspnetusersId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_perosnal_info_aspnetusers1");
@@ -592,11 +628,6 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .HasConstraintName("fk_users_has_calendar_events_aspnetusers1");
         });
 
-        modelBuilder.Entity<IdentityUserToken<string>>(b =>
-        {
-
-            b.HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
-        });
         OnModelCreatingPartial(modelBuilder);
     }
 
