@@ -13,16 +13,24 @@
                     </CellTemplate>
                 </TemplateColumn>
                 <TemplateColumn>
-                    <HeaderTemplate>
-                        Edit
-                    </HeaderTemplate>
                     <CellTemplate>
                         <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
                     </CellTemplate>
                 </TemplateColumn>
                 <TemplateColumn>
+                    <HeaderTemplate>
+                        Edit
+                    </HeaderTemplate>
                     <CellTemplate>
                         <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn>
+                    <HeaderTemplate>
+                        Delete
+                    </HeaderTemplate>
+                    <CellTemplate>
+                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(context.Item))"></MudButton>
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
@@ -61,6 +69,11 @@
     void AddNewLink()
     {
         data.Add(new LinkModel("New Link", ""));
+    }
+
+    void DeleteLink(LinkModel item)
+    {
+        data.Remove(item);
     }
 
 }
