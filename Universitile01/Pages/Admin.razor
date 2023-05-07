@@ -1,0 +1,24 @@
+﻿@page "/Admin"
+<h3>Admin</h3>
+@layout AdminLayout
+
+
+<MudPaper Outlined="false" >
+    <MudStack Justify="@Justify.Center" Row="true">
+        <MudPaper Class="pa-2 mud-theme-secondary">
+            <MudCard Outlined="false">
+                <MudCardContent>
+                    <MudText>Modules</MudText>
+                    <MudText Typo="Typo.body2">Access the Courses and Modules DB tables.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="admincoursesmodules" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudPaper>
+    </MudStack>
+</MudPaper>
+
+@code {
+
+}

@@ -1,0 +1,264 @@
+﻿@page "/admincoursesmodules"
+@using MudBlazor
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+
+
+<MudDataGrid T="Module" Items="@Modules" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+             StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+    <Columns>
+        <PropertyColumn Property="x => x.ModuleId" Title="Id" IsEditable="false" Hidden="true"/>
+        <PropertyColumn Property="x => x.ModuleName" Title="Name" IsEditable="true" />
+        <PropertyColumn Property="x => x.ModuleDescription" Title="Description" IsEditable="true" />
+        <PropertyColumn Property="x => x.ModuleDuration" Title="Semesters" IsEditable="true" />
+        <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Belongs in Course"  IsEditable="false" >
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.CoursesCourse.CourseName" Required RequiredError="You must select a Position!!!" >
+                @foreach (Course coursed in Courses)
+                {
+                        <MudSelectItem Value="coursed.CourseName"  />
+                }
+                </MudSelect>
+            </EditTemplate>
+         </PropertyColumn>
+        <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
+        <CellTemplate>
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+        </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+
+<MudButton OnClick="@AddEmptyRow" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+
+@code {
+    public static int modid;
+    private bool _readOnly;
+    private bool _isCellEditMode;
+    private List<string> _events = new();
+    private bool _editTriggerRowClick;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+
+    private List<Module> Modules = new List<Module>();
+    private List<Course> Courses = new List<Course>();
+    public static Module mod;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string sqlModules = "SELECT m.*, c.course_name FROM modules m INNER JOIN courses c ON m.courses_course_id = c.course_id;";
+        using (MySqlCommand command = new MySqlCommand(sqlModules, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(sqlModules, connection);
+                sqlcmd.CommandText = sqlModules;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Module mod = new Module();
+                    mod.ModuleId = (Int32)rdr["module_id"];
+                    mod.ModuleName = rdr["module_name"].ToString();
+                    mod.ModuleDescription = rdr["module_description"].ToString();
+                    mod.ModuleDuration = (Int32)rdr["module_duration"];
+                    mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+                    mod.CoursesCourse = new Course { CourseName = rdr["course_name"].ToString() };
+                    Modules.Add(mod);
+                    if (modid < (Int32)rdr["module_id"])
+                    {
+                        modid = (Int32)rdr["module_id"];
+                    }
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        string coursessql = "SELECT * FROM courses";
+        using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(coursessql, connection);
+                sqlcmd.CommandText = coursessql;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Course mod = new Course();
+                    mod.CourseId = (Int32)rdr["course_id"];
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.CourseDescription = rdr["course_description"].ToString();
+                    mod.CourseDuration = (Int32)rdr["course_duration"];
+                    Courses.Add(mod);
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+
+    }
+    async Task CommittedItemChanges(Module mod)
+    {
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + mod.CoursesCourse.CourseName + "'";
+        string courseid = "";
+        using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
+            sqlcmd.CommandText = sqlfindcId;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                courseid = rdr["course_id"].ToString();
+            }
+        }
+
+
+
+        try
+        {
+            string selectExistingModQuery = "SELECT * FROM modules WHERE module_Id = @moduleId";
+            using MySqlCommand selectExistingModCommand = new MySqlCommand(selectExistingModQuery, connection);
+            selectExistingModCommand.Parameters.AddWithValue("@moduleId", mod.ModuleId);
+            connection.Close();
+            connection.Open();
+            using MySqlDataReader reader = selectExistingModCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                string updateExistingModQuery = "UPDATE modules SET module_name = @moduleName, courses_course_id = @CoursesCourseId, module_description = @moduleDescription, module_duration = @moduleDuration WHERE module_id = @moduleId"; //course_id = (SELECT course_id FROM courses WHERE course_name = @courseName) WHERE module_id = @moduleId
+                using MySqlCommand updateExistingModCommand = new MySqlCommand(updateExistingModQuery, connection);
+                updateExistingModCommand.Parameters.AddWithValue("@moduleName", mod.ModuleName);
+                updateExistingModCommand.Parameters.AddWithValue("@moduleDescription", mod.ModuleDescription);
+                updateExistingModCommand.Parameters.AddWithValue("@moduleDuration", mod.ModuleDuration);
+                updateExistingModCommand.Parameters.AddWithValue("@CoursesCourseId", courseid);
+                updateExistingModCommand.Parameters.AddWithValue("@moduleId", mod.ModuleId);
+                connection.Close();
+                connection.Open();
+                await updateExistingModCommand.ExecuteNonQueryAsync();
+                connection.Close();
+            }
+            connection.Close();
+        }
+        catch
+        {
+            throw;
+        }
+        
+    }
+
+    // events
+    void StartedEditingItem(Module mod)
+    {
+        try
+        {
+            _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(mod)}");
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    void CanceledEditingItem(Module mod)
+    {
+        try
+        {
+            _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(mod)}");
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    void Delete(Module mod)
+    {
+        try
+        {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sql = "DELETE FROM modules WHERE module_id = @moduleId";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@moduleId", mod.ModuleId);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            Modules.Remove(mod);
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    async Task AddEmptyRow()
+    {
+        modid = modid + 1;
+        Module mod = new Module()
+            {
+            ModuleId = modid,
+            ModuleName = "",
+            ModuleDescription = "",
+            ModuleDuration = 0,
+            CoursesCourseId = 0,
+            CoursesCourse = new Course { CourseName = "" }
+            };
+        Modules.Add(mod); // add the empty Module to the list
+
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string query = "INSERT INTO Modules (module_id, module_name, module_description, module_duration, courses_course_id) VALUES (@ModuleId, @ModuleName, @ModuleDescription, @ModuleDuration, @CoursesCourseId)";
+
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@ModuleId", mod.ModuleId);
+                command.Parameters.AddWithValue("@ModuleName", mod.ModuleName);
+                command.Parameters.AddWithValue("@ModuleDescription", mod.ModuleDescription);
+                command.Parameters.AddWithValue("@ModuleDuration", mod.ModuleDuration);
+                command.Parameters.AddWithValue("@CoursesCourseId", mod.CoursesCourseId);
+
+                await command.ExecuteNonQueryAsync();
+                connection.Close();
+            }
+        }
+    }
+}

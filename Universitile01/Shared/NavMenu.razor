@@ -1,4 +1,15 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+@*@inject AuthenticationStateProvider _authenticationStateProvider
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore*@
+
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -40,8 +51,26 @@
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     // This method toggles the value of the collapseNavMenu variable to show/hide the navigation menu
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        async Task<string> getUserName()
+        {
+            var user = (await authenticationStateTask).User;
+            return user.Identity.Name;
+        }
+        async Task<string> getUserId()
+        {
+            var user = (await authenticationStateTask).User;
+            var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+            return userid;
+        }
     }
 }

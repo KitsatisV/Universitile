@@ -21,6 +21,7 @@ namespace Universitile01.Areas.Identity.Pages.Account
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+
 			ReturnUrl = Url.Content("~/dashboard");
 
 			if (ModelState.IsValid)
@@ -29,8 +30,16 @@ namespace Universitile01.Areas.Identity.Pages.Account
 
 				if (result.Succeeded)
 				{
-					return LocalRedirect(ReturnUrl);
-				}
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return LocalRedirect("/admin");
+                    }
+                    else
+                    {
+                        return LocalRedirect(ReturnUrl);
+                    }
+                }
 
 				ModelState.AddModelError("", "Email and/or Password incorrect!");
 			}

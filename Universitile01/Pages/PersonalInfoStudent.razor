@@ -1,264 +1,328 @@
-﻿@page "/PersonalInfo"
-@using Data
+@page "/PersonalInfo"
 @using System.Globalization;
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+
 
 <PageTitle>dashboard</PageTitle>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
 </head>
 
 <body>
 
 
-@*
-////////////////////////
-////////////////////////
-////////////////////////
-AVATAR AND PERSONAL INFO
-////////////////////////
-////////////////////////
-////////////////////////
-*@
-<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+	@*
+	////////////////////////
+	////////////////////////
+	////////////////////////
+	AVATAR AND PERSONAL INFO
+	////////////////////////
+	////////////////////////
+	////////////////////////
+	*@
+	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
 
-    <AuthorizeView Roles="Student, Teacher">
-        <Authorized>
-		    <RadzenColumn Size="2" Style="background-color:black;">
-		    	<MudAvatar Style="height:7rem; width:7rem;">VK</MudAvatar>
-		    </RadzenColumn>
-		    <RadzenColumn Size="10" Style="background-color:black">
-		    	Info
-		    </RadzenColumn>
-        </Authorized>
-    </AuthorizeView>
+		<AuthorizeView Roles="Student, Teacher">
+			<Authorized>
+				<RadzenColumn Size="2" Style="background-color:black;">
+					<MudAvatar Style="height:7rem; width:7rem;">VK</MudAvatar>
+				</RadzenColumn>
+				<RadzenColumn Size="10" Style="background-color:black">
+					Info
+				</RadzenColumn>
+			</Authorized>
+		</AuthorizeView>
 
-</RadzenRow>
+	</RadzenRow>
 
-<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-    <RadzenColumn Size="12" Style="background-color:black">
-        <MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
-		    
-            @*
-            //////////////////////////////////////////////////////
-            ///////////////////////STUDENTS///////////////////////
-            //////////////////////////////////////////////////////
-            *@
-            <AuthorizeView Roles="Student">
-                <Authorized>
-				    @*
-				    ////////////////////////
-				         ATTENCANCE TAB
-				    ////////////////////////
-				    *@
-				    <MudTabPanel Text="Attendance">
-				    	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-				    		<RadzenColumn Size="12">
-				    			<RadzenChart>
-				    				<RadzenDonutSeries Data="@revenue" CategoryProperty="Type" ValueProperty="Amount">
-				    					<ChildContent>
-				    						<RadzenSeriesDataLabels Visible="@showDataLabels" />
-				    					</ChildContent>
-				    					<TitleTemplate>
-				    						<div class="rz-donut-content">
-				    							<div style="color:white; font-size:1rem"><b>Attendance</b></div>
-				    						</div>
-				    					</TitleTemplate>
-				    				</RadzenDonutSeries>
-				    			</RadzenChart>
-				    		</RadzenColumn>
-				    	</RadzenRow>
-				    </MudTabPanel>
-				    @*
-				    ////////////////////////
-				           GRADES TAB
-				    ////////////////////////
-				    *@
-				    <MudTabPanel Text="Grades">
-				    	<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0">
-				    		@foreach (Grades grade in grades)
-				    		{
-				    			<div style="border:solid; border-color:darkslategrey; width:400px; height:250px">
-				    				<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-				    					<RadzenColumn Size="12" Style="justify-self:center; align-self:center; margin-bottom:-2vh">
-				    						<RadzenText Style="width:100%; font-size:1rem"><center>@grade.Module<br /><span style="font-size:1.5rem"><b>@grade.Grade</b></span></center></RadzenText>
-				    					</RadzenColumn>
-				    					<RadzenColumn Size="12" Style="justify-self:center; align-self:center">
-				    						<RadzenRadialGauge Style="width: 100%; height: 200px;">
-				    							<RadzenRadialGaugeScale StartAngle="-150" EndAngle="150" Step="20" Min="0" Max="100" TickPosition=@tickPosition>
-				    								<RadzenRadialGaugeScalePointer Value=@grade.Grade Length="0.6" ShowValue=@showValue />
-				    								<RadzenRadialGaugeScaleRange From="0" To="30" Fill="red" />
-				    								<RadzenRadialGaugeScaleRange From="30" To="40" Fill="orange" />
-				    								<RadzenRadialGaugeScaleRange From="40" To="100" Fill="green" />
-				    							</RadzenRadialGaugeScale>
-				    						</RadzenRadialGauge>
-				    					</RadzenColumn>
-				    				</RadzenRow>
-				    			</div>
-				    		}
-				    	</RadzenRow>
-				    </MudTabPanel>
-                </Authorized>
-            </AuthorizeView>
-            @*
-            //////////////////////////////////////////////////////
-            ///////////////////////STUDENTS///////////////////////
-            //////////////////////////////////////////////////////
-            *@
+	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+		<RadzenColumn Size="12" Style="background-color:black">
+			<MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
 
-            @*
-            //////////////////////////////////////////////////////
-            ///////////////////////TEACHERS///////////////////////
-            //////////////////////////////////////////////////////
-            *@
-            <AuthorizeView Roles="Teacher">
-                <Authorized>
-                    @*
-                    ////////////////////////
-                          STUDENTS TAB
-                    ////////////////////////
-                    *@
-                    <MudTabPanel Text="Students">
-                        <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-				    		<RadzenColumn Size="12">
-				    			@*<MudDataGrid T="Student" Items="@students" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
-				    				<ToolBarContent>
-				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
-				    				</ToolBarContent>
-				    				<Columns>
-				    					<PropertyColumn Property="x => x.Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Surname" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.School" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Year" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Module" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-				    						<CellTemplate>
-				    							<MudStack Row Style="width:max-content; height:30px">
-				    								<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
-				    							</MudStack>
-				    						</CellTemplate>
-				    					</TemplateColumn>
-				    				</Columns>
-				    			</MudDataGrid>*@
-				    		</RadzenColumn>
-                        </RadzenRow>
-                    </MudTabPanel>
-					@*
-					////////////////////////
-					      TEACHERS TAB
-					////////////////////////
-					*@
-					<MudTabPanel Text="Teachers">
-                        <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
-				    		<RadzenColumn Size="12">
-				    			@*<MudDataGrid T="Teacher" Items="@teachers" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
-				    				<ToolBarContent>
-				    					<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
-				    				</ToolBarContent>
-				    				<Columns>
-				    					<PropertyColumn Property="x => x.Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Surname" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Department" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Email" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<PropertyColumn Property="x => x.Role" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-				    					<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-				    						<CellTemplate>
-				    							<MudStack Row Style="width:max-content; height:30px">
-				    								<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
-				    							</MudStack>
-				    						</CellTemplate>
-				    					</TemplateColumn>
-				    				</Columns>
-				    			</MudDataGrid>*@
-				    		</RadzenColumn>
-                        </RadzenRow>
-                    </MudTabPanel>
-                </Authorized>
-            </AuthorizeView>
-            @*
-            //////////////////////////////////////////////////////
-            ///////////////////////TEACHERS///////////////////////
-            //////////////////////////////////////////////////////
-            *@
-            
-        </MudTabs>
-    </RadzenColumn>
-</RadzenRow>
+				
+				@*//////////////////////////////////////////////////////
+				///////////////////////STUDENTS///////////////////////
+				//////////////////////////////////////////////////////*@
+				
+				<AuthorizeView>
+					<Authorized>
+						
+						@*////////////////////////
+						ATTENCANCE TAB
+						////////////////////////*@
+						
+						<MudTabPanel Text="Attendance">
+							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+								<RadzenColumn Size="12">
+									<RadzenChart>
+										<RadzenDonutSeries Data="@revenue" CategoryProperty="Type" ValueProperty="Amount">
+											<ChildContent>
+												<RadzenSeriesDataLabels Visible="@showDataLabels" />
+											</ChildContent>
+											<TitleTemplate>
+												<div class="rz-donut-content">
+													<div style="color:white; font-size:1rem"><b>Attendance</b></div>
+												</div>
+											</TitleTemplate>
+										</RadzenDonutSeries>
+									</RadzenChart>
+								</RadzenColumn>
+							</RadzenRow>
+						</MudTabPanel>
+						@*
+						////////////////////////
+						GRADES TAB
+						////////////////////////
+						*@
+				
+					
+				
+						<MudTabPanel Text="Grades">
+							<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0">
+								@foreach (Module grade in modGrade)
+								{
+
+									<div style="border:solid; border-color:darkslategrey; width:400px; height:250px">
+										<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+											<RadzenColumn Size="12" Style="justify-self:center; align-self:center; margin-bottom:-2vh">
+												<RadzenText Style="width:100%; font-size:1rem"><center>@grade.ModuleName<br /><span style="font-size:1.5rem"><b>@grade.Grade</b></span></center></RadzenText>
+											</RadzenColumn>
+											<RadzenColumn Size="12" Style="justify-self:center; align-self:center">
+												<RadzenRadialGauge Style="width: 100%; height: 200px;">
+													<RadzenRadialGaugeScale StartAngle="-150" EndAngle="150" Step="20" Min="0" Max="100" TickPosition="GaugeTickPosition.Outside">
+												@*<RadzenRadialGaugeScalePointer Value=@grade.Grade Length="0.6"  />*@
+														<RadzenRadialGaugeScaleRange From="0" To="30" Fill="red" />
+														<RadzenRadialGaugeScaleRange From="30" To="40" Fill="orange" />
+														<RadzenRadialGaugeScaleRange From="40" To="100" Fill="green" />
+													</RadzenRadialGaugeScale>
+												</RadzenRadialGauge>
+											</RadzenColumn>
+										</RadzenRow>
+									</div>
+								}
+							</RadzenRow>
+						</MudTabPanel>
+					</Authorized>
+				</AuthorizeView>
+				@*
+				//////////////////////////////////////////////////////
+				///////////////////////STUDENTS///////////////////////
+				//////////////////////////////////////////////////////
+				*@
+
+				@*
+				//////////////////////////////////////////////////////
+				///////////////////////TEACHERS///////////////////////
+				//////////////////////////////////////////////////////
+				*@
+				<AuthorizeView>
+					<Authorized>
+						@*
+						////////////////////////
+						STUDENTS TAB
+						////////////////////////
+						*@
+					<MudTabPanel Text="Students">
+							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+								<RadzenColumn Size="12">
+									<MudDataGrid T="PerosnalInfo" Items="@studInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+									<ToolBarContent>
+									<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
+									</ToolBarContent>
+									<Columns>
+									<PropertyColumn Property="st => st.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="st=> st.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="st => st.Sex" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="st => st.Mobile" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="st=> st.Landline" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+									<CellTemplate>
+									<MudStack Row Style="width:max-content; height:30px">
+									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
+									</MudStack>
+									</CellTemplate>
+									</TemplateColumn>
+									</Columns>
+									</MudDataGrid>
+								</RadzenColumn>
+							</RadzenRow>
+						</MudTabPanel>
+						@*
+						////////////////////////
+						TEACHERS TAB
+						////////////////////////
+						*@
+						<MudTabPanel Text="Teachers">
+							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
+								<RadzenColumn Size="12">
+									<MudDataGrid T="PerosnalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+									<ToolBarContent>
+									<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
+									</ToolBarContent>
+									<Columns>
+									<PropertyColumn Property="x => x.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="x => x.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="x => x.Mobile" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="x => x.Landline" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<PropertyColumn Property="x => x.Sex" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+									<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+									<CellTemplate>
+									<MudStack Row Style="width:max-content; height:30px">
+									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
+									</MudStack>
+									</CellTemplate>
+									</TemplateColumn>
+									</Columns>
+									</MudDataGrid>
+								</RadzenColumn>
+							</RadzenRow>
+						</MudTabPanel>
+					</Authorized>
+				</AuthorizeView>
+				@*
+				//////////////////////////////////////////////////////
+				///////////////////////TEACHERS///////////////////////
+				//////////////////////////////////////////////////////
+				*@
+
+			</MudTabs>
+		</RadzenColumn>
+	</RadzenRow>
 
 </body>
 
 @code
 {
-    bool showDataLabels = false;
+	private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+	private string userId;
+	[CascadingParameter]
+	private Task<AuthenticationState> authenticationStateTask { get; set; }
+	private List<Module> modGrade = new List<Module>();
+	private List<Module> stModules = new List<Module>();
+	private List<PerosnalInfo> studInfo = new List<PerosnalInfo>();
+	private List<RevenueData> revenue = new List<RevenueData>
+	{
+		new RevenueData { Type = "Type 1", Amount = 50 },
+		new RevenueData { Type = "Type 2", Amount = 30 },
+		new RevenueData { Type = "Type 3", Amount = 20 },
+	};
 
-    class DataItem
-    {
-        public string Type { get; set; }
-        public double Amount { get; set; }
-    }
+	private bool showDataLabels = true;
 
-    DataItem[] revenue = new DataItem[]
-    {
-        new DataItem
-        {
-            Type = "Presence",
-            Amount = 84
-        },
-        new DataItem
-        {
-            Type = "Authorized Absence",
-            Amount = 9
-        },
-        new DataItem
-        {
-            Type = "Unauthorized Absence",
-            Amount = 23
-        }
-    };
+	public class RevenueData
+	{
+		public string Type { get; set; }
+		public int Amount { get; set; }
+	}
+	private List<PerosnalInfo> teacherInfo = new List<PerosnalInfo>();
 
-    public List<Grades> grades = new List<Grades>
-    {
-        new Grades("Team Project", 69),
-        new Grades("Application Development", 94),
-        new Grades("Software Engineering", 74),
-        new Grades("English", 16),
-        new Grades("Graphics 1", 34),
-        new Grades("Introduction to Computer Science", 46),
-        new Grades("Databases", 74),
-        new Grades("Foundations of Computer Science", 83)
-    };
 
-    bool showValue = true;
-    double value = 100;
-    IEnumerable<GaugeTickPosition> tickPositions = Enum.GetValues(typeof(GaugeTickPosition)).Cast<GaugeTickPosition>();
-    GaugeTickPosition tickPosition = GaugeTickPosition.Inside;
 
-	//List<Student> students = new List<Student>
-	//	{
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998"),
-	//		new Student("John", "Doe", "example@example.ex", "Computer Science", "2", "21/09/1998")
-	//	};
 
-	//private List<Teacher> teachers = new List<Teacher>()
-	//{
-	//	new Teacher("Ioannis", "Masmanidis", "Databases, Team Project", "Computer Science", "io.masmanidis@mc-class.gr", "6969696969"),
-	//	new Teacher("Alexandros", "Berberis", "Introduction to Computer Science, Foundations of Computer Science", "Computer Science", "al.berberis@mc-class.gr", "1111111111"),
-	//	new Teacher("Grigorios", "Kalogiannis", "Graphics 1", "Computer Science", "g.kalogiannis@mc-class.gr", "2222222222"),
-	//	new Teacher("Iren", "Hovanishian", "English", "English", "i.hovanishian@mc-class.gr", "3333333333"),
-	//	new Teacher("Kostas", "Karaklas", "Programming 1, Programming 2", "Computer Science", "k.karaklas@mc-class.gr", "444444444"),
-	//	new Teacher("Vasileios", "Memos", "Software Engineering", "Computer Science", "vas.memos@mc-class.gr", "555555555")
-	//};
+	protected override async Task OnInitializedAsync()
+	{
+		var userId = getUserId();
+		async Task<string> getUserName()
+		{
+			var user = (await authenticationStateTask).User;
+			return user.Identity.Name;
+		}
+		async Task<string> getUserId()
+		{
+			var user = (await authenticationStateTask).User;
+			var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+			return userid;
+		}
+		string gradessql = "SELECT m.* FROM modules m INNER JOIN teachers s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+		MySqlConnection connection = new MySqlConnection(connect);
+		using (MySqlCommand command = new MySqlCommand(gradessql, connection))
+		{
+			connection.Open();
+			MySqlCommand sqlcmd = new MySqlCommand(gradessql, connection);
+			sqlcmd.CommandText = gradessql;
+			sqlcmd.CommandType = CommandType.Text;
+			MySqlDataReader rdr = sqlcmd.ExecuteReader();
+			while (rdr.Read())
+			{
+
+				Module mod = new Module();
+				mod.ModuleId = (Int32)rdr["module_id"];
+				mod.ModuleName = rdr["module_name"].ToString();
+				mod.ModuleDescription = rdr["module_description"].ToString();
+				mod.ModuleDuration = (Int32)rdr["module_duration"];
+				mod.Grade = rdr["grade"].ToString();
+				mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+				modGrade.Add(mod);
+			}
+			
+			rdr.Close();
+			connection.Close();
+		}
+		string combinedSql = "SELECT pi.*, m.module_name FROM perosnal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id = '" + userId.Result.ToString() + "'";
+		using (MySqlCommand command = new MySqlCommand(gradessql, connection))
+		{
+			connection.Open();
+			MySqlCommand sqlcmd = new MySqlCommand(combinedSql, connection);
+			sqlcmd.CommandText = combinedSql;
+			sqlcmd.CommandType = CommandType.Text;
+			MySqlDataReader rdr = sqlcmd.ExecuteReader();
+			while (rdr.Read())
+			{
+				PerosnalInfo pers = new PerosnalInfo();
+				pers.FirstName = rdr["student_first_name"].ToString();
+				pers.LastName = rdr["student_last_name"].ToString();
+				if (!studInfo.Any(personalInfo => personalInfo.FirstName == pers.FirstName && personalInfo.LastName == pers.LastName))
+					studInfo.Add(pers);
+
+				Module mod = new Module();
+				mod.ModuleName = rdr["module_name"].ToString();
+				if (!stModules.Any(module => module.ModuleName == mod.ModuleName))
+					stModules.Add(mod);
+			}
+
+			rdr.Close();
+			connection.Close();
+
+
+
+
+		}
+		string teachsql = "SELECT pi.* FROM perosnal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
+		using (MySqlCommand command = new MySqlCommand(teachsql, connection))
+		{
+			connection.Open();
+			MySqlCommand sqlcmd = new MySqlCommand(teachsql, connection);
+			sqlcmd.CommandText = teachsql;
+			sqlcmd.CommandType = CommandType.Text;
+			MySqlDataReader rdr = sqlcmd.ExecuteReader();
+			while (rdr.Read())
+			{
+				PerosnalInfo teach = new PerosnalInfo();
+				teach.InfoId = (Int32)rdr["info_id"];
+				teach.DateOfBirth = (DateTime)rdr["date_of_birth"];
+				teach.Sex = (sbyte)rdr["sex"];
+				teach.FirstName = rdr["first_name"].ToString();
+				teach.LastName = rdr["last_name"].ToString();
+				teach.MiddleName = rdr["middle_name"].ToString();
+				teach.Landline = rdr["landline"].ToString();
+				teach.Mobile = rdr["mobile"].ToString();
+				teach.AspnetusersId = rdr["aspnetusers_Id"].ToString();
+				if (!teacherInfo.Any(personalInfo => personalInfo.InfoId == teach.InfoId))
+					teacherInfo.Add(teach);
+			}
+			rdr.Close();
+			connection.Close();
+		}
+	}
 }
-
-
-
