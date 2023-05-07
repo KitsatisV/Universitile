@@ -66,11 +66,13 @@
             new LinkModel ("Link 3","https://www.example.com/link3" )
     };
 
+    //Add new Link row
     void AddNewLink()
     {
         data.Add(new LinkModel("New Link", ""));
     }
 
+    //Delete Link row
     void DeleteLink(LinkModel item)
     {
         data.Remove(item);
