@@ -10,28 +10,9 @@
             vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
         </p>
 
-        @*
-        //////////////////////////////////////////////////////
-        ///////////////////////TEACHERS///////////////////////
-        //////////////////////////////////////////////////////
-        *@
-        <AuthorizeView>
-            <Authorized>
-                <MudTextField @bind-Value="HelperText" Label="Edit Module Info" Color="white" HelperText="Edit Module Info"
-                              Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color:beige; color:black; margin-top:10px" />
-
-                <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Color="Color.Secondary" Class="ml-auto" StartIcon="@Icons.Material.Filled.Edit">Edit</MudButton>
-            </Authorized>
-
-        </AuthorizeView>
-        @*
-        //////////////////////////////////////////////////////
-        ///////////////////////TEACHERS///////////////////////
-        //////////////////////////////////////////////////////
-        *@
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Secondary" OnClick="Submit">Ok</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Submit" >Ok</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -42,5 +23,4 @@
     void Cancel() => MudDialog.Cancel();
 
     public string HelperText { get; set; }
-}
 }
