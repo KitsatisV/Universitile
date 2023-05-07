@@ -94,7 +94,7 @@
             return userid;
         }
         MySqlConnection connection = new MySqlConnection(connect);
-        string combinedSql = "SELECT m.*, pi.first_name, pi.last_name, pi2.first_name AS teacher_first_name, pi2.last_name AS teacher_last_name FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN perosnal_info pi ON pi.aspnetusers_Id = s.aspnetusers_Id INNER JOIN perosnal_info pi2 ON pi2.aspnetusers_Id = t.aspnetusers_Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+        string combinedSql = "SELECT m.*, pi.first_name, pi.last_name, pi2.first_name AS teacher_first_name, pi2.last_name AS teacher_last_name FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN personal_info pi ON pi.aspnetusers_Id = s.aspnetusers_Id INNER JOIN personal_info pi2 ON pi2.aspnetusers_Id = t.aspnetusers_Id WHERE u.Id ='" + userId.Result.ToString() + "'";
         using (MySqlCommand command = new MySqlCommand(combinedSql, connection))
         {
             connection.Open();
