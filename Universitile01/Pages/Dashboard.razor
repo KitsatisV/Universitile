@@ -23,7 +23,7 @@
         <AuthorizeView>
             <Authorized>
                 <div class="col-8">
-                    <RadzenScheduler Data="@events" TItem="CalendarEvent" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Tittle" AppointmentSelect=@OpenDialogCalendar>
+                    <RadzenScheduler Data="@events" TItem="Session" StartProperty="DateStart" EndProperty="DateEnd" TextProperty="Tittle">
                         <RadzenDayView />
                         <RadzenWeekView />
                         <RadzenMonthView />
@@ -78,13 +78,13 @@
 								<MudCardContent>
 									@if (announcement.Importance)
 									{
-										<MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead[0] == 1))">
+                                        <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead == true))">
 											<MudText><b>@announcement.Message</b></MudText>
 										</MudBadge>
 									}
 									else
 									{
-										<MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead[0] == 1))">
+										<MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead == true))">
 											<MudText><b>@announcement.Message</b></MudText>
 										</MudBadge>
 									}
@@ -100,7 +100,7 @@
         <AuthorizeView>
             <Authorized>
 				<div class="col-4" style="color: white">
-					<MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@_sourceTeachers" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
+                    <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@personalInfo" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
 						<ItemTemplate>
 							<div class="d-flex flex-column flex-column justify-center" style="height:100%">
 								<RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#000901">
@@ -141,15 +141,16 @@
 
 @code {
     private string userId;
-    private List<CalendarEvent> events = new List<CalendarEvent>();
+    private List<Session> events = new List<Session>();
     private List<Module> modules = new List<Module>();
     private int selectedIndexModule;
     private MudCarousel<Module> _carouselmodules;
-    private List<PerosnalInfo> _sourceTeachers;
-    private MudCarousel<PerosnalInfo> _carouselTeachers;
+    private List<PerosnalInfo> personalInfo = new List<PerosnalInfo>();
+    private MudCarousel<PerosnalInfo> _carouselTeachers;// idk
     private int selectedIndexTeachers = 0;
     private List<Announcement> announcements = new List<Announcement>();
     private List<Module> myModules = new List<Module>();
+    private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -163,9 +164,8 @@
     protected override async Task OnInitializedAsync()
     {
         var userId = getUserId();
-        events = await Db.CalendarEvents.ToListAsync();
+        events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
-        _sourceTeachers = TeacherService.GetAllTeachers();
         announcements = await Db.Announcements
             .Include(a => a.UsersHasAnnouncements)
             .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId.ToString()))
@@ -181,17 +181,18 @@
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
         }
-        MySqlConnection connection = new MySqlConnection("Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2");
-        string sql = "SELECT m.* FROM modules m INNER JOIN students s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
-        using (MySqlCommand command = new MySqlCommand(sql, connection))
+        MySqlConnection connection = new MySqlConnection(connect);
+        string dashteachsql = "SELECT m.* FROM modules m INNER JOIN teachers s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+        using (MySqlCommand command = new MySqlCommand(dashteachsql, connection))
         {
             connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(sql, connection);
-            sqlcmd.CommandText = sql;
+            MySqlCommand sqlcmd = new MySqlCommand(dashteachsql, connection);
+            sqlcmd.CommandText = dashteachsql;
             sqlcmd.CommandType = CommandType.Text;
             MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
+
                 Module mod = new Module();
                 mod.ModuleId = (Int32)rdr["module_id"];
                 mod.ModuleName = rdr["module_name"].ToString();
@@ -205,6 +206,100 @@
             // Close the connection when done with it.
             connection.Close();
         }
-    }
+        string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetusers u ON uha.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+        using (MySqlCommand command = new MySqlCommand(dashteachsql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(annsql, connection);
+            sqlcmd.CommandText = annsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Announcement ann = new Announcement();
+                ann.AnnouncementsId = (Int32)rdr["announcements_id"];
+                ann.Date = (DateTime)rdr["date"];
+                ann.Message = rdr["Message"].ToString();
+                ann.Importance = (Boolean)rdr["Importance"];
+                announcements.Add(ann);
+            }
+            rdr.Close();
+            connection.Close();
+        }
+        string dashstsql = "SELECT m.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
+        using (MySqlCommand command = new MySqlCommand(dashstsql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(dashstsql, connection);
+            sqlcmd.CommandText = dashstsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
 
+                Module mod = new Module();
+                mod.ModuleId = (Int32)rdr["module_id"];
+                mod.ModuleName = rdr["module_name"].ToString();
+                mod.ModuleDescription = rdr["module_description"].ToString();
+                mod.ModuleDuration = (Int32)rdr["module_duration"];
+                mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+                myModules.Add(mod);
+            }
+            rdr.Close();
+            connection.Close();
+        }
+
+        string teachsql = "SELECT pi.* FROM perosnal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
+        using (MySqlCommand command = new MySqlCommand(teachsql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(teachsql, connection);
+            sqlcmd.CommandText = teachsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                PerosnalInfo teach = new PerosnalInfo();
+                teach.InfoId = (Int32)rdr["info_id"];
+                teach.DateOfBirth = (DateTime)rdr["date_of_birth"];
+                teach.Sex = (sbyte)rdr["sex"];
+                teach.FirstName = rdr["first_name"].ToString();
+                teach.LastName = rdr["last_name"].ToString();
+                teach.MiddleName = rdr["middle_name"].ToString();
+                teach.Landline = rdr["landline"].ToString();
+                teach.Mobile = rdr["mobile"].ToString();
+                teach.AspnetusersId = rdr["aspnetusers_Id"].ToString();
+                if(!personalInfo.Any(personalInfo=>personalInfo.InfoId == teach.InfoId))
+                    personalInfo.Add(teach);
+            }
+            rdr.Close();
+            connection.Close();
+        }
+        string studsql = "SELECT pi.* FROM perosnal_info pi JOIN teachers t ON pi.aspnetusers_Id = t.aspnetusers_Id JOIN modules m ON t.modules_module_id = m.module_id JOIN courses c ON m.courses_course_id = c.course_id JOIN students s ON c.course_id = s.courses_course_id AND s.aspnetusers_Id ='" + userId.Result.ToString() + "'";//query
+        using (MySqlCommand command = new MySqlCommand(studsql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(studsql, connection);
+            sqlcmd.CommandText = studsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                PerosnalInfo stud = new PerosnalInfo();
+                stud.InfoId = (Int32)rdr["info_id"];
+                stud.DateOfBirth = (DateTime)rdr["date_of_birth"];
+                stud.Sex = (sbyte)rdr["sex"];
+                stud.FirstName = rdr["first_name"].ToString();
+                stud.LastName = rdr["last_name"].ToString();
+                stud.MiddleName = rdr["middle_name"].ToString();
+                stud.Landline = rdr["landline"].ToString();
+                stud.Mobile = rdr["mobile"].ToString();
+                stud.AspnetusersId = rdr["aspnetusers_Id"].ToString();
+                if (!personalInfo.Any(personalInfo => personalInfo.InfoId == stud.InfoId))
+                    personalInfo.Add(stud);
+            }
+            rdr.Close();
+            connection.Close();
+        }
+    }
 }

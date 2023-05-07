@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Universitile01.Models;
 
 public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUser>
-
 {
     public UniversitiledatabaseContext()
     {
@@ -17,9 +16,6 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
         : base(options)
     {
     }
-    
-   
- 
 
     public virtual DbSet<Addresss> Addressses { get; set; }
 
@@ -37,8 +33,6 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
 
     public virtual DbSet<Aspnetusertoken> Aspnetusertokens { get; set; }
 
-    public virtual DbSet<CalendarEvent> CalendarEvents { get; set; }
-
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<CourseLeader> CourseLeaders { get; set; }
@@ -49,11 +43,16 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
 
     public virtual DbSet<PerosnalInfo> PerosnalInfos { get; set; }
 
+    public virtual DbSet<Session> Sessions { get; set; }
+
+    public virtual DbSet<SessionHasStudent> SessionHasStudents { get; set; }
+
     public virtual DbSet<UsersHasAnnouncement> UsersHasAnnouncements { get; set; }
 
+    public virtual DbSet<UsersHasCalendarEvent> UsersHasCalendarEvents { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=universtile.mysql.database.azure.com;user id=azureuser;password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;database=universitiledatabase;sslmode=Required;sslca=DigiCertGlobalRootCA.crt.pem;tlsversion=\"TLS 1.2\"", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -230,61 +229,6 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId");
         });
 
-        modelBuilder.Entity<CalendarEvent>(entity =>
-        {
-            entity.HasKey(e => e.EventId).HasName("PRIMARY");
-
-            entity
-                .ToTable("calendar_events")
-                .HasCharSet("utf8mb3")
-                .UseCollation("utf8mb3_general_ci");
-
-            entity.Property(e => e.EventId)
-                .ValueGeneratedNever()
-                .HasColumnName("event_id");
-            entity.Property(e => e.DateEnd)
-                .HasColumnType("datetime")
-                .HasColumnName("date_end");
-            entity.Property(e => e.DateStart)
-                .HasColumnType("datetime")
-                .HasColumnName("date_start");
-            entity.Property(e => e.Description)
-                .HasMaxLength(45)
-                .HasColumnName("description");
-            entity.Property(e => e.Tittle)
-                .HasMaxLength(45)
-                .HasColumnName("tittle");
-
-            entity.HasMany(d => d.Aspnetusers).WithMany(p => p.CalendarEventsEvents)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UsersHasCalendarEvent",
-                    r => r.HasOne<Aspnetuser>().WithMany()
-                        .HasForeignKey("AspnetusersId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_users_has_calendar_events_aspnetusers1"),
-                    l => l.HasOne<CalendarEvent>().WithMany()
-                        .HasForeignKey("CalendarEventsEventId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_users_has_calendar_events_calendar_events1"),
-                    j =>
-                    {
-                        j.HasKey("CalendarEventsEventId", "AspnetusersId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j
-                            .ToTable("users_has_calendar_events")
-                            .HasCharSet("utf8mb3")
-                            .UseCollation("utf8mb3_general_ci");
-                        j.HasIndex(new[] { "AspnetusersId" }, "fk_users_has_calendar_events_aspnetusers1_idx");
-                        j.HasIndex(new[] { "CalendarEventsEventId" }, "fk_users_has_calendar_events_calendar_events1_idx");
-                        j.IndexerProperty<int>("CalendarEventsEventId").HasColumnName("calendar_events_event_id");
-                        j.IndexerProperty<string>("AspnetusersId")
-                            .HasColumnName("aspnetusers_Id")
-                            .UseCollation("utf8mb4_0900_ai_ci")
-                            .HasCharSet("utf8mb4");
-                    });
-        });
-
         modelBuilder.Entity<Course>(entity =>
         {
             entity.HasKey(e => e.CourseId).HasName("PRIMARY");
@@ -308,6 +252,35 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
             entity.Property(e => e.CourseName)
                 .HasMaxLength(45)
                 .HasColumnName("course_name");
+
+            entity.HasMany(d => d.Aspnetusers).WithMany(p => p.CoursesCourses)
+                .UsingEntity<Dictionary<string, object>>(
+                    "Student",
+                    r => r.HasOne<Aspnetuser>().WithMany()
+                        .HasForeignKey("AspnetusersId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("fk_courses_has_aspnetusers_aspnetusers1"),
+                    l => l.HasOne<Course>().WithMany()
+                        .HasForeignKey("CoursesCourseId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("fk_courses_has_aspnetusers_courses1"),
+                    j =>
+                    {
+                        j.HasKey("CoursesCourseId", "AspnetusersId")
+                            .HasName("PRIMARY")
+                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j
+                            .ToTable("students")
+                            .HasCharSet("utf8mb3")
+                            .UseCollation("utf8mb3_general_ci");
+                        j.HasIndex(new[] { "AspnetusersId" }, "fk_courses_has_aspnetusers_aspnetusers1_idx");
+                        j.HasIndex(new[] { "CoursesCourseId" }, "fk_courses_has_aspnetusers_courses1_idx");
+                        j.IndexerProperty<int>("CoursesCourseId").HasColumnName("courses_course_id");
+                        j.IndexerProperty<string>("AspnetusersId")
+                            .HasColumnName("aspnetusers_Id")
+                            .UseCollation("utf8mb4_0900_ai_ci")
+                            .HasCharSet("utf8mb4");
+                    });
         });
 
         modelBuilder.Entity<CourseLeader>(entity =>
@@ -372,6 +345,10 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .ValueGeneratedOnAdd()
                 .HasColumnName("module_id");
             entity.Property(e => e.CoursesCourseId).HasColumnName("courses_course_id");
+            entity.Property(e => e.Grade)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("'\"N/A\"'")
+                .HasColumnName("grade");
             entity.Property(e => e.ModuleDescription)
                 .HasMaxLength(250)
                 .HasColumnName("module_description");
@@ -387,7 +364,7 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
 
             entity.HasMany(d => d.Aspnetusers).WithMany(p => p.ModulesModules)
                 .UsingEntity<Dictionary<string, object>>(
-                    "Student",
+                    "Teacher",
                     r => r.HasOne<Aspnetuser>().WithMany()
                         .HasForeignKey("AspnetusersId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
@@ -403,7 +380,7 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                             .HasName("PRIMARY")
                             .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
                         j
-                            .ToTable("students")
+                            .ToTable("teachers")
                             .HasCharSet("utf8mb3")
                             .UseCollation("utf8mb3_general_ci");
                         j.HasIndex(new[] { "AspnetusersId" }, "fk_modules_has_aspnetusers_aspnetusers1_idx");
@@ -464,6 +441,61 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .HasConstraintName("fk_perosnal_info_aspnetusers1");
         });
 
+        modelBuilder.Entity<Session>(entity =>
+        {
+            entity.HasKey(e => new { e.EventId, e.ModulesModuleId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity
+                .ToTable("session")
+                .HasCharSet("utf8mb3")
+                .UseCollation("utf8mb3_general_ci");
+
+            entity.HasIndex(e => e.ModulesModuleId, "fk_session_modules1_idx");
+
+            entity.Property(e => e.EventId).HasColumnName("event_id");
+            entity.Property(e => e.ModulesModuleId).HasColumnName("modules_module_id");
+            entity.Property(e => e.DateEnd)
+                .HasColumnType("datetime")
+                .HasColumnName("date_end");
+            entity.Property(e => e.DateStart)
+                .HasColumnType("datetime")
+                .HasColumnName("date_start");
+            entity.Property(e => e.Tittle)
+                .HasMaxLength(45)
+                .HasColumnName("tittle");
+
+            entity.HasOne(d => d.ModulesModule).WithMany(p => p.Sessions)
+                .HasPrincipalKey(p => p.ModuleId)
+                .HasForeignKey(d => d.ModulesModuleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_session_modules1");
+        });
+
+        modelBuilder.Entity<SessionHasStudent>(entity =>
+        {
+            entity.HasKey(e => new { e.SessionEventId, e.StudentsAspnetusersId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity
+                .ToTable("session_has_students")
+                .HasCharSet("utf8mb3")
+                .UseCollation("utf8mb3_general_ci");
+
+            entity.HasIndex(e => e.SessionEventId, "fk_session_has_students_session1_idx");
+
+            entity.HasIndex(e => e.StudentsAspnetusersId, "fk_session_has_students_students1_idx");
+
+            entity.Property(e => e.SessionEventId).HasColumnName("session_event_id");
+            entity.Property(e => e.StudentsAspnetusersId)
+                .HasColumnName("students_aspnetusers_Id")
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
+            entity.Property(e => e.IsPresent).HasColumnName("is_present");
+        });
+
         modelBuilder.Entity<UsersHasAnnouncement>(entity =>
         {
             entity.HasKey(e => new { e.AnnouncementsAnnouncementsId, e.AspnetusersId })
@@ -484,10 +516,7 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .HasColumnName("aspnetusers_Id")
                 .UseCollation("utf8mb4_0900_ai_ci")
                 .HasCharSet("utf8mb4");
-            entity.Property(e => e.IsRead)
-                .HasMaxLength(1)
-                .IsFixedLength()
-                .HasColumnName("is_read");
+            entity.Property(e => e.IsRead).HasColumnName("is_read");
 
             entity.HasOne(d => d.AnnouncementsAnnouncements).WithMany(p => p.UsersHasAnnouncements)
                 .HasForeignKey(d => d.AnnouncementsAnnouncementsId)
@@ -503,47 +532,71 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
 
         modelBuilder.Entity<IdentityUser>(b =>
         {
-           
+
             b.HasKey(u => u.Id);
         });
 
         modelBuilder.Entity<IdentityRole>(b =>
         {
-            
+
             b.HasKey(r => r.Id);
         });
 
         modelBuilder.Entity<IdentityUserLogin<string>>(b =>
         {
-            
+
             b.HasKey(l => new { l.LoginProvider, l.ProviderKey });
         });
 
         modelBuilder.Entity<IdentityUserRole<string>>(b =>
         {
-            
+
             b.HasKey(ur => new { ur.UserId, ur.RoleId });
         });
 
         modelBuilder.Entity<IdentityUserClaim<string>>(b =>
         {
-           
+
             b.HasKey(uc => uc.Id);
         });
 
         modelBuilder.Entity<IdentityRoleClaim<string>>(b =>
         {
-            
+
             b.HasKey(rc => rc.Id);
+        });
+        modelBuilder.Entity<UsersHasCalendarEvent>(entity =>
+        {
+            entity.HasKey(e => new { e.AspnetusersId, e.SessionsEventId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity
+                .ToTable("users_has_calendar_events")
+                .HasCharSet("utf8mb3")
+                .UseCollation("utf8mb3_general_ci");
+
+            entity.HasIndex(e => e.AspnetusersId, "fk_users_has_calendar_events_aspnetusers1_idx");
+
+            entity.HasIndex(e => e.SessionsEventId, "fk_users_has_calendar_events_sessions1_idx");
+
+            entity.Property(e => e.AspnetusersId)
+                .HasColumnName("aspnetusers_Id")
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
+            entity.Property(e => e.SessionsEventId).HasColumnName("sessions_event_id");
+
+            entity.HasOne(d => d.Aspnetusers).WithMany(p => p.UsersHasCalendarEvents)
+                .HasForeignKey(d => d.AspnetusersId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_users_has_calendar_events_aspnetusers1");
         });
 
         modelBuilder.Entity<IdentityUserToken<string>>(b =>
         {
-            
+
             b.HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
         });
-
-
         OnModelCreatingPartial(modelBuilder);
     }
 
