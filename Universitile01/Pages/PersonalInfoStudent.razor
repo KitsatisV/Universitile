@@ -269,7 +269,7 @@
 			rdr.Close();
 			connection.Close();
 		}
-		string combinedSql = "SELECT pi.*, m.module_name FROM perosnal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id = '" + userId.Result.ToString() + "'";
+		string combinedSql = "SELECT pi.*, m.module_name FROM personal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id = '" + userId.Result.ToString() + "'";
 		using (MySqlCommand command = new MySqlCommand(gradessql, connection))
 		{
 			connection.Open();
@@ -298,7 +298,7 @@
 
 
 		}
-		string teachsql = "SELECT pi.* FROM perosnal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
+		string teachsql = "SELECT pi.* FROM personal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
 		using (MySqlCommand command = new MySqlCommand(teachsql, connection))
 		{
 			connection.Open();
