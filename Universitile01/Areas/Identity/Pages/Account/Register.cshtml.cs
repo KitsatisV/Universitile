@@ -10,11 +10,13 @@ namespace Universitile01.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RegisterModel(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public RegisterModel(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -44,7 +46,6 @@ namespace Universitile01.Areas.Identity.Pages.Account
 						ModelState.AddModelError(string.Empty, "Failed to assign role to user.");
 						return Page();
 					}
-
 					//await _signInManager.SignInAsync(identity, isPersistent: false);
 					//return LocalRedirect(ReturnUrl);
 				}

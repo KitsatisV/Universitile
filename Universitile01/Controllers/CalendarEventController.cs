@@ -4,7 +4,6 @@ using Universitile01.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Universitile01.Data;
 
 namespace Universitile01.Controllers
 {
