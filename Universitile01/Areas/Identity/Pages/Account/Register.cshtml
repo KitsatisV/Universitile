@@ -22,6 +22,15 @@
 					<label asp-for="Input.Password" class="form-label"></label>
 					<span asp-validation-for="Input.Password" class="text-danger"></span>
 				</div>
+				<div class="form-floating" style="margin:10px">
+					<select asp-for="Input.Role" class="form-control">
+						<option value="Admin">Admin</option>
+						<option value="Student">Student</option>
+						<option value="Teacher">Teacher</option>
+					</select>
+					<label asp-for="Input.Role" class="form-label"></label>
+					<span asp-validation-for="Input.Role" class="text-danger"></span>
+				</div>
 				<div style="margin:10px">
 					<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
 				</div>

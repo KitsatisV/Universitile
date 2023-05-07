@@ -26,7 +26,7 @@
     <PackageReference Include="MudBlazor" Version="6.2.2" />
     <PackageReference Include="MySql.Data" Version="8.0.33" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="4.10.0" />
+    <PackageReference Include="Radzen.Blazor" Version="4.10.2" />
   </ItemGroup>
 
 </Project>
