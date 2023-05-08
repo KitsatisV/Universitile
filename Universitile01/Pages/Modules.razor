@@ -8,6 +8,9 @@
 @using Microsoft.EntityFrameworkCore
 @inject AuthenticationStateProvider _authenticationStateProvider
 
+
+<PageTitle>Modules</PageTitle>
+
 <body>
     <AuthorizeView Roles="Student, Teacher">
         <Authorized>
@@ -68,8 +71,6 @@
     private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
     private Dictionary<int, PersonalInfo> moduleTeacherMap = new Dictionary<int, PersonalInfo>();
     @inject IDialogService DialogService
-
-
 
     protected override async Task OnInitializedAsync()
     {
