@@ -55,7 +55,7 @@
 				///////////////////////STUDENTS///////////////////////
 				//////////////////////////////////////////////////////*@
 				
-				<AuthorizeView>
+				<AuthorizeView Roles="Student">
 					<Authorized>
 						
 						@*////////////////////////
@@ -126,7 +126,7 @@
 				///////////////////////TEACHERS///////////////////////
 				//////////////////////////////////////////////////////
 				*@
-				<AuthorizeView>
+				<AuthorizeView Roles="Teacher">
 					<Authorized>
 						@*
 						////////////////////////
@@ -167,23 +167,24 @@
 							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								<RadzenColumn Size="12">
 									<MudDataGrid T="PersonalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
-									<ToolBarContent>
-									<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
-									</ToolBarContent>
-									<Columns>
-									<PropertyColumn Property="x => x.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="x => x.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="x => x.Mobile" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="x => x.Landline" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="x => x.Sex" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-									<CellTemplate>
-									<MudStack Row Style="width:max-content; height:30px">
-									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
-									</MudStack>
-									</CellTemplate>
-									</TemplateColumn>
-									</Columns>
+										<ToolBarContent>
+											<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
+										</ToolBarContent>
+										<Columns>
+											<PropertyColumn Property="x => x.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="x => x.MiddleName" Title="Middle Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="x => x.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="x => x.Mobile" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="x => x.Landline" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="x => x.Sex" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+												<CellTemplate>
+													<MudStack Row Style="width:max-content; height:30px">
+														<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
+													</MudStack>
+												</CellTemplate>
+											</TemplateColumn>
+										</Columns>
 									</MudDataGrid>
 								</RadzenColumn>
 							</RadzenRow>
