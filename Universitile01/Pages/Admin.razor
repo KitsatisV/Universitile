@@ -3,7 +3,7 @@
 @layout AdminLayout
 
 
-<MudPaper Outlined="false" >
+@*<MudPaper Outlined="false" >
     <MudStack Justify="@Justify.Center" Row="true">
         <MudPaper Class="pa-2 mud-theme-secondary">
             <MudCard Outlined="false">
@@ -17,7 +17,49 @@
             </MudCard>
         </MudPaper>
     </MudStack>
-</MudPaper>
+    <MudStack Justify="@Justify.Center" Row="true">
+        <MudPaper Class="pa-2 mud-theme-secondary">
+            <MudCard Outlined="false">
+                <MudCardContent>
+                    <MudText>Account Register</MudText>
+                    <MudText Typo="Typo.body2">Register new Users</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="Identity/Account/Register" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudPaper>
+    </MudStack>
+</MudPaper>*@
+
+<MudGrid Spacing="2" Justify="Justify.Center">
+    <MudItem>
+        <MudPaper>
+            <MudCard Outlined="false">
+                <MudCardContent>
+                    <MudText>Account Register</MudText>
+                    <MudText Typo="Typo.body2">Register new Users</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="Identity/Account/Register" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+    <MudItem>
+        <MudPaper>
+            <MudCard Outlined="false">
+                <MudCardContent>
+                    <MudText>Modules</MudText>
+                    <MudText Typo="Typo.body2">Access the Courses and Modules DB tables.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Href="admincoursesmodules" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 @code {
 

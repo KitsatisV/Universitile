@@ -7,7 +7,7 @@ public partial class PersonalInfo
 {
     public int InfoId { get; set; }
 
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
     public sbyte Sex { get; set; }
 

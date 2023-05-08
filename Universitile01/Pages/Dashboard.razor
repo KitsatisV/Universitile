@@ -1,10 +1,10 @@
 ﻿@page "/Dashboard"
 @using System.Text;
-@using MySql.Data.MySqlClient;
-@using System.Data;
 @inject IDialogService DialogService
 @using Universitile01.Models;
 @using Universitile01.Services;
+@using MySql.Data.MySqlClient;
+@using System.Data;
 @inject UniversitiledatabaseContext Db
 @inject TeacherService TeacherService
 @using Microsoft.EntityFrameworkCore
@@ -300,7 +300,7 @@
             {
                 PersonalInfo teach = new PersonalInfo();
                 teach.InfoId = (Int32)rdr["info_id"];
-                teach.DateOfBirth = (DateTime)rdr["date_of_birth"];
+                teach.DateOfBirth = (DateOnly)rdr["date_of_birth"];
                 teach.Sex = (sbyte)rdr["sex"];
                 teach.FirstName = rdr["first_name"].ToString();
                 teach.LastName = rdr["last_name"].ToString();
@@ -326,7 +326,7 @@
             {
                 PersonalInfo stud = new PersonalInfo();
                 stud.InfoId = (Int32)rdr["info_id"];
-                stud.DateOfBirth = (DateTime)rdr["date_of_birth"];
+                stud.DateOfBirth = (DateOnly)rdr["date_of_birth"];
                 stud.Sex = (sbyte)rdr["sex"];
                 stud.FirstName = rdr["first_name"].ToString();
                 stud.LastName = rdr["last_name"].ToString();

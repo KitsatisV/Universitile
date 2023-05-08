@@ -500,7 +500,7 @@ public partial class UniversitiledatabaseContext : IdentityDbContext<IdentityUse
                 .UseCollation("utf8mb4_0900_ai_ci")
                 .HasCharSet("utf8mb4");
             entity.Property(e => e.DateOfBirth)
-                .HasColumnType("datetime")
+                .HasColumnType("date")
                 .HasColumnName("date_of_birth");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(45)
