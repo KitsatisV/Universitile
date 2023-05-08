@@ -17,7 +17,7 @@
                     PersonalInfo teacher = moduleTeacherMap.ContainsKey(module.ModuleId) ? moduleTeacherMap[module.ModuleId] : null;
                     <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
                         <RadzenColumn Size="12" Style="justify-self:center; align-self:center">
-                            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="width:480px; height:350; background-color:#12080c">
+                            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="width:480px; height:355px; background-color:#12080c">
                                 <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
                                     <RadzenStack Gap="0" Style="align-self:center">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Module</b></RadzenText>
@@ -25,16 +25,23 @@
                                         <RadzenText TextStyle="TextStyle.Body2">@module.ModuleId</RadzenText>
                                     </RadzenStack>
                                 </RadzenStack>
-                                <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:185px; width:100%">
+                                <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:225px; width:100%">
                                     <RadzenRow RowGap="0">
                                         <RadzenColumn SizeXS="8">
                                             <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
                                             <RadzenText TextStyle="TextStyle.Body1">@teacher.FirstName @teacher.LastName</RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText> 
+                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText>
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px; margin-bottom:40px" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Take Quiz</MudButton>
+                                            <AuthorizeView Roles="Teacher">
+                                                <Authorized Context="a">
+                                                    <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px;" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignmentsss</MudButton>
+                                                    <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Quizzzz</MudButton>
+                                                </Authorized>
+                                            </AuthorizeView>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px;" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Quiz</MudButton>
+
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
                                         </RadzenColumn>
