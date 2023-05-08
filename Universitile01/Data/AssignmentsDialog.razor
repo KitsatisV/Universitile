@@ -6,7 +6,6 @@
                     <Columns>
                         <MudButton Disabled="false" Color="@Color.Error" OnClick="@AddNewLink">Add new Link</MudButton>
                         <PropertyColumn Property="x => x.Name" />
-
                         @*URL column*@
                         <TemplateColumn Context="a">
                             <HeaderTemplate>
@@ -16,6 +15,7 @@
                                 <MudLink Href="@a.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Quiz Link</MudLink>
                             </CellTemplate>
                         </TemplateColumn>
+                       
                         @*Edit textfield column*@
                         <TemplateColumn Context="b">
                             <CellTemplate>
