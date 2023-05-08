@@ -167,19 +167,12 @@
 											<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
 										</ToolBarContent>
 										<Columns>
-											<PropertyColumn Property="x => x.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="x => x.MiddleName" Title="Middle Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="x => x.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="x => x.Mobile" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="x => x.Landline" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="x => x.Sex" Title="Role" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-												<CellTemplate>
-													<MudStack Row Style="width:max-content; height:30px">
-														<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
-													</MudStack>
-												</CellTemplate>
-											</TemplateColumn>
+											<PropertyColumn Property="tch => tch.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="tch => tch.MiddleName" Title="Middle Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="tch => tch.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="tch => tch.Sex" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="tch => tch.Landline" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="tch => tch.Mobile" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 										</Columns>
 									</MudDataGrid>
 								</RadzenColumn>
@@ -208,6 +201,8 @@
 	private List<Module> modGrade = new List<Module>();
 	private List<Module> stModules = new List<Module>();
 	private List<PersonalInfo> studInfo = new List<PersonalInfo>();
+
+	//Grades
 	private List<RevenueData> revenue = new List<RevenueData>
 	{
 		new RevenueData { Type = "Type 1", Amount = 50 },
@@ -223,7 +218,7 @@
 		public int Amount { get; set; }
 	}
 	private List<PersonalInfo> teacherInfo = new List<PersonalInfo>();
-
+	////////
 
 
 
