@@ -1,0 +1,108 @@
+﻿@*@page "/cleader"
+@layout AdminLayout
+
+
+<MudDataGrid T="CourseLeader" Items="@" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+             StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+    <Columns>
+        <PropertyColumn Property="x => x.CoursesCourse.CourseId" Title="Id" IsEditable="false" Hidden="true"/>
+        <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Name" IsEditable="true" />
+        <PropertyColumn Property="x => x.Aspnetusers.UserName" Title="Belongs in Course"  IsEditable="false">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.CoursesCourse.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!" >
+                @foreach ( coursed in Courses)
+                {
+                        <MudSelectItem Value="coursed.CourseName"  />
+                }
+                </MudSelect>
+            </EditTemplate>
+         </PropertyColumn>
+        <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
+        <CellTemplate>
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+        </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+
+@code {
+    private List<Course> Courses = new List<Course>();
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string sqlLeaders = "SELECT m.*, c.course_name FROM modules m INNER JOIN courses c ON m.courses_course_id = c.course_id;";
+        using (MySqlCommand command = new MySqlCommand(sqlLeaders, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(sqlLeaders, connection);
+                sqlcmd.CommandText = sqlLeaders;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    CourseLeader lead = new CourseLeader();
+                    lead.Aspnetusers = new Aspnetuser { Id = rdr["Id"].ToString() };
+                    lead.Aspnetusers.PersonalInfos = new ICollection<PersonalInfo> { FirstName = rdr["first_name"].ToString() };
+            lead.Aspnetusers = new Aspnetuser { rdr["module_description"].ToString();
+                    mod.ModuleDuration = (Int32)rdr["module_duration"];
+                    mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+                    mod.CoursesCourse = new Course { CourseName = rdr["course_name"].ToString() };
+                    Modules.Add(mod);
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        string coursessql = "SELECT * FROM courses";
+        using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(coursessql, connection);
+                sqlcmd.CommandText = coursessql;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Course mod = new Course();
+                    mod.CourseId = (Int32)rdr["course_id"];
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.CourseDescription = rdr["course_description"].ToString();
+                    mod.CourseDuration = (Int32)rdr["course_duration"];
+                    Courses.Add(mod);
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+
+    }
+}
+*@

@@ -1,0 +1,166 @@
+﻿@page "/studentcourse"
+@using MudBlazor
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+@layout AdminLayout
+@*StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"*@
+<MudDataGrid T="StudentstoCourse" Items="@Studentsf" ReadOnly="false" EditMode="@(true ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+             
+             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+    <Columns>
+        <PropertyColumn Property="x => x.FirstName" Title="First Name" IsEditable="false" />
+        <PropertyColumn Property="x => x.LastName" Title="Last Name" IsEditable="false" />
+        <PropertyColumn Property="x => x.CourseName" Title="Belongs in Course"  IsEditable="true">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!" >
+                @foreach (Course coursed in Courses)
+                {
+                        <MudSelectItem Value="coursed.CourseName"  />
+                }
+                </MudSelect>
+            </EditTemplate>
+         </PropertyColumn>
+@*        <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
+        <CellTemplate>
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+        </CellTemplate>
+        </TemplateColumn>*@
+    </Columns>
+</MudDataGrid>
+
+
+@code {
+    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+    private List<PersonalInfo> Students = new List<PersonalInfo>();
+    private List<StudentstoCourse> Studentsf = new List<StudentstoCourse>();
+    private List<Course> Courses = new List<Course>();
+    protected override async Task OnInitializedAsync() 
+    {
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string sqlstudents = "SELECT ur.* FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u On k.Id = u.UserId WHERE u.RoleId = '" + "9a2104f0-43b7-4cdc-b125-f667fc272be7" + "'";
+        using (MySqlCommand command = new MySqlCommand(sqlstudents, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(sqlstudents, connection);
+                sqlcmd.CommandText = sqlstudents;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    PersonalInfo stud = new PersonalInfo();
+                    stud.FirstName = rdr["first_name"].ToString();
+                    stud.LastName = rdr["last_name"].ToString();
+
+                    StudentstoCourse studentstoCourse = new StudentstoCourse();
+                    studentstoCourse.FirstName = stud.FirstName;
+                    studentstoCourse.LastName = stud.LastName;
+                    Studentsf.Add(studentstoCourse);
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+
+            catch
+            {
+                throw;
+            }
+        }
+        string coursessql = "SELECT * FROM courses";
+        using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(coursessql, connection);
+                sqlcmd.CommandText = coursessql;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Course mod = new Course();
+                    mod.CourseId = (Int32)rdr["course_id"];
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.CourseDescription = rdr["course_description"].ToString();
+                    mod.CourseDuration = (Int32)rdr["course_duration"];
+                    Courses.Add(mod);
+
+                    //StudentstoCourse studentstoCourse = new StudentstoCourse();
+                    //studentstoCourse.CourseName = mod.CourseName;
+                    //Studentsf.Add(studentstoCourse);
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+       
+        //string coursessql = "SELECT * FROM courses";
+        //using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+        //{
+
+        //    try
+        //    {
+        //        connection.Open();
+        //        MySqlCommand sqlcmd = new MySqlCommand(coursessql, connection);
+        //        sqlcmd.CommandText = coursessql;
+        //        sqlcmd.CommandType = CommandType.Text;
+        //        MySqlDataReader rdr = sqlcmd.ExecuteReader();
+        //        while (rdr.Read())
+        //        {
+        //            Course mod = new Course();
+        //            mod.CourseId = (Int32)rdr["course_id"];
+        //            mod.CourseName = rdr["course_name"].ToString();
+        //            mod.CourseDescription = rdr["course_description"].ToString();
+        //            mod.CourseDuration = (Int32)rdr["course_duration"];
+        //            Courses.Add(mod);
+
+        //        }
+        //        // always call Close when done reading.
+        //        rdr.Close();
+        //        // Close the connection when done with it.
+        //        connection.Close();
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
+
+
+    }
+
+    public class StudentstoCourse
+	{
+		public string Role { get; set; }
+
+		public string FirstName { get; set; }
+
+		public string LastName { get; set; }
+
+		public string? MiddleName { get; set; }
+
+        public string? CourseName { get; set; }
+
+	}
+
+}

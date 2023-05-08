@@ -9,6 +9,7 @@
 @inject TeacherService TeacherService
 @using Microsoft.EntityFrameworkCore
 @inject AuthenticationStateProvider _authenticationStateProvider
+@layout AdminLayout
 
 
 <MudDataGrid T="Module" Items="@Modules" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
@@ -19,9 +20,9 @@
         <PropertyColumn Property="x => x.ModuleName" Title="Name" IsEditable="true" />
         <PropertyColumn Property="x => x.ModuleDescription" Title="Description" IsEditable="true" />
         <PropertyColumn Property="x => x.ModuleDuration" Title="Semesters" IsEditable="true" />
-        <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Belongs in Course"  IsEditable="false" >
+        <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Belongs in Course"  IsEditable="false">
             <EditTemplate>
-                <MudSelect @bind-Value="context.Item.CoursesCourse.CourseName" Required RequiredError="You must select a Position!!!" >
+                <MudSelect @bind-Value="context.Item.CoursesCourse.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!" >
                 @foreach (Course coursed in Courses)
                 {
                         <MudSelectItem Value="coursed.CourseName"  />
