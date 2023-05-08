@@ -1,4 +1,5 @@
 ﻿@page "/sessions"
+@using Universitile01.Data;
 @using Universitile01.Models;
 
 <PageTitle>Sessions</PageTitle>
@@ -23,21 +24,20 @@
 							<PropertyColumn Property="x => x.DateStart.ToShortDateString()" Title="Date" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 							<PropertyColumn Property="x => String.Concat(x.DateStart.ToShortTimeString(), str, x.DateEnd.ToShortTimeString())" Title="From - To" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 							<PropertyColumn Property="x => x.ModulesModule" Title="Module ID" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+							@if (context.User.IsInRole("Student"))
+							{
 							@*<PropertyColumn Property="x => x.Attendance" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />*@
-							@*<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-								<CellTemplate>
-									<MudStack Row Style="width:max-content; height:30px">
-										@if (ctx.Item.Files != "" && ctx.Item.Files != null)
-										{
-											<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Primary">Files</MudButton>
-										}
-										else
-										{
-											<p style="justify-self:center"></p>
-										}
-									</MudStack>
-								</CellTemplate>
-							</TemplateColumn>*@
+							}
+							@if (context.User.IsInRole("Teacher"))
+							{
+								<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+									<CellTemplate>
+										<MudStack Row Style="width:max-content; height:30px">
+											<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Error">Edit Attendance</MudButton>
+										</MudStack>
+									</CellTemplate>
+								</TemplateColumn>
+							}
 						</Columns>
 					</MudDataGrid>
 				</RadzenColumn>
@@ -50,6 +50,12 @@
 @code
 {
 	public readonly string str = " - ";
+
+	//private void OpenAttendanceDialog()
+	//{
+	//	var options = new MudBlazor.DialogOptions { };
+	//	MudBlazor.DialogService.Show<AttendanceDialog>();
+	//}
 
 	private List<Session> sessions = new List<Session>
 	{
