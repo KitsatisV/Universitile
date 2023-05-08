@@ -1,54 +1,57 @@
-﻿@using Universitile01.Models;
-@using Microsoft.EntityFrameworkCore
-@inject AuthenticationStateProvider _authenticationStateProvider
-
-
-<MudDialog Style="background-color:black; color:aliceblue">
-    <DialogContent>
-        <MudDataGrid Items="@data" T="LinkModel" Style="background-color:#12080c;">
-            <Columns>
-                <MudButton Disabled="false" Color="@Color.Error" OnClick="@AddNewLink">Add new Link</MudButton>
-                <PropertyColumn Property="x => x.Name" />
-                @*URL column*@
-                <TemplateColumn>
-                    <HeaderTemplate>
-                        <strong>URL</strong>
-                    </HeaderTemplate>
-                    <CellTemplate>
-                        <MudLink Href="@context.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Quiz Link</MudLink>
-                    </CellTemplate>
-                </TemplateColumn>
-                        @*Edit textfield column*@
-                        <TemplateColumn>
-                            <CellTemplate>
-                                <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
-                            </CellTemplate>
-                        </TemplateColumn>
-                        @*Edit button column*@
-                        <TemplateColumn>
+﻿<AuthorizeView Roles="Student, Teacher">
+    <Authorized>
+        <MudDialog Style="background-color:black; color:aliceblue">
+            <DialogContent>
+                <MudDataGrid Items="@data" T="LinkModel" Style="background-color:#12080c;">
+                    <Columns>
+                        <MudButton Disabled="false" Color="@Color.Error" OnClick="@AddNewLink">Add new Link</MudButton>
+                        <PropertyColumn Property="x => x.Name" />
+                        @*URL column*@
+                        <TemplateColumn Context="a">
                             <HeaderTemplate>
-                                Edit
+                                <strong>URL</strong>
                             </HeaderTemplate>
                             <CellTemplate>
-                                <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
+                                <MudLink Href="@a.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Quiz Link</MudLink>
                             </CellTemplate>
                         </TemplateColumn>
-                        @*Edit delete button column*@
-                        <TemplateColumn>
-                            <HeaderTemplate>
-                                Delete
-                            </HeaderTemplate>
-                            <CellTemplate>
-                                <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(context.Item))"></MudButton>
-                            </CellTemplate>
-                </TemplateColumn>
-            </Columns>
-        </MudDataGrid>
-    </DialogContent>
-    <DialogActions>
-        <MudButton Color="Color.Secondary" OnClick="Submit">Ok</MudButton>  @*Close modal dialog button*@
-    </DialogActions>
-</MudDialog>
+                        <AuthorizeView Roles="Teacher">
+                            <Authorized Context="r">
+                                @*Edit textfield column*@
+                                <TemplateColumn Context="b">
+                                    <CellTemplate>
+                                        <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
+                                    </CellTemplate>
+                                </TemplateColumn>
+                                @*Edit button column*@
+                                <TemplateColumn Context="c">
+                                    <HeaderTemplate>
+                                        Edit
+                                    </HeaderTemplate>
+                                    <CellTemplate>
+                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                                @*Edit delete button column*@
+                                <TemplateColumn Context="d">
+                                    <HeaderTemplate>
+                                        Delete
+                                    </HeaderTemplate>
+                                    <CellTemplate>
+                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(d.Item))"></MudButton>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Authorized>
+                        </AuthorizeView>
+                    </Columns>
+                </MudDataGrid>
+            </DialogContent>
+            <DialogActions>
+                <MudButton Color="Color.Secondary" OnClick="Submit">Ok</MudButton>  @*Close modal dialog button*@
+            </DialogActions>
+        </MudDialog>
+    </Authorized>
+</AuthorizeView>
 
 
 

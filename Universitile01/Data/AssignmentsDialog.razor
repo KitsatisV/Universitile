@@ -12,35 +12,37 @@
                                 <strong>URL</strong>
                             </HeaderTemplate>
                             <CellTemplate>
-                                <MudLink Href="@a.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Quiz Link</MudLink>
+                                <MudLink Href="@a.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Assignment Link</MudLink>
                             </CellTemplate>
                         </TemplateColumn>
-                       
-                        @*Edit textfield column*@
-                        <TemplateColumn Context="b">
-                            <CellTemplate>
-                                <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
-                            </CellTemplate>
-                        </TemplateColumn>
-                        @*Edit button column*@
-                        <TemplateColumn Context="c">
-                            <HeaderTemplate>
-                                Edit
-                            </HeaderTemplate>
-                            <CellTemplate>
-                                <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
-                            </CellTemplate>
-                        </TemplateColumn>
-                        @*Edit delete button column*@
-                        <TemplateColumn Context="d">
-                            <HeaderTemplate>
-                                Delete
-                            </HeaderTemplate>
-                            <CellTemplate>
-                                <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(d.Item))"></MudButton>
-                            </CellTemplate>
-                        </TemplateColumn>
-
+                        <AuthorizeView Roles="Teacher">
+                            <Authorized Context="r">
+                                @*Edit textfield column*@
+                                <TemplateColumn Context="b">
+                                    <CellTemplate>
+                                        <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
+                                    </CellTemplate>
+                                </TemplateColumn>
+                                @*Edit button column*@
+                                <TemplateColumn Context="c">
+                                    <HeaderTemplate>
+                                        Edit
+                                    </HeaderTemplate>
+                                    <CellTemplate>
+                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                                @*Edit delete button column*@
+                                <TemplateColumn Context="d">
+                                    <HeaderTemplate>
+                                        Delete
+                                    </HeaderTemplate>
+                                    <CellTemplate>
+                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(d.Item))"></MudButton>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Authorized>
+                        </AuthorizeView>
                     </Columns>
                 </MudDataGrid>
             </DialogContent>
@@ -50,8 +52,6 @@
         </MudDialog>
     </Authorized>
 </AuthorizeView>
-
-
 
 
 @code {
