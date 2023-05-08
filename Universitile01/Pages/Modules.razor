@@ -12,7 +12,7 @@
 <PageTitle>Modules</PageTitle>
 
 <body>
-    <AuthorizeView Roles="Student, Teacher">
+    <AuthorizeView >
         <Authorized>
             <RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%) ">
                 @foreach (Module module in stModules)
@@ -31,12 +31,12 @@
                                 <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:225px; width:100%">
                                     <RadzenRow RowGap="0">
                                         <RadzenColumn SizeXS="8">
-                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
+                                      @*      <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
                                             <RadzenText TextStyle="TextStyle.Body1">@teacher.FirstName @teacher.LastName</RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText>*@
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <AuthorizeView Roles="Teacher">
+                                            <AuthorizeView>
                                                 <Authorized Context="a">
                                                     <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px;" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignmentsss</MudButton>
                                                     <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Quizzzz</MudButton>
@@ -122,6 +122,31 @@
 
             rdr.Close();
             connection.Close();
+        }
+        string combinedTSql = "SELECT m.* FROM modules m  INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN aspnetusers u ON u.Id = t.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
+        using (MySqlCommand command = new MySqlCommand(combinedTSql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(combinedTSql, connection);
+            sqlcmd.CommandText = combinedTSql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Module mod = new Module();
+                mod.ModuleId = (Int32)rdr["module_id"];
+                mod.ModuleName = rdr["module_name"].ToString();
+                mod.ModuleDescription = rdr["module_description"].ToString();
+                mod.ModuleDuration = (Int32)rdr["module_duration"];
+                mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+                stModules.Add(mod);
+
+
+            }
+
+            rdr.Close();
+            connection.Close();
+        
         }
     }
 
