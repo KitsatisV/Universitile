@@ -38,7 +38,11 @@
 					<span asp-validation-for="Input.Mobile" class="text-danger"></span>
 				</div>
 				<div class="form-floating" style="margin:10px">
-                    <input asp-for="Input.Sex" class="form-control" autocomplete="Sex" aria-required="true" />
+                    <select asp-for="Input.Sex" class="form-control" autocomplete="Sex" aria-required="true" >
+					<option value="0">Not known</option>
+					<option value="1">Male</option>
+					<option value="2">Female</option>
+					</select>
                     <label asp-for="Input.Sex" class="form-label"></label>
 					<span asp-validation-for="Input.Sex" class="text-danger"></span>
 				</div>
