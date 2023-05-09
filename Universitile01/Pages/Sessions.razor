@@ -62,7 +62,9 @@
 	private void OpenAttendanceDialog(Session session)
 	{
 		var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
-		DialogService.Show<AttendanceDialog>("", options);
+		var parameters = new DialogParameters();
+		parameters.Add("SessionID", session.EventId);
+		DialogService.Show<AttendanceDialog>(session.Tittle, parameters, options);
 	}
 
 	private List<Session> sessions = new List<Session>
