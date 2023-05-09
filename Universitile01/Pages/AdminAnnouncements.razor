@@ -18,8 +18,25 @@
              Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
     <Columns>
         <PropertyColumn Property="x => x.Message" Title="Message" IsEditable="true" />
-        <PropertyColumn Property="x => x.Importance" Title="Importance" IsEditable="true" />
-        <PropertyColumn Property="x => x.role" Title="Role teacher/student" IsEditable="true" />
+        <PropertyColumn Property="x => x.Importance" Title="Importance" IsEditable="true">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.Importance" Immediate="true" Required RequiredError="You must select a Position!!!">
+                    @foreach (Boot asdas in Boots)
+                    {
+                    <MudSelectItem Value="asdas.imp"/>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.role" Title="Role teacher/student" IsEditable="true">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.role" Immediate="true" Required RequiredError="You must select a Position!!!">
+                    @foreach (Role eoro in Roles2){
+                        <MudSelectItem Value="eoro.Name"/>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
         <PropertyColumn Property="x => x.today" Title="Date" IsEditable="false" />
     
        <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
@@ -37,10 +54,27 @@
 @code {
     private bool _isCellEditMode;
     new List<CreateAnnouncement> Announcements = new List<CreateAnnouncement>();
+    new List<Role> Roles2 = new List<Role>();
+    new List<Boot> Boots = new List<Boot>();
     private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
     protected override async Task OnInitializedAsync()
     {
+        //last minute code
+        Role Roles = new Role();
+        Roles.Name = "student";
+        Roles2.Add(Roles);
+        Role Rolesw = new Role();
+        Rolesw.Name = "teacher";
+        Roles2.Add(Rolesw);
+
+        Boot Boots1 = new Boot();
+        Boots1.imp = "true";
+        Boots.Add(Boots1);
+        Boot Boots2 = new Boot();
+        Boots2.imp = "false";
+        Boots.Add(Boots2);
+
         MySqlConnection connection = new MySqlConnection(connectionString);
         string annsql = "SELECT a.announcements_id, a.date, a.Message, a.Importance, r.Id AS Id FROM announcements a LEFT JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id LEFT JOIN aspnetroles r ON uha.aspnetroles_Id = r.Id ORDER BY a.date DESC";
         using (MySqlCommand command = new MySqlCommand(annsql, connection))
@@ -142,20 +176,12 @@
             sqlcmd.CommandText = sqlidfromann;
             sqlcmd.CommandType = CommandType.Text;
             MySqlDataReader rdr = sqlcmd.ExecuteReader();
-            if (rdr.Read())
-            {
                 while (rdr.Read())
                 {
                     lastid = (Int32)rdr["announcements_id"];
                 }
-            }
-            else
-            {
-                lastid = 0;
-            }
             rdr.Close();
             connection.Close();
-
         }
         string sqlrolehasann = "INSERT INTO users_has_announcements(announcements_announcements_id,aspnetroles_Id) VALUES (@annid, @roleid)";
         using (MySqlCommand command = new MySqlCommand(sqlrolehasann, connection))
@@ -203,4 +229,13 @@
         public string? role { get; set;}
     }
 
+    public class Role
+    {
+        public string? Name { get; set; }
+    }
+
+    public class Boot
+    {
+        public string? imp { get; set; }
+    }
 }
