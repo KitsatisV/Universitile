@@ -1,28 +1,32 @@
-﻿<MudDialog Style="background-color:black; color:aliceblue" >
-    <DialogContent>
-        <MudDataGrid T="TempAttendance" Items="@attendances" EditMode="MudBlazor.DataGridEditMode.Cell" Dense="true">
-            <Columns>
-                <PropertyColumn IsEditable="false" Property="x => x.Name" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                <PropertyColumn IsEditable="false" Property="x => x.Surname" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                <PropertyColumn IsEditable="false" Property="x => x.Email" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                <PropertyColumn Property="x => x.Attendance" Filterable="true" Sortable="false" CellStyle="color:white" HeaderStyle="color:black">
-                    <EditTemplate>
-                        <MudSwitch @bind-Checked="context.Item.Attendance" Color="Color.Success" UnCheckedColor="Color.Error" />
-                    </EditTemplate>
-                </PropertyColumn>
-            </Columns>
-        </MudDataGrid>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-    </DialogActions>
-</MudDialog>
+﻿<AuthorizeView Roles="Teacher">
+    <Authorized>
+        <MudDialog Style="background-color:black; color:aliceblue" >
+            <DialogContent>
+                <MudDataGrid T="TempAttendance" Items="@attendances" EditMode="MudBlazor.DataGridEditMode.Cell" Dense="true">
+                    <Columns>
+                        <PropertyColumn IsEditable="false" Property="x => x.Name" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
+                        <PropertyColumn IsEditable="false" Property="x => x.Surname" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
+                        <PropertyColumn IsEditable="false" Property="x => x.Email" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
+                        <PropertyColumn Property="x => x.Attendance" Filterable="true" Sortable="false" CellStyle="color:white" HeaderStyle="color:black" Context="ctx">
+                            <EditTemplate>
+                                <MudSwitch @bind-Checked="ctx.Item.Attendance" Color="Color.Success" UnCheckedColor="Color.Error" />
+                            </EditTemplate>
+                        </PropertyColumn>
+                    </Columns>
+                </MudDataGrid>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="Cancel">Cancel</MudButton>
+                <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </Authorized>
+</AuthorizeView>
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    //[Parameter] public string ContentText { get; set; }
+    [Parameter] public string SessionId { get; set; }
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
