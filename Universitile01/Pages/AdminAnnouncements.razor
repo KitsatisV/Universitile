@@ -19,6 +19,7 @@
     <Columns>
         <PropertyColumn Property="x => x.Message" Title="Message" IsEditable="true" />
         <PropertyColumn Property="x => x.Importance" Title="Importance" IsEditable="true" />
+        <PropertyColumn Property="x => x.role" Title="Role teacher/student" IsEditable="true" />
         <PropertyColumn Property="x => x.today" Title="Date" IsEditable="false" />
     
        <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
@@ -41,7 +42,7 @@
     protected override async Task OnInitializedAsync()
     {
         MySqlConnection connection = new MySqlConnection(connectionString);
-        string annsql = "SELECT * FROM announcements";
+        string annsql = "SELECT a.announcements_id, a.date, a.Message, a.Importance, r.Id AS Id FROM announcements a LEFT JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id LEFT JOIN aspnetroles r ON uha.aspnetroles_Id = r.Id ORDER BY a.date DESC";
         using (MySqlCommand command = new MySqlCommand(annsql, connection))
         {
             connection.Open();
@@ -60,6 +61,18 @@
                 mod.Message = rdr["Message"].ToString();
                 mod.today = (DateTime)rdr["date"];
                 mod.Id = (Int32)rdr["announcements_id"];
+                if (rdr["Id"].ToString() == "4aff1f28-c6d5-4297-96cf-b9371ae3d81d")
+                {
+                    mod.role = "teacher";
+                }
+                else if (rdr["Id"].ToString() == "9a2104f0-43b7-4cdc-b125-f667fc272be7")
+                {
+                    mod.role = "student";
+                }
+                else
+                {
+                    mod.role = string.Empty;
+                }
                 Announcements.Add(mod);
 
             }
@@ -83,7 +96,7 @@
                 command.ExecuteNonQuery();
                 connection.Close();
             }
-                Announcements.Remove(ann);
+            Announcements.Remove(ann);
 
         }
         catch
@@ -94,6 +107,7 @@
 
     void Save(CreateAnnouncement ann)
     {
+        int lastid = 0;
         MySqlConnection connection = new MySqlConnection(connectionString);
         string sqlfindcId = "INSERT INTO announcements (date, Message, Importance) VALUES (@date, @msg , @importance)";
         using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
@@ -120,6 +134,53 @@
                 //probably int isnt 0-1    
             }
         }
+        string sqlidfromann = "SELECT announcements_id FROM announcements";
+        using (MySqlCommand command = new MySqlCommand(sqlidfromann, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(sqlidfromann, connection);
+            sqlcmd.CommandText = sqlidfromann;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                while (rdr.Read())
+                {
+                    lastid = (Int32)rdr["announcements_id"];
+                }
+            }
+            else
+            {
+                lastid = 0;
+            }
+            rdr.Close();
+            connection.Close();
+
+        }
+        string sqlrolehasann = "INSERT INTO users_has_announcements(announcements_announcements_id,aspnetroles_Id) VALUES (@annid, @roleid)";
+        using (MySqlCommand command = new MySqlCommand(sqlrolehasann, connection))
+        {
+            try
+            {
+                command.Parameters.AddWithValue("@annid", lastid);
+                if (ann.role == "teacher")
+                {
+                    command.Parameters.AddWithValue("@roleid", "4aff1f28-c6d5-4297-96cf-b9371ae3d81d");
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@roleid", "9a2104f0-43b7-4cdc-b125-f667fc272be7");            
+                }
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch
+            {
+                throw; 
+            }
+        }
     }
     async Task AddEmptyRow()
     {
@@ -128,6 +189,7 @@
                 today = DateTime.Now,
                 Message = "",
                 Importance = "false",
+                role = "student",
             };
         Announcements.Add(mod);
     }
@@ -138,6 +200,7 @@
         public DateTime? today { get; set; }
         public string? Message { get; set; }
         public string? Importance { get; set; }
+        public string? role { get; set;}
     }
 
 }

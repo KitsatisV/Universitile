@@ -241,7 +241,6 @@
                 return role;
             }
         }
-        
         string dashteachsql = "SELECT m.* FROM modules m INNER JOIN teachers s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
@@ -266,7 +265,7 @@
             // Close the connection when done with it.
             connection.Close();
         }
-        string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetroles u  WHERE u.Id ='" + userRole.ToString() + "'";
+        string annsql = "SELECT * FROM announcements q JOIN users_has_announcements r ON q.announcements_id = r.announcements_announcements_id WHERE r.aspnetroles_Id ='" + userRole.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
             connection.Open();
