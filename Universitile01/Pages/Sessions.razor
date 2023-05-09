@@ -2,6 +2,8 @@
 @using Universitile01.Data;
 @using Universitile01.Models;
 
+@inject IDialogService DialogService
+
 <PageTitle>Sessions</PageTitle>
 
 <head>
@@ -39,7 +41,7 @@
 								<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
 									<CellTemplate>
 										<MudStack Row Style="width:max-content; height:30px">
-											<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Error">Edit Attendance</MudButton>
+											<MudButton OnClick=@(args => OpenAttendanceDialog(ctx.Item)) Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Error">Edit Attendance</MudButton>
 										</MudStack>
 									</CellTemplate>
 								</TemplateColumn>
@@ -57,11 +59,11 @@
 {
 	public readonly string str = " - ";
 
-	//private void OpenAttendanceDialog()
-	//{
-	//	var options = new MudBlazor.DialogOptions { };
-	//	MudBlazor.DialogService.Show<AttendanceDialog>();
-	//}
+	private void OpenAttendanceDialog(Session session)
+	{
+		var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
+		DialogService.Show<AttendanceDialog>("", options);
+	}
 
 	private List<Session> sessions = new List<Session>
 	{

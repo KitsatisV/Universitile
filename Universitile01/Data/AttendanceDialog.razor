@@ -1,6 +1,17 @@
 ﻿<MudDialog Style="background-color:black; color:aliceblue" >
     <DialogContent>
-        @ContentText
+        <MudDataGrid T="TempAttendance" Items="@attendances" EditMode="MudBlazor.DataGridEditMode.Cell" Dense="true">
+            <Columns>
+                <PropertyColumn IsEditable="false" Property="x => x.Name" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
+                <PropertyColumn IsEditable="false" Property="x => x.Surname" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
+                <PropertyColumn IsEditable="false" Property="x => x.Email" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
+                <PropertyColumn Property="x => x.Attendance" Filterable="true" Sortable="false" CellStyle="color:white" HeaderStyle="color:black">
+                    <EditTemplate>
+                        <MudSwitch @bind-Checked="context.Item.Attendance" Color="Color.Success" UnCheckedColor="Color.Error" />
+                    </EditTemplate>
+                </PropertyColumn>
+            </Columns>
+        </MudDataGrid>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -11,8 +22,34 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public string ContentText { get; set; }
+    //[Parameter] public string ContentText { get; set; }
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
+
+    //This list ought to be something with attendance
+    List<TempAttendance> attendances = new List<TempAttendance>()
+    {
+        new TempAttendance("John", "Doe", "johndoe@test.com", false),
+        new TempAttendance("John", "Doe", "johndoe@test.com", true),
+        new TempAttendance("John", "Doe", "johndoe@test.com", true),
+        new TempAttendance("John", "Doe", "johndoe@test.com", false)
+    };
+
+    //back end stuff
+    public class TempAttendance
+    {
+        public TempAttendance(string name, string surname, string email, bool attendance)
+        {
+            Name = name;
+            Surname = surname;
+            Email = email;
+            Attendance = attendance;
+        }
+
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; }
+        public bool Attendance { get; set; }
+    }
 }
