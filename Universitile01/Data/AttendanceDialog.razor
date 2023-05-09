@@ -2,34 +2,17 @@
     <Authorized>
         <MudDialog Style="background-color:black; color:aliceblue; width:80vw">
             <DialogContent>
-                @*<MudDataGrid T="TempAttendance" Items="@attendances" EditMode="MudBlazor.DataGridEditMode.Cell" Dense="true" Style="background-color:dimgray; color:aliceblue">
-                    <Columns>
-                        <PropertyColumn IsEditable="false" Property="x => x.Name" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:white" />
-                        <PropertyColumn IsEditable="false" Property="x => x.Surname" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:white" />
-                        <PropertyColumn IsEditable="false" Property="x => x.Email" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:white" />
-                        <TemplateColumn IsEditable="true" Title="Attendance"  Filterable="true" Sortable="false" CellStyle="color:white" HeaderStyle="color:white" Context="ctx">
-                            <EditTemplate>
-                                <MudPaper Class="pa-16 ma-2" Elevation="5" Height="100%" Width="100%">
-                                    <MudToggleIconButton @bind-Toggled="@ctx.Item.Attendance" Icon="@Icons.Material.Filled.AlarmOff" Color="@Color.Error" Title="Off" ToggledIcon="@Icons.Material.Filled.AlarmOn" ToggledColor="@Color.Success" ToggledTitle="On" />
-                                </MudPaper>
-                            </EditTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                </MudDataGrid>*@
-
                 <MudTable Items="attendances" FixedHeader="true" Hover="true" Dense="true" Breakpoint="Breakpoint.Sm" Context="ctx" Style="max-height:70vh; background-color:rgb(40, 40, 40); color:aliceblue">
                     <HeaderContent>
                         <MudTh Style="color:black">Name</MudTh>
                         <MudTh Style="color:black">Surname</MudTh>
-                        <MudTh Style="color:black">Email</MudTh>
                         <MudTh Style="color:black">Attendance</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd Style="color:aliceblue" DataLabel="Name">@ctx.Name</MudTd>
-                        <MudTd Style="color:aliceblue" DataLabel="Surname">@ctx.Surname</MudTd>
-                        <MudTd Style="color:aliceblue" DataLabel="Email">@ctx.Email</MudTd>
+                        <MudTd Style="color:aliceblue" DataLabel="Name">@ctx.SessionEventId.ToString()</MudTd>
+                        <MudTd Style="color:aliceblue" DataLabel="Surname">@ctx.StudentsAspnetusersId</MudTd>
                         <MudTd Style="color:aliceblue" DataLabel="Attendance">
-                            <MudToggleIconButton @bind-Toggled="ctx.Attendance" Icon="@Icons.Material.Filled.AlarmOff" Color="@Color.Error" Title="Absent" ToggledIcon="@Icons.Material.Filled.AlarmOn" ToggledColor="@Color.Success" ToggledTitle="Present" />
+                            <MudToggleIconButton @bind-Toggled="ctx.IsPresent" Icon="@Icons.Material.Filled.AlarmOff" Color="@Color.Error" Title="Absent" ToggledIcon="@Icons.Material.Filled.AlarmOn" ToggledColor="@Color.Success" ToggledTitle="Present" />
                         </MudTd>
                     </RowTemplate>
                 </MudTable>
@@ -53,6 +36,16 @@
     //Attendance Toggler
     public void OnToggledChanged()
     {
-        
+
     }
+
+    List<SessionHasStudent> attendances = new List<SessionHasStudent>
+    {
+        new SessionHasStudent(0, "Doe", true),
+        new SessionHasStudent(1, "Joe", false),
+        new SessionHasStudent(2, "Moe", true),
+        new SessionHasStudent(3, "Hoe", false),
+        new SessionHasStudent(4, "Poe", true),
+        new SessionHasStudent(5, "Toe", false),
+    };
 }
