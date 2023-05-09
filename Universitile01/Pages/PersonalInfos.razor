@@ -310,7 +310,7 @@
 			rdr.Close();
 			connection.Close();
 		}
-		string attendancesql = "SELECT shs.is_present FROM session_has_students shs JOIN session s ON shs.session_event_id = s.event_id JOIN modules m ON s.modules_module_id = m.module_id WHERE shs.students_aspnetusers_Id = '" + userId.Result.ToString() + "'";
+		string attendancesql = "SELECT shs.is_present FROM session_has_students shs JOIN session s ON shs.session_event_id1 = s.event_id JOIN modules m ON s.modules_module_id = m.module_id WHERE shs.students_aspnetusers_Id = '" + userId.Result.ToString() + "'";
 		using (MySqlCommand command = new MySqlCommand(attendancesql, connection))
 		{
 			connection.Open();
