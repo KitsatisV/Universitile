@@ -25,13 +25,13 @@
 							<PropertyColumn Property="x => x.Tittle" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 							<PropertyColumn Property="x => x.DateStart.ToShortDateString()" Title="Date" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 							<PropertyColumn Property="x => String.Concat(x.DateStart.ToShortTimeString(), str, x.DateEnd.ToShortTimeString())" Title="From - To" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-							<PropertyColumn Context="ctx" Property="x => x.ModulesModule.ModuleName" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black">
+							@*<PropertyColumn Context="ctx" Property="x => x.ModulesModule.ModuleName" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black">
 								<EditTemplate>
 									<MudSelect @bind-Value="ctx.Item.ModulesModule.ModuleName" Required>
 
 									</MudSelect>
 								</EditTemplate>
-							</PropertyColumn>
+							</PropertyColumn>*@
 							@if (context.User.IsInRole("Student"))
 							{
 							@*<PropertyColumn Property="x => x.Attendance" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />*@
@@ -64,7 +64,7 @@
 		var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
 		var parameters = new DialogParameters();
 		parameters.Add("SessionID", session.EventId);
-		DialogService.Show<AttendanceDialog>(session.Tittle, parameters, options);
+		DialogService.Show<AttendanceDialog>(session.Tittle/*, parameters*/, options);
 	}
 
 	private List<Session> sessions = new List<Session>
