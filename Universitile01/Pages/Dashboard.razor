@@ -191,24 +191,23 @@
     private List<Module> myModules = new List<Module>();
     private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
-	[CascadingParameter]
-	private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-	private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
-	{
+    private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
+    {
 
-	}
+    }
 
 
     protected override async Task OnInitializedAsync()
     {
+        MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connect);
+
         var userId = getUserId();
         events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
-        announcements = await Db.Announcements
-            .Include(a => a.UsersHasAnnouncements)
-            .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId.ToString()))
-            .ToListAsync();
+        string userRole = getRole();
         async Task<string> getUserName()
         {
             var user = (await authenticationStateTask).User;
@@ -220,7 +219,31 @@
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
         }
-        MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connect);
+        
+        string getRole()
+        {
+            string sql = "SELECT r.Id FROM aspnetusers u JOIN aspnetuserroles ur ON u.Id = ur.UserId JOIN aspnetroles r ON ur.RoleId = r.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+            using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(sql, connection))
+            {
+                string role = "";
+                connection.Open();
+                MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(sql, connection);
+                sqlcmd.CommandText = sql;
+                sqlcmd.CommandType = CommandType.Text;
+                MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                if (rdr.Read())
+                {
+                    role = rdr["Id"].ToString();
+                }
+
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+                return role;
+            }
+        }
+
         string dashteachsql = "SELECT m.* FROM modules m INNER JOIN teachers s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
@@ -245,7 +268,7 @@
             // Close the connection when done with it.
             connection.Close();
         }
-        string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetusers u ON uha.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+        string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetroles u  WHERE u.Id ='" + userRole.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
             connection.Open();
