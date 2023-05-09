@@ -1,19 +1,38 @@
 ﻿<AuthorizeView Roles="Teacher">
     <Authorized>
-        <MudDialog Style="background-color:black; color:aliceblue" >
+        <MudDialog Style="background-color:black; color:aliceblue; width:80vw">
             <DialogContent>
-                <MudDataGrid T="TempAttendance" Items="@attendances" EditMode="MudBlazor.DataGridEditMode.Cell" Dense="true">
+                @*<MudDataGrid T="TempAttendance" Items="@attendances" EditMode="MudBlazor.DataGridEditMode.Cell" Dense="true" Style="background-color:dimgray; color:aliceblue">
                     <Columns>
-                        <PropertyColumn IsEditable="false" Property="x => x.Name" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                        <PropertyColumn IsEditable="false" Property="x => x.Surname" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                        <PropertyColumn IsEditable="false" Property="x => x.Email" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:black" />
-                        <PropertyColumn Property="x => x.Attendance" Filterable="true" Sortable="false" CellStyle="color:white" HeaderStyle="color:black" Context="ctx">
+                        <PropertyColumn IsEditable="false" Property="x => x.Name" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:white" />
+                        <PropertyColumn IsEditable="false" Property="x => x.Surname" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:white" />
+                        <PropertyColumn IsEditable="false" Property="x => x.Email" Filterable="true" Sortable="true" CellStyle="color:white" HeaderStyle="color:white" />
+                        <TemplateColumn IsEditable="true" Title="Attendance"  Filterable="true" Sortable="false" CellStyle="color:white" HeaderStyle="color:white" Context="ctx">
                             <EditTemplate>
-                                <MudSwitch @bind-Checked="ctx.Item.Attendance" Color="Color.Success" UnCheckedColor="Color.Error" />
+                                <MudPaper Class="pa-16 ma-2" Elevation="5" Height="100%" Width="100%">
+                                    <MudToggleIconButton @bind-Toggled="@ctx.Item.Attendance" Icon="@Icons.Material.Filled.AlarmOff" Color="@Color.Error" Title="Off" ToggledIcon="@Icons.Material.Filled.AlarmOn" ToggledColor="@Color.Success" ToggledTitle="On" />
+                                </MudPaper>
                             </EditTemplate>
-                        </PropertyColumn>
+                        </TemplateColumn>
                     </Columns>
-                </MudDataGrid>
+                </MudDataGrid>*@
+
+                <MudTable Items="attendances" Hover="true" Dense="true" Breakpoint="Breakpoint.Sm" Context="ctx" Style="background-color:rgb(40, 40, 40); color:aliceblue">
+                    <HeaderContent>
+                        <MudTh Style="color:aliceblue">Name</MudTh>
+                        <MudTh Style="color:aliceblue">Surname</MudTh>
+                        <MudTh Style="color:aliceblue">Email</MudTh>
+                        <MudTh Style="color:aliceblue">Attendance</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd Style="color:aliceblue" DataLabel="Name">@ctx.Name</MudTd>
+                        <MudTd Style="color:aliceblue" DataLabel="Surname">@ctx.Surname</MudTd>
+                        <MudTd Style="color:aliceblue" DataLabel="Email">@ctx.Email</MudTd>
+                        <MudTd Style="color:aliceblue" DataLabel="Attendance">
+                            <MudSwitch @bind-Checked="ctx.Attendance" Color="Color.Success" UnCheckedColor="Color.Error" />
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
             </DialogContent>
             <DialogActions>
                 <MudButton OnClick="Cancel">Cancel</MudButton>
