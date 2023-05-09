@@ -40,6 +40,7 @@ namespace Universitile01.Areas.Identity.Pages.Account
 				if (result.Succeeded)
 				{
 					await _signInManager.SignInAsync(identity, isPersistent: false);
+					await _userManager.AddToRoleAsync(identity, Input.Role);
 
 					using (MySqlConnection connection = new MySqlConnection(_connectionString))
 					{
