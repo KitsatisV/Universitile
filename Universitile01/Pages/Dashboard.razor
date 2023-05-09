@@ -71,9 +71,9 @@
     </div>
 
     <div class="row">
-        <AuthorizeView Roles="Student, Teacher">
+       @* <AuthorizeView Roles="Student, Teacher">
             <Authorized>
-				<div class="col-8" style="color:white">
+			<div class="col-8" style="color:white">
 					<RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
 						<Template Context="announcement">
 							<MudCard Style="background-color:#13181b; color:aliceblue">
@@ -90,14 +90,14 @@
 											<MudText><b>@announcement.Message</b></MudText>
 										</MudBadge>
 									}
-									@*<MudText Typo="Typo.body2">@announcement.Message</MudText>*@
+									<MudText Typo="Typo.body2">@announcement.Message</MudText>
 								</MudCardContent>
 							</MudCard>
 						</Template>
 					</RadzenDataList>
 				</div>
             </Authorized>
-        </AuthorizeView>
+        </AuthorizeView>*@
 
         <AuthorizeView Roles="Student">
             <Authorized>
@@ -205,10 +205,10 @@
         var userId = getUserId();
         events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
-        announcements = await Db.Announcements
-            .Include(a => a.UsersHasAnnouncements)
-            .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId.ToString()))
-            .ToListAsync();
+        //announcements = await Db.Announcements
+        //    .Include(a => a.UsersHasAnnouncements)
+        //    .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId.ToString()))
+        //    .ToListAsync();
         async Task<string> getUserName()
         {
             var user = (await authenticationStateTask).User;
@@ -245,26 +245,26 @@
             // Close the connection when done with it.
             connection.Close();
         }
-        string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetusers u ON uha.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
-        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
-        {
-            connection.Open();
-            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(annsql, connection);
-            sqlcmd.CommandText = annsql;
-            sqlcmd.CommandType = CommandType.Text;
-            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                Announcement ann = new Announcement();
-                ann.AnnouncementsId = (Int32)rdr["announcements_id"];
-                ann.Date = (DateTime)rdr["date"];
-                ann.Message = rdr["Message"].ToString();
-                ann.Importance = (Boolean)rdr["Importance"];
-                announcements.Add(ann);
-            }
-            rdr.Close();
-            connection.Close();
-        }
+        //string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetusers u ON uha.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
+        //using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
+        //{
+        //    connection.Open();
+        //    MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(annsql, connection);
+        //    sqlcmd.CommandText = annsql;
+        //    sqlcmd.CommandType = CommandType.Text;
+        //    MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
+        //    while (rdr.Read())
+        //    {
+        //        Announcement ann = new Announcement();
+        //        ann.AnnouncementsId = (Int32)rdr["announcements_id"];
+        //        ann.Date = (DateTime)rdr["date"];
+        //        ann.Message = rdr["Message"].ToString();
+        //        ann.Importance = (Boolean)rdr["Importance"];
+        //        announcements.Add(ann);
+        //    }
+        //    rdr.Close();
+        //    connection.Close();
+        //}
         string dashstsql = "SELECT m.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashstsql, connection))
         {
