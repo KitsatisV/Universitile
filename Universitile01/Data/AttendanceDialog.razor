@@ -12,7 +12,7 @@
                         <MudTd Style="color:aliceblue" DataLabel="Name">@ctx.SessionEventId.ToString()</MudTd>
                         <MudTd Style="color:aliceblue" DataLabel="Surname">@ctx.StudentsAspnetusersId</MudTd>
                         <MudTd Style="color:aliceblue" DataLabel="Attendance">
-                            <MudToggleIconButton @bind-Toggled="ctx.IsPresent" Icon="@Icons.Material.Filled.AlarmOff" Color="@Color.Error" Title="Absent" ToggledIcon="@Icons.Material.Filled.AlarmOn" ToggledColor="@Color.Success" ToggledTitle="Present" />
+                            <MudToggleIconButton Toggled="ctx.IsPresent" ToggledChanged=@(args => Togggle(ctx)) Icon="@Icons.Material.Filled.Cancel" Color="@Color.Error" Title="Absent" ToggledIcon="@Icons.Material.Filled.CheckCircle" ToggledColor="@Color.Success" ToggledTitle="Present" />
                         </MudTd>
                     </RowTemplate>
                 </MudTable>
@@ -34,9 +34,15 @@
     void Cancel() => MudDialog.Cancel();
 
     //Attendance Toggler
-    public void OnToggledChanged()
+    public void Togggle(SessionHasStudent item)
     {
-
+        foreach (SessionHasStudent att in attendances)
+        {
+            if (item == att)
+            {
+                att.IsPresent = (att.IsPresent) ? false : true;
+            }
+        }
     }
 
     List<SessionHasStudent> attendances = new List<SessionHasStudent>
