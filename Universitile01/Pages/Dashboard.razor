@@ -191,13 +191,13 @@
     private List<Module> myModules = new List<Module>();
     private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
-	[CascadingParameter]
-	private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-	private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
-	{
+    private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
+    {
 
-	}
+    }
 
 
     protected override async Task OnInitializedAsync()
@@ -300,7 +300,9 @@
             {
                 PersonalInfo teach = new PersonalInfo();
                 teach.InfoId = (Int32)rdr["info_id"];
-                teach.DateOfBirth = (DateOnly)rdr["date_of_birth"];
+
+                var date = DateOnly.FromDateTime((DateTime)rdr["date_of_birth"]);
+                teach.DateOfBirth = date;
                 teach.Sex = (sbyte)rdr["sex"];
                 teach.FirstName = rdr["first_name"].ToString();
                 teach.LastName = rdr["last_name"].ToString();

@@ -15,7 +15,6 @@
              Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
     <Columns>
         <PropertyColumn Property="x => x.ModuleName" Title="Module Name" IsEditable="false" />
-        <PropertyColumn Property="x => x.CourseName.CourseName" Title="Belongs in Course" IsEditable="false" />
         <PropertyColumn Property="x => x.FullName" Title="Teacher Name" IsEditable="true">
             <EditTemplate>
                 <MudSelect @bind-Value="context.Item.FullName" Immediate="true" Required RequiredError="You must select a Position!!!">
@@ -40,39 +39,32 @@
     private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
     private List<PersonalInfo> Students = new List<PersonalInfo>();
     private List<TeacherstoModules> Teacherssf = new List<TeacherstoModules>();
-    private List<Course> Courses = new List<Course>();
     private List<Teacher> Teach = new List<Teacher>();
-    public static PersonalInfo pers;
+    private List<string> aspnetusersid = new List<string>();
     private bool _editTriggerRowClick;
     private bool _isCellEditMode;
     private bool _readOnly;
     private List<string> _events = new();
-    private List<string> aspnetusersid = new List<string>();
+
 
     protected override async Task OnInitializedAsync()
     {
 
         MySqlConnection connection = new MySqlConnection(connectionString);
-        string sqlstudents = "SELECT m.module_id, m.module_name, c.course_name FROM modules m JOIN courses c ON m.courses_course_id = c.course_id WHERE NOT EXISTS (  SELECT 1 FROM teachers t WHERE t.modules_module_id = m.module_id)";
-        using (MySqlCommand command = new MySqlCommand(sqlstudents, connection))
+        string sqlteachers = "SELECT ur.aspnetusers_Id FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId WHERE u.RoleId = '4aff1f28-c6d5-4297-96cf-b9371ae3d81d'";
+        using (MySqlCommand command = new MySqlCommand(sqlteachers, connection))
         {
 
             try
             {
                 connection.Open();
-                MySqlCommand sqlcmd = new MySqlCommand(sqlstudents, connection);
-                sqlcmd.CommandText = sqlstudents;
+                MySqlCommand sqlcmd = new MySqlCommand(sqlteachers, connection);
+                sqlcmd.CommandText = sqlteachers;
                 sqlcmd.CommandType = CommandType.Text;
                 MySqlDataReader rdr = sqlcmd.ExecuteReader();
                 while (rdr.Read())
                 {
-
-                    TeacherstoModules mod = new TeacherstoModules();
-                    mod.ModuleId = (Int32)rdr["module_id"];
-                    mod.ModuleName = rdr["module_name"].ToString();
-                    mod.CourseName = new Course { CourseName = rdr["course_name"].ToString()};
-                    Teacherssf.Add(mod);
-
+                    aspnetusersid.Add(rdr["aspnetusers_Id"].ToString());
                 }
                 // always call Close when done reading.
                 rdr.Close();
@@ -85,6 +77,8 @@
                 throw;
             }
         }
+
+
         foreach (string a in aspnetusersid)
         {
             string noncoursestudents = "SELECT * FROM personal_info WHERE aspnetusers_Id ='" + a + "'";
@@ -101,12 +95,12 @@
                     MySqlDataReader rdr = sqlcmd.ExecuteReader();
                     while (rdr.Read())
                     {
-                        TeacherstoModules mod = new TeacherstoModules();
+                        Teacher mod = new Teacher();
                         mod.Id = a;
                         mod.FirstName = rdr["first_name"].ToString();
                         mod.LastName = rdr["last_name"].ToString();
-                        Teacherssf.Add(mod);
-
+                        mod.FullName = mod.LastName + " " + mod.FirstName;
+                        Teach.Add(mod);
                     }
                     // always call Close when done reading.
                     rdr.Close();
@@ -119,7 +113,7 @@
                 }
             }
         }
-        string coursessql = "SELECT * FROM courses";
+        string coursessql = "SELECT m.module_id, m.module_name, c.course_name FROM modules m JOIN courses c ON m.courses_course_id = c.course_id WHERE NOT EXISTS (  SELECT 1 FROM teachers t WHERE t.modules_module_id = m.module_id)";
         using (MySqlCommand command = new MySqlCommand(coursessql, connection))
         {
 
@@ -132,7 +126,11 @@
                 MySqlDataReader rdr = sqlcmd.ExecuteReader();
                 while (rdr.Read())
                 {
-
+                    TeacherstoModules mod = new TeacherstoModules();
+                    mod.ModuleId = (Int32)rdr["module_id"];
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.ModuleName = rdr["module_name"].ToString();
+                    Teacherssf.Add(mod);
 
                 }
                 // always call Close when done reading.
@@ -154,10 +152,10 @@
         try
         {
             MySqlConnection connection = new MySqlConnection(connectionString);
-            string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
+            string sql = "DELETE FROM teacher WHERE Id = @Id";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue("@Id", pers.Id);
+                command.Parameters.AddWithValue("@Id", pers.ModuleId);
                 connection.Close();
                 connection.Open();
                 command.ExecuteNonQuery();
@@ -173,31 +171,37 @@
 
     void Save(TeacherstoModules pers)
     {
+
         MySqlConnection connection = new MySqlConnection(connectionString);
-        string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.ModuleName + "'";
-        using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+        string[] splitname = pers.FullName.Split(' ');
+        string lastname = splitname[0];
+        string name = splitname[1];
+        string aspnetuserid = "";
+        string sqlfullname2id = "SELECT aspnetusers_id FROM personal_info WHERE first_name = '" + name + "' AND last_name = '" + lastname + "'";
+        using (MySqlCommand command = new MySqlCommand(sqlfullname2id, connection))
         {
-            connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
-            sqlcmd.CommandText = sqlfindcId;
+            MySqlCommand sqlcmd = new MySqlCommand(sqlfullname2id, connection);
+            sqlcmd.CommandText = sqlfullname2id;
             sqlcmd.CommandType = CommandType.Text;
+            connection.Open();
             MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
-                //pers.ModuleId = rdr["course_id"].ToString();
+                aspnetuserid = rdr["Aspnetusers_Id"].ToString();
+
             }
+            // always call Close when done reading.
             rdr.Close();
+            // Close the connection when done with it.
             connection.Close();
-
         }
-
         try
         {
-            string sql = "INSERT INTO students (aspnetusers_Id, courses_course_id) VALUES (@Id, @CourseId)";
+            string sql = "INSERT INTO teachers (modules_module_id, aspnetusers_Id) VALUES (@moduleId, @userId)";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue("@Id", pers.Id);
-                command.Parameters.AddWithValue("@CourseId", pers.ModuleId);
+                command.Parameters.AddWithValue("@moduleId", pers.ModuleId);
+                command.Parameters.AddWithValue("@userId", aspnetuserid);
 
                 connection.Close();
                 connection.Open();
@@ -213,7 +217,6 @@
 
     public class TeacherstoModules
     {
-        public string Id { get; set; }
 
         public string FirstName { get; set; }
 
@@ -221,19 +224,21 @@
 
         public string? ModuleName { get; set; }
 
-        public int ModuleId { get; set; }
+        public int? ModuleId { get; set; }
 
-        public virtual Course CourseName { get; set; }
+        public string? CourseName { get; set; }
 
-        public string FullName = "{FirstName} " + "{LastName}";
+        public string? FullName { get; set; }
     }
 
     public class Teacher
     {
+        public string Id { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public string FullName = "{FirstName} " + "{LastName}";
+        public string FullName { get; set; }
     }
 }
