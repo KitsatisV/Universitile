@@ -1,0 +1,58 @@
+﻿@page "/AdminAnnouncements"
+@using MudBlazor
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+@layout AdminLayout
+
+
+<h3>AdminAnnouncements</h3>
+
+<MudDataGrid T="CreateAnnouncement" Items="@Announcements" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+    <Columns>
+        <PropertyColumn Property="x => x.Message" Title="Message" IsEditable="true" />
+        <PropertyColumn Property="x => x.today" Title="Date" IsEditable="true" />
+        <PropertyColumn Property="x => x.Importance" Title="Importance" IsEditable="true" />
+    </Columns>
+@*    <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
+        <CellTemplate>
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
+        </CellTemplate>
+    </TemplateColumn>*@
+</MudDataGrid>
+
+
+
+@code {
+    private bool _isCellEditMode;
+    new List<CreateAnnouncement> Announcements = new List<CreateAnnouncement>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CreateAnnouncement Dates2 = new CreateAnnouncement();
+        Dates2.today = DateTime.Now;
+        Dates2.Message = "hello";
+        Dates2.Importance = "true";
+        Announcements.Add(Dates2);
+ 
+
+    }
+    
+
+
+    public class CreateAnnouncement
+    {
+        public DateTime? today { get; set; }
+        public string? Message { get; set; }
+        public string? Importance { get; set; }
+    }
+
+}
