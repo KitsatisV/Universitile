@@ -17,7 +17,16 @@
         <div class="buttons-con">
             <div class="action-link-wrap">
                 <a onclick="history.back(-1)" class="link-button link-back-button">Go Back</a>
-                <a href="" class="link-button">Go to Home Page</a>
+                <AuthorizeView Roles="Teacher, Student">
+                    <Authorized>
+                        <a href="dashboard" class="link-button">Go to Home Page</a>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Roles="Admin">
+                    <Authorized>
+                        <a href="admin" class="link-button">Go to Home Page</a>
+                    </Authorized>
+                </AuthorizeView>
             </div>
         </div>
     </div>
