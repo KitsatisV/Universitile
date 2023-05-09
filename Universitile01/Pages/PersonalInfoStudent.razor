@@ -310,7 +310,8 @@
 			{
 				PersonalInfo teach = new PersonalInfo();
 				teach.InfoId = (Int32)rdr["info_id"];
-				teach.DateOfBirth = (DateTime)rdr["date_of_birth"];
+				var date = DateOnly.FromDateTime((DateTime)rdr["date_of_birth"]);
+				teach.DateOfBirth = date;
 				teach.Sex = (sbyte)rdr["sex"];
 				teach.FirstName = rdr["first_name"].ToString();
 				teach.LastName = rdr["last_name"].ToString();
