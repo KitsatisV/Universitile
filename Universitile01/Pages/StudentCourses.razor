@@ -1,0 +1,372 @@
+﻿@page "/Studentcourses"
+@using MudBlazor
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+@layout AdminLayout
+@*StartedEditingItem="@StartedEditingCourses" CanceledEditingItem="@CanceledEditingCourses" CommittedItemChanges="@CommittedItemChanges"*@
+
+<AuthorizeView Context="ctx" Roles="Admin">
+    <Authorized>
+
+<MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
+    <MudTabPanel Text="Unassigned Students">
+        <MudDataGrid T="StudentstoCourse" Items="@Studentsf" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+                     Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+            <Columns>
+                <PropertyColumn Property="x => x.FirstName" Title="First Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.LastName" Title="Last Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.CourseName" Title="Belongs in Course" IsEditable="true">
+                    <EditTemplate>
+                        <MudSelect @bind-Value="context.Item.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!">
+                            @foreach (Course coursed in Courses)
+                            {
+                                <MudSelectItem Value="coursed.CourseName"></MudSelectItem>
+                            }
+                        </MudSelect>
+                    </EditTemplate>
+                </PropertyColumn>
+                <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+
+
+        @code {
+        private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+        private List<PersonalInfo> Students = new List<PersonalInfo>();
+        private List<StudentstoCourse> Studentsf = new List<StudentstoCourse>();
+        private List<Course> Courses = new List<Course>();
+        private bool _isCellEditMode;
+        private List<string> aspnetusersid = new List<string>();
+        private List<string> aspnetusersid2 = new List<string>();
+
+        protected override async Task OnInitializedAsync()
+        {
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sqlstudents = "SELECT ur.* FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId  LEFT JOIN students s ON k.Id = s.aspnetusers_Id WHERE u.RoleId = '9a2104f0-43b7-4cdc-b125-f667fc272be7' AND s.aspnetusers_Id IS NULL";
+            using (MySqlCommand command = new MySqlCommand(sqlstudents, connection))
+            {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(sqlstudents, connection);
+                sqlcmd.CommandText = sqlstudents;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    aspnetusersid.Add(rdr["aspnetusers_Id"].ToString());
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+
+            catch
+            {
+                throw;
+            }
+            }
+            foreach (string a in aspnetusersid)
+            {
+            string noncoursestudents = "SELECT * FROM personal_info WHERE aspnetusers_Id ='" + a + "'";
+
+            using (MySqlCommand command = new MySqlCommand(noncoursestudents, connection))
+            {
+
+                try
+                {
+                    connection.Open();
+                    MySqlCommand sqlcmd = new MySqlCommand(noncoursestudents, connection);
+                    sqlcmd.CommandText = noncoursestudents;
+                    sqlcmd.CommandType = CommandType.Text;
+                    MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        StudentstoCourse mod = new StudentstoCourse();
+                        mod.Id = a;
+                        mod.FirstName = rdr["first_name"].ToString();
+                        mod.LastName = rdr["last_name"].ToString();
+                        Studentsf.Add(mod);
+
+                    }
+                    // always call Close when done reading.
+                    rdr.Close();
+                    // Close the connection when done with it.
+                    connection.Close();
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+            }
+            string coursessql = "SELECT * FROM courses";
+            using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+            {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(coursessql, connection);
+                sqlcmd.CommandText = coursessql;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Course mod = new Course();
+                    mod.CourseId = (Int32)rdr["course_id"];
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.CourseDescription = rdr["course_description"].ToString();
+                    mod.CourseDuration = (Int32)rdr["course_duration"];
+                    Courses.Add(mod);
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+            }
+            string sqlstudentsNN = "SELECT ur.first_name, ur.last_name, ur.aspnetusers_Id, c.course_Id, c.course_name FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId LEFT JOIN students s ON k.Id = s.aspnetusers_Id LEFT JOIN courses c ON s.courses_course_id = c.course_id WHERE u.RoleId = '9a2104f0-43b7-4cdc-b125-f667fc272be7' AND s.aspnetusers_Id IS NOT NULL";
+            using (MySqlCommand command = new MySqlCommand(sqlstudentsNN, connection))
+            {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(sqlstudentsNN, connection);
+                sqlcmd.CommandText = sqlstudentsNN;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    StudentstoCourseAs mod = new StudentstoCourseAs();
+                    mod.Id = rdr["aspnetusers_Id"].ToString();
+                    mod.FirstName = rdr["first_name"].ToString();
+                    mod.LastName = rdr["last_name"].ToString();
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.CourseId = (Int32)rdr["course_Id"];
+                    Studentsfas.Add(mod);
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+
+            catch
+            {
+                throw;
+            }
+            }
+        }
+
+        void Delete(StudentstoCourse pers)
+        {
+            try
+            {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.Id);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            Studentsf.Remove(pers);
+            }
+            catch
+            {
+            throw;
+            }
+        }
+
+        void Save(StudentstoCourse pers)
+        {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
+            using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+            {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
+            sqlcmd.CommandText = sqlfindcId;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                pers.CourseId = rdr["course_id"].ToString();
+            }
+            rdr.Close();
+            connection.Close();
+
+            }
+
+            try
+            {
+            string sql = "INSERT INTO students (aspnetusers_Id, courses_course_id) VALUES (@Id, @CourseId)";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.Id);
+                command.Parameters.AddWithValue("@CourseId", pers.CourseId);
+
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            }
+            catch
+            {
+            throw;
+            }
+        }
+
+        public class StudentstoCourse
+        {
+            public string Id { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public string? CourseName { get; set; }
+
+            public string? CourseId { get; set; }
+        }
+
+        }
+    </MudTabPanel>
+    <MudTabPanel Text="Assigned Students">
+        <MudDataGrid T="StudentstoCourseAs" Items="@Studentsfas" ReadOnly="false" EditMode="@(_isCellEditMode2 ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+                     Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+            <Columns>
+                <PropertyColumn Property="x => x.FirstName" Title="First Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.LastName" Title="Last Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.CourseName" Title="Belongs in Course" IsEditable="true">
+                    <EditTemplate>
+                        <MudSelect @bind-Value="context.Item.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!">
+                            @foreach (Course coursed in Courses)
+                            {
+                                <MudSelectItem Value="coursed.CourseName"></MudSelectItem>
+                            }
+                        </MudSelect>
+                    </EditTemplate>
+                </PropertyColumn>
+                <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteAssigned(@context.Item))" />
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => SaveAssigned(@context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+
+
+        @code {
+        private List<PersonalInfo> Students2 = new List<PersonalInfo>();
+        private List<StudentstoCourseAs> Studentsfas = new List<StudentstoCourseAs>();
+        private List<Course> Courses2 = new List<Course>();
+        public static PersonalInfo pers2;
+        public bool _isCellEditMode2;
+
+        void DeleteAssigned(StudentstoCourseAs pers)
+        {
+            try
+            {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sqldelstudent = "DELETE FROM aspnetusers WHERE Id = @Id";
+            using (MySqlCommand command = new MySqlCommand(sqldelstudent, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.Id);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            Studentsfas.Remove(pers);
+            }
+            catch
+            {
+            throw;
+            }
+        }
+
+        void SaveAssigned(StudentstoCourseAs pers)
+        {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
+            using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+            {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
+            sqlcmd.CommandText = sqlfindcId;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                pers.CourseId = (Int32)rdr["course_id"];
+            }
+            rdr.Close();
+            connection.Close();
+
+            }
+
+            try
+            {
+            string sql = "UPDATE Students SET courses_course_id = @CourseId WHERE aspnetusers_Id = @Id";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.Id);
+                command.Parameters.AddWithValue("@CourseId", pers.CourseId);
+
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            }
+            catch
+            {
+            throw;
+            }
+        }
+
+        public class StudentstoCourseAs
+        {
+            public string Id { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public string? CourseName { get; set; }
+
+            public int? CourseId { get; set; }
+        }
+        }
+    </MudTabPanel>
+</MudTabs>
+
+    </Authorized>
+</AuthorizeView>

@@ -1,8 +1,8 @@
 @page
+@using Universitile01.Shared;
+
 @model RegisterModel
-@{
-	ViewData["Title"] = "Register";
-}
+
 
 <h1>@ViewData["Title"]</h1>
 <div class="row" style="margin:50px">
@@ -12,6 +12,45 @@
 				<h2>Register a new user</h2>
 				<hr />
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-floating" style="margin:10px">
+					<input asp-for="Input.FirstName" class="form-control" autocomplete="First Name" aria-required="true" />
+					<label asp-for="Input.FirstName" class="form-label"></label>
+					<span asp-validation-for="Input.FirstName" class="text-danger"></span>
+				</div>
+				<div class="form-floating" style="margin:10px">
+					<input asp-for="Input.MiddleName" class="form-control" autocomplete="Middle Name" aria-required="false" />
+					<label asp-for="Input.MiddleName" class="form-label"></label>
+					<span asp-validation-for="Input.MiddleName" class="text-danger"></span>
+				</div>
+				<div class="form-floating" style="margin:10px">
+					<input asp-for="Input.LastName" class="form-control" autocomplete="Last Name" aria-required="true" />
+					<label asp-for="Input.LastName" class="form-label"></label>
+					<span asp-validation-for="Input.LastName" class="text-danger"></span>
+				</div>
+				<div class="form-floating" style="margin:10px">
+					<input asp-for="Input.Landline" class="form-control" autocomplete="Landline" aria-required="true" />
+					<label asp-for="Input.Landline" class="form-label"></label>
+					<span asp-validation-for="Input.Landline" class="text-danger"></span>
+				</div>
+				<div class="form-floating" style="margin:10px">
+					<input asp-for="Input.Mobile" class="form-control" autocomplete="Mobile" aria-required="true" />
+					<label asp-for="Input.Mobile" class="form-label"></label>
+					<span asp-validation-for="Input.Mobile" class="text-danger"></span>
+				</div>
+				<div class="form-floating" style="margin:10px">
+                    <select asp-for="Input.Sex" class="form-control" autocomplete="Sex" aria-required="true" >
+					<option value="0">Not known</option>
+					<option value="1">Male</option>
+					<option value="2">Female</option>
+					</select>
+                    <label asp-for="Input.Sex" class="form-label"></label>
+					<span asp-validation-for="Input.Sex" class="text-danger"></span>
+				</div>
+				<div class="form-floating" style="margin:10px">
+					<input asp-for="Input.DateOfBirth" class="form-control" autocomplete="Birthday" aria-required="true" type="date" />
+					<label asp-for="Input.DateOfBirth" class="form-label"></label>
+					<span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+				</div>
 				<div class="form-floating" style="margin:10px">
 					<input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
 					<label asp-for="Input.Email" class="form-label"></label>

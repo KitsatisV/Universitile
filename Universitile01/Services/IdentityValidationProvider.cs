@@ -22,7 +22,7 @@ namespace Universitile01.Services
             _options = optionsAccessor.Value;
         }
 
-        protected override TimeSpan RevalidationInterval => TimeSpan.FromSeconds(1);
+        protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(5);
 
         protected override async Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState, CancellationToken cancellationToken)
         {

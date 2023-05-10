@@ -1,10 +1,10 @@
-﻿@page "/Dashboard"
+@page "/Dashboard"
 @using System.Text;
-@using MySql.Data.MySqlClient;
-@using System.Data;
 @inject IDialogService DialogService
 @using Universitile01.Models;
 @using Universitile01.Services;
+@using MySql.Data.MySqlClient;
+@using System.Data;
 @inject UniversitiledatabaseContext Db
 @inject TeacherService TeacherService
 @using Microsoft.EntityFrameworkCore
@@ -73,8 +73,8 @@
     <div class="row">
        @* <AuthorizeView Roles="Student, Teacher">
             <Authorized>
-			<div class="col-8" style="color:white">
-					<RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll;">
+				<div class="col-8" style="color:white; height:400px">
+					<RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll">
 						<Template Context="announcement">
 							<MudCard Style="background-color:#13181b; color:aliceblue">
 								<MudCardContent>
@@ -179,6 +179,7 @@
 </body>
 
 @code {
+
     private string userId;
     private List<Session> events = new List<Session>();
     private List<Module> modules = new List<Module>();
@@ -194,16 +195,10 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    private void OpenDialogCalendar(SchedulerAppointmentSelectEventArgs<CalendarEvent> args)
-    {
-
-    }
-
 
     protected override async Task OnInitializedAsync()
     {
         MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connect);
-
         var userId = getUserId();
         events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
@@ -222,7 +217,7 @@
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
         }
-        
+      
         string getRole()
         {
             string sql = "SELECT r.Id FROM aspnetusers u JOIN aspnetuserroles ur ON u.Id = ur.UserId JOIN aspnetroles r ON ur.RoleId = r.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
@@ -247,6 +242,7 @@
             }
         }
 
+        //Get Teachers Modules
         string dashteachsql = "SELECT m.* FROM modules m INNER JOIN teachers s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
@@ -271,26 +267,32 @@
             // Close the connection when done with it.
             connection.Close();
         }
-        //string annsql = "SELECT a.Message, a.date,announcements_id, a.Importance FROM announcements a JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id JOIN aspnetusers u ON uha.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
-        //using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
-        //{
-        //    connection.Open();
-        //    MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(annsql, connection);
-        //    sqlcmd.CommandText = annsql;
-        //    sqlcmd.CommandType = CommandType.Text;
-        //    MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
-        //    while (rdr.Read())
-        //    {
-        //        Announcement ann = new Announcement();
-        //        ann.AnnouncementsId = (Int32)rdr["announcements_id"];
-        //        ann.Date = (DateTime)rdr["date"];
-        //        ann.Message = rdr["Message"].ToString();
-        //        ann.Importance = (Boolean)rdr["Importance"];
-        //        announcements.Add(ann);
-        //    }
-        //    rdr.Close();
-        //    connection.Close();
-        //}
+
+
+        string annsql = "SELECT * FROM announcements q JOIN users_has_announcements r ON q.announcements_id = r.announcements_announcements_id WHERE r.aspnetroles_Id ='" + userRole.ToString() + "'";
+
+        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
+        {
+            connection.Open();
+            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(annsql, connection);
+            sqlcmd.CommandText = annsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Announcement ann = new Announcement();
+                ann.AnnouncementsId = (Int32)rdr["announcements_id"];
+                ann.Date = (DateTime)rdr["date"];
+                ann.Message = rdr["Message"].ToString();
+                ann.Importance = (Boolean)rdr["Importance"];
+                announcements.Add(ann);
+            }
+            rdr.Close();
+            connection.Close();
+        }
+
+        //Get Student Modules
+
         string dashstsql = "SELECT m.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashstsql, connection))
         {
@@ -314,6 +316,7 @@
             connection.Close();
         }
 
+        //Get Teachers
         string teachsql = "SELECT pi.* FROM personal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection))
         {
@@ -341,6 +344,8 @@
             rdr.Close();
             connection.Close();
         }
+
+        //Get Students
         string studsql = "SELECT pi.* FROM personal_info pi JOIN teachers t ON pi.aspnetusers_Id = t.aspnetusers_Id JOIN modules m ON t.modules_module_id = m.module_id JOIN courses c ON m.courses_course_id = c.course_id JOIN students s ON c.course_id = s.courses_course_id AND s.aspnetusers_Id ='" + userId.Result.ToString() + "'";//query
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(studsql, connection))
         {

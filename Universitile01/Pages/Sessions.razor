@@ -1,5 +1,8 @@
 ﻿@page "/sessions"
+@using Universitile01.Data;
 @using Universitile01.Models;
+
+@inject IDialogService DialogService
 
 <PageTitle>Sessions</PageTitle>
 
@@ -22,22 +25,27 @@
 							<PropertyColumn Property="x => x.Tittle" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 							<PropertyColumn Property="x => x.DateStart.ToShortDateString()" Title="Date" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 							<PropertyColumn Property="x => String.Concat(x.DateStart.ToShortTimeString(), str, x.DateEnd.ToShortTimeString())" Title="From - To" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-							<PropertyColumn Property="x => x.ModulesModuleId" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+							@*<PropertyColumn Context="ctx" Property="x => x.ModulesModule.ModuleName" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black">
+								<EditTemplate>
+									<MudSelect @bind-Value="ctx.Item.ModulesModule.ModuleName" Required>
+
+									</MudSelect>
+								</EditTemplate>
+							</PropertyColumn>*@
+							@if (context.User.IsInRole("Student"))
+							{
 							@*<PropertyColumn Property="x => x.Attendance" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />*@
-							@*<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-								<CellTemplate>
-									<MudStack Row Style="width:max-content; height:30px">
-										@if (ctx.Item.Files != "" && ctx.Item.Files != null)
-										{
-											<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Primary">Files</MudButton>
-										}
-										else
-										{
-											<p style="justify-self:center"></p>
-										}
-									</MudStack>
-								</CellTemplate>
-							</TemplateColumn>*@
+							}
+							@if (context.User.IsInRole("Teacher"))
+							{
+								<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+									<CellTemplate>
+										<MudStack Row Style="width:max-content; height:30px">
+											<MudButton OnClick=@(args => OpenAttendanceDialog(ctx.Item)) Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Error">Edit Attendance</MudButton>
+										</MudStack>
+									</CellTemplate>
+								</TemplateColumn>
+							}
 						</Columns>
 					</MudDataGrid>
 				</RadzenColumn>
@@ -51,6 +59,14 @@
 {
 	public readonly string str = " - ";
 
+	private void OpenAttendanceDialog(Session session)
+	{
+		var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Small };
+		var parameters = new DialogParameters();
+		parameters.Add("SessionID", session.EventId);
+		DialogService.Show<AttendanceDialog>(session.Tittle, parameters, options);
+	}
+
 	private List<Session> sessions = new List<Session>
 	{
 		new Session(1, "Application Development", DateTime.Parse("01/05/2023 18:00"), DateTime.Parse("01/05/2023 19:00"), 231),
@@ -60,19 +76,5 @@
 		new Session(5, "English", DateTime.Parse("02/05/2023 18:00"), DateTime.Parse("02/05/2023 19:00"), 452),
 		new Session(2, "Application Development", DateTime.Parse("02/05/2023 19:00"), DateTime.Parse("02/05/2023 20:00"), 231),
 		new Session(3, "Application Development", DateTime.Parse("02/05/2023 20:00"), DateTime.Parse("02/05/2023 21:00"), 231)
-
-		//new Session("Team Project", "21/04/2023", 1, 4, "Presence", "files"),
-		//new Session("Team Project", "21/04/2023", 2, 4, "Authorized Absence", "files"),
-		//new Session("Team Project", "21/04/2023", 3, 4, "Presence", "files"),
-		//new Session("Team Project", "21/04/2023", 4, 4, "Presence", "files"),
-		//new Session("Application Development", "22/04/2023", 1, 3, "Authorized Absence", ""),
-		//new Session("Application Development", "22/04/2023", 2, 3, "Authorized Absence", ""),
-		//new Session("Application Development", "22/04/2023", 3, 3, "Authorized Absence", ""),
-		//new Session("Software Engineering", "23/04/2023", 1, 2, "Authorized Absence", "files"),
-		//new Session("Software Engineering", "23/04/2023", 2, 2, "Authorized Absence", "files"),
-		//new Session("English", "24/04/2023", 1, 1, "Unauthorized Absence", ""),
-		//new Session("Graphics 1", "25/04/2023", 1, 3, "Unauthorized Absence", "files"),
-		//new Session("Graphics 1", "25/04/2023", 2, 3, "Unauthorized Absence", "files"),
-		//new Session("Graphics 1", "25/04/2023", 3, 3, "Presence", "files")
 	};
 }
