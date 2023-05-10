@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,7 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Universitile01.Areas.Identity.Pages.Account
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize (Roles = "Admin")]
+
     public class RegisterModel : PageModel
 	{
 		private readonly SignInManager<IdentityUser> _signInManager;

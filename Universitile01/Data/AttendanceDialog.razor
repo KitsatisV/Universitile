@@ -1,0 +1,57 @@
+﻿<AuthorizeView Roles="Teacher">
+    <Authorized>
+        <MudDialog Style="background-color:black; color:aliceblue; width:80vw">
+            <DialogContent>
+                <MudTable Items="attendances" FixedHeader="true" Hover="true" Dense="true" Breakpoint="Breakpoint.Sm" Context="ctx" Style="max-height:70vh; background-color:rgb(40, 40, 40); color:aliceblue">
+                    <HeaderContent>
+                        <MudTh Style="color:black">Name</MudTh>
+                        <MudTh Style="color:black">Surname</MudTh>
+                        <MudTh Style="color:black">Attendance</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd Style="color:aliceblue" DataLabel="Name">@ctx.SessionEventId.ToString()</MudTd>
+                        <MudTd Style="color:aliceblue" DataLabel="Surname">@ctx.StudentsAspnetusersId</MudTd>
+                        <MudTd Style="color:aliceblue" DataLabel="Attendance">
+                            <MudToggleIconButton Toggled="ctx.IsPresent" ToggledChanged=@(args => Togggle(ctx)) Icon="@Icons.Material.Filled.Cancel" Color="@Color.Error" Title="Absent" ToggledIcon="@Icons.Material.Filled.CheckCircle" ToggledColor="@Color.Success" ToggledTitle="Present" />
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="Cancel">Cancel</MudButton>
+                <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public int SessionId { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    //Attendance Toggler
+    public void Togggle(SessionHasStudent item)
+    {
+        foreach (SessionHasStudent att in attendances)
+        {
+            if (item == att)
+            {
+                att.IsPresent = (att.IsPresent) ? false : true;
+            }
+        }
+    }
+
+    List<SessionHasStudent> attendances = new List<SessionHasStudent>
+    {
+        new SessionHasStudent(0, "Doe", true),
+        new SessionHasStudent(1, "Joe", false),
+        new SessionHasStudent(2, "Moe", true),
+        new SessionHasStudent(3, "Hoe", false),
+        new SessionHasStudent(4, "Poe", true),
+        new SessionHasStudent(5, "Toe", false),
+    };
+}
