@@ -71,7 +71,7 @@
     </div>
 
     <div class="row">
-       @* <AuthorizeView Roles="Student, Teacher">
+        <AuthorizeView Roles="Student, Teacher">
             <Authorized>
 				<div class="col-8" style="color:white; height:400px">
 					<RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll">
@@ -97,7 +97,7 @@
 					</RadzenDataList>
 				</div>
             </Authorized>
-        </AuthorizeView>*@
+        </AuthorizeView>
 
         <AuthorizeView Roles="Student">
             <Authorized>
@@ -202,6 +202,7 @@
         var userId = getUserId();
         events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
+        string userRole = getRole();
         //announcements = await Db.Announcements
         //    .Include(a => a.UsersHasAnnouncements)
         //    .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId.ToString()))
