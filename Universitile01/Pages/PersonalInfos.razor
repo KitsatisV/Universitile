@@ -35,12 +35,42 @@
 
 		<AuthorizeView Roles="Student, Teacher">
 			<Authorized>
-				<RadzenColumn Size="2" Style="background-color:black;">
-					<MudAvatar Style="height:7rem; width:7rem;">VK</MudAvatar>
+				<RadzenColumn Size="2" Style="background-color:black; width:100%; height:; justify-items:center">
+					<center>
+						<MudAvatar Style="height:7vw; width:7vw">VK</MudAvatar>
+					</center>
 				</RadzenColumn>
 				<RadzenColumn Size="10" Style="background-color:black">
 					<RadzenCard Style="width:stretch; height:stretch">
+						<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+							<RadzenColumn Size="4" Style="justify-content:center; align-content:center; padding-left:1vw">
+								<pre style="font-family:'Times New Roman', Times, serif; color:whitesmoke; font-size:1rem">
+Full Name:		@user.Name @user.MiddleName @user.Surname
 
+Sex:				@user.Sex
+
+Date of Birth:		@user.DoB
+								</pre>
+							</RadzenColumn>
+							<RadzenColumn Size="4" Style="justify-content:center; align-content:center; padding-left:1vw">
+								<pre style="font-family:'Times New Roman', Times, serif; color:whitesmoke; font-size:1rem">
+School:		@user.School
+
+Course:		@user.Course
+
+Email:		@user.Email
+								</pre>
+							</RadzenColumn>
+							<RadzenColumn Size="4" Style="justify-content:center; align-content:center; padding-left:1vw; padding-right:1vw">
+								<pre style="font-family:'Times New Roman', Times, serif; color:whitesmoke; font-size:1rem">
+Address:		@user.Address
+
+Landline:	@user.Landline
+
+Mobile:		@user.Mobile
+								</pre>
+							</RadzenColumn>
+						</RadzenRow>
 					</RadzenCard>
 				</RadzenColumn>
 			</Authorized>
@@ -376,8 +406,5 @@
 		public string Sex { get; set; }
 	}
 
-	new List<TempUser> users = new List<TempUser>
-	{
-		new TempUser("Vasileios", "", "Kitsatis", "vkitsatis@gmail.com", "2321023210", "6945752572", "Kithairwna 1b", "UoD", "Computer Science", "21/09/98", "Male")
-	};
+	public TempUser user = new TempUser("Vasileios", "", "Kitsatis", "vkitsatis@gmail.com", "2321023210", "6945752572", "Kithairwna 1b", "UoD", "Computer Science", "21/09/98", "Male");
 }
