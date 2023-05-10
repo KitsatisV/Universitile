@@ -11,50 +11,53 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @layout AdminLayout
 @*StartedEditingItem="@StartedEditingCourses" CanceledEditingItem="@CanceledEditingCourses" CommittedItemChanges="@CommittedItemChanges"*@
-<MudDataGrid T="StudentstoCourse" Items="@Studentsf" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
-             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
-    <Columns>
-        <PropertyColumn Property="x => x.FirstName" Title="First Name" IsEditable="false" />
-        <PropertyColumn Property="x => x.LastName" Title="Last Name" IsEditable="false" />
-        <PropertyColumn Property="x => x.CourseName" Title="Belongs in Course" IsEditable="true">
-            <EditTemplate>
-                <MudSelect @bind-Value="context.Item.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!">
-                    @foreach (Course coursed in Courses)
-                    {
-                        <MudSelectItem Value="coursed.CourseName"></MudSelectItem>
-                    }
-                </MudSelect>
-            </EditTemplate>
-        </PropertyColumn>
-        <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
-            <CellTemplate>
-                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
-                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-</MudDataGrid>
+
+<MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
+    <MudTabPanel Text="Unassigned Students">
+        <MudDataGrid T="StudentstoCourse" Items="@Studentsf" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+                     Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+            <Columns>
+                <PropertyColumn Property="x => x.FirstName" Title="First Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.LastName" Title="Last Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.CourseName" Title="Belongs in Course" IsEditable="true">
+                    <EditTemplate>
+                        <MudSelect @bind-Value="context.Item.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!">
+                            @foreach (Course coursed in Courses)
+                            {
+                                <MudSelectItem Value="coursed.CourseName"></MudSelectItem>
+                            }
+                        </MudSelect>
+                    </EditTemplate>
+                </PropertyColumn>
+                <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
 
 
-@code {
-    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
-    private List<PersonalInfo> Students = new List<PersonalInfo>();
-    private List<StudentstoCourse> Studentsf = new List<StudentstoCourse>();
-    private List<Course> Courses = new List<Course>();
-    public static PersonalInfo pers;
-    private bool _editTriggerRowClick;
-    private bool _isCellEditMode;
-    private bool _readOnly;
-    private List<string> _events = new();
-    private List<string> aspnetusersid = new List<string>();
+        @code {
+        private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+        private List<PersonalInfo> Students = new List<PersonalInfo>();
+        private List<StudentstoCourse> Studentsf = new List<StudentstoCourse>();
+        private List<Course> Courses = new List<Course>();
+        public static PersonalInfo pers;
+        private bool _editTriggerRowClick;
+        private bool _isCellEditMode;
+        private bool _readOnly;
+        private List<string> _events = new();
+        private List<string> aspnetusersid = new List<string>();
 
-    protected override async Task OnInitializedAsync()
-    {
-
-        MySqlConnection connection = new MySqlConnection(connectionString);
-        string sqlstudents = "SELECT ur.* FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId  LEFT JOIN students s ON k.Id = s.aspnetusers_Id WHERE u.RoleId = '9a2104f0-43b7-4cdc-b125-f667fc272be7' AND s.aspnetusers_Id IS NULL";
-        using (MySqlCommand command = new MySqlCommand(sqlstudents, connection))
+        protected override async Task OnInitializedAsync()
         {
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sqlstudents = "SELECT ur.* FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId  LEFT JOIN students s ON k.Id = s.aspnetusers_Id WHERE u.RoleId = '9a2104f0-43b7-4cdc-b125-f667fc272be7' AND s.aspnetusers_Id IS NULL";
+            using (MySqlCommand command = new MySqlCommand(sqlstudents, connection))
+            {
 
             try
             {
@@ -77,9 +80,9 @@
             {
                 throw;
             }
-        }
-        foreach (string a in aspnetusersid)
-        {
+            }
+            foreach (string a in aspnetusersid)
+            {
             string noncoursestudents = "SELECT * FROM personal_info WHERE aspnetusers_Id ='" + a + "'";
 
             using (MySqlCommand command = new MySqlCommand(noncoursestudents, connection))
@@ -111,10 +114,10 @@
                     throw;
                 }
             }
-        }
-        string coursessql = "SELECT * FROM courses";
-        using (MySqlCommand command = new MySqlCommand(coursessql, connection))
-        {
+            }
+            string coursessql = "SELECT * FROM courses";
+            using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+            {
 
             try
             {
@@ -142,37 +145,13 @@
             {
                 throw;
             }
+            }
         }
-    }
 
-    void StartedEditingCourses(PersonalInfo pers)
-    {
-        try
+        void Delete(StudentstoCourse pers)
         {
-            _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(pers)}");
-        }
-        catch
-        {
-            throw;
-        }
-    }
-
-    void CanceledEditingCourses(PersonalInfo pers)
-    {
-        try
-        {
-            _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(pers)}");
-        }
-        catch
-        {
-            throw;
-        }
-    }
-
-    void Delete(StudentstoCourse pers)
-    {
-        try
-        {
+            try
+            {
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
@@ -184,19 +163,19 @@
                 connection.Close();
             }
             Studentsf.Remove(pers);
-        }
-        catch
-        {
+            }
+            catch
+            {
             throw;
+            }
         }
-    }
 
-    void Save(StudentstoCourse pers)
-    {
-        MySqlConnection connection = new MySqlConnection(connectionString);
-        string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
-        using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+        void Save(StudentstoCourse pers)
         {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
+            using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+            {
             connection.Open();
             MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
             sqlcmd.CommandText = sqlfindcId;
@@ -208,11 +187,11 @@
             }
             rdr.Close();
             connection.Close();
-            
-        }
-        
-        try
-        {
+
+            }
+
+            try
+            {
             string sql = "INSERT INTO students (aspnetusers_Id, courses_course_id) VALUES (@Id, @CourseId)";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
@@ -224,26 +203,139 @@
                 command.ExecuteNonQuery();
                 connection.Close();
             }
-        }
-        catch
-        {
+            }
+            catch
+            {
             throw;
+            }
         }
-    }
 
-    public class StudentstoCourse
-    {
-        public string Id { get; set; }
+        public class StudentstoCourse
+        {
+            public string Id { get; set; }
 
-        public string FirstName { get; set; }
+            public string FirstName { get; set; }
 
-        public string LastName { get; set; }
+            public string LastName { get; set; }
 
-        public string? CourseName { get; set; }
+            public string? CourseName { get; set; }
 
-        public string? CourseId { get; set; }
-    }
+            public string? CourseId { get; set; }
+        }
 
-}
+        }
+    </MudTabPanel>
+    <MudTabPanel Text="Assigned Students">
+        <MudDataGrid T="StudentstoCourse" Items="@Studentsf" ReadOnly="false" EditMode="@(_isCellEditMode2 ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+                     Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+            <Columns>
+                <PropertyColumn Property="x => x.FirstName" Title="First Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.LastName" Title="Last Name" IsEditable="false" />
+                <PropertyColumn Property="x => x.CourseName" Title="Belongs in Course" IsEditable="true">
+                    <EditTemplate>
+                        <MudSelect @bind-Value="context.Item.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!">
+                            @foreach (Course coursed in Courses)
+                            {
+                                <MudSelectItem Value="coursed.CourseName"></MudSelectItem>
+                            }
+                        </MudSelect>
+                    </EditTemplate>
+                </PropertyColumn>
+                <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteAssigned(@context.Item))" />
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+
+
+        @code {
+        private List<PersonalInfo> Students2 = new List<PersonalInfo>();
+        private List<StudentstoCourseAs> Studentsfas = new List<StudentstoCourseAs>();
+        private List<Course> Courses2 = new List<Course>();
+        public static PersonalInfo pers2;
+        public bool _isCellEditMode2;
+
+        void DeleteAssigned(StudentstoCourseAs pers)
+        {
+            try
+            {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.Id);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            Studentsfas.Remove(pers);
+            }
+            catch
+            {
+            throw;
+            }
+        }
+
+        void SaveAssigned(StudentstoCourseAs pers)
+        {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
+            using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+            {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
+            sqlcmd.CommandText = sqlfindcId;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                pers.CourseId = rdr["course_id"].ToString();
+            }
+            rdr.Close();
+            connection.Close();
+
+            }
+
+            try
+            {
+            string sql = "INSERT INTO students (aspnetusers_Id, courses_course_id) VALUES (@Id, @CourseId)";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.Id);
+                command.Parameters.AddWithValue("@CourseId", pers.CourseId);
+
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            }
+            catch
+            {
+            throw;
+            }
+        }
+
+        public class StudentstoCourseAs
+        {
+            public string Id { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public string? CourseName { get; set; }
+
+            public string? CourseId { get; set; }
+        }
+
+        }
+    </MudTabPanel>
+</MudTabs>
+
 
 
