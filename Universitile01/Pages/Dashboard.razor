@@ -208,6 +208,13 @@
             var user = (await authenticationStateTask).User;
             return user.Identity.Name;
         }
+
+        //Get User's role
+        //async Task<string> getRole()
+        //{
+        //    return ((await authenticationStateTask).User.IsInRole("Teacher")) ? "Teacher" : "Student";
+        //}
+
         async Task<string> getUserId()
         {
             var user = (await authenticationStateTask).User;
