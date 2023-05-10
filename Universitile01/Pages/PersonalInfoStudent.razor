@@ -146,10 +146,10 @@
 									<PropertyColumn Property="st => st.Sex" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 									<PropertyColumn Property="st => st.Mobile" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
 									<PropertyColumn Property="st=> st.Landline" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<TemplateColumn CellClass="d-flex justify-start" Title="Files" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
+									<TemplateColumn CellClass="d-flex justify-start" Title="Grades" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
 									<CellTemplate>
 									<MudStack Row Style="width:max-content; height:30px">
-									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Tertiary">Chat</MudButton>
+									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Error" OnClick="GradesDIalog">Grades</MudButton>
 									</MudStack>
 									</CellTemplate>
 									</TemplateColumn>
@@ -326,4 +326,11 @@
 			connection.Close();
 		}
 	}
+
+	private void GradesDIalog()
+	{
+		var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
+		DialogService.Show<GradesDialog>("Simple Dialog", options);
+	}
+}
 }

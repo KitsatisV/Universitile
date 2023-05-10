@@ -1,0 +1,61 @@
+﻿<AuthorizeView Roles="Teacher">
+    <Authorized>
+        <MudDialog Style="background-color:black; color:aliceblue">
+            <DialogContent>
+                <MudDataGrid Items="@data" T="ModuleModel" Editable="true" Style="background-color:#12080c;">
+                    <Columns>
+                        <PropertyColumn Property="x => x.Name" />
+                        <PropertyColumn Property="x => x.Grade" />
+                        @*Edit textfield column*@
+                        <TemplateColumn Context="b">
+                            <CellTemplate>
+                                <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
+                            </CellTemplate>
+                        </TemplateColumn>
+                        @*Edit button column*@
+                        <TemplateColumn Context="c">
+                            <HeaderTemplate>
+                                Edit
+                            </HeaderTemplate>
+                            <CellTemplate>
+                                <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            </DialogContent>
+            <DialogActions>
+                <MudButton Color="Color.Error" OnClick="Submit">Ok</MudButton>  @*Close modal dialog button*@
+            </DialogActions>
+        </MudDialog>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    //Module class with name and grade properties
+    public class ModuleModel
+    {
+        public ModuleModel(string name, int grade)
+        {
+            Name = name;
+            Grade = grade;
+        }
+
+        public string Name { get; set; }
+        public int Grade { get; set; }
+    }
+
+    //List of modules hardcoded
+    List<ModuleModel> data = new List<ModuleModel> {
+        new ModuleModel("Module 1", 70),
+        new ModuleModel("Module 2", 85),
+        new ModuleModel("Module 3", 60)
+    };
+
+}
