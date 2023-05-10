@@ -9,6 +9,7 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 
 
+
 <PageTitle>Modules</PageTitle>
 
 <body>
@@ -40,8 +41,8 @@
                                             <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText>
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px;" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Quiz</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="() => AssignmentsDialog(asgnModules)">Assignemnt</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="() => TakeQuizDialog(quizModules)">Quiz</MudButton>
                                         </RadzenColumn>
                                     </RadzenRow>
                                 </RadzenCard>
@@ -63,9 +64,12 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private List<Module> stModules = new List<Module>();
+    private List<LinksQuiz> quizModules = new List<LinksQuiz>() ;
+    private List<LinksAssignment> asgnModules = new List<LinksAssignment>();
     private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
     private Dictionary<int, PersonalInfo> moduleTeacherMap = new Dictionary<int, PersonalInfo>();
     @inject IDialogService DialogService
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -143,20 +147,79 @@
             connection.Close();
         
         }
+        string combinedQSql = "SELECT m.*, pi.first_name, pi.last_name, pi2.first_name AS teacher_first_name, pi2.last_name AS teacher_last_name, q.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN personal_info pi ON pi.aspnetusers_Id = s.aspnetusers_Id INNER JOIN personal_info pi2 ON pi2.aspnetusers_Id = t.aspnetusers_Id LEFT JOIN links_quiz q ON q.modules_module_id = m.module_id WHERE u.Id = '" + userId.Result.ToString() + "'";
+        string combinedASql = "SELECT m.*, pi.first_name, pi.last_name, pi2.first_name AS teacher_first_name, pi2.last_name AS teacher_last_name, a.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN personal_info pi ON pi.aspnetusers_Id = s.aspnetusers_Id INNER JOIN personal_info pi2 ON pi2.aspnetusers_Id = t.aspnetusers_Id LEFT JOIN links_assignments a ON a.modules_module_id = m.module_id WHERE u.Id = '" + userId.Result.ToString() + "'";
+        using (MySqlCommand command = new MySqlCommand(combinedQSql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(combinedQSql, connection);
+            sqlcmd.CommandText = combinedQSql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Module mod = new Module();
+                mod.ModuleId = (Int32)rdr["module_id"];
+                mod.ModuleName = rdr["module_name"].ToString();
+                mod.ModuleDescription = rdr["module_description"].ToString();
+                mod.ModuleDuration = (Int32)rdr["module_duration"];
+                mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+
+                LinksQuiz quiz = new LinksQuiz();
+                //quiz.ModulesModuleId = (Int32)rdr["modules_module_id"];
+                quiz.LinkId = rdr["link_id"] == DBNull.Value ? 0 : (Int32)rdr["link_id"];
+                quiz.Quizzes = rdr["quizzes"].ToString();
+                quizModules.Add(quiz);
+            }
+
+            rdr.Close();
+            connection.Close();
+        }
+
+        using (MySqlCommand command = new MySqlCommand(combinedASql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(combinedASql, connection);
+            sqlcmd.CommandText = combinedASql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Module mod = new Module();
+                mod.ModuleId = (Int32)rdr["module_id"];
+                mod.ModuleName = rdr["module_name"].ToString();
+                mod.ModuleDescription = rdr["module_description"].ToString();
+                mod.ModuleDuration = (Int32)rdr["module_duration"];
+                mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+
+                LinksAssignment asgn = new LinksAssignment();
+                //asgn.ModulesModuleId = (Int32)rdr["modules_module_id"];
+                asgn.AssignmentId = rdr["assignment_id"] == DBNull.Value ? 0 : (Int32)rdr["assignment_id"];
+                asgn.Assignments = rdr["assignments"].ToString();
+                asgnModules.Add(asgn);
+            }
+
+            rdr.Close();
+            connection.Close();
+        }
+
+   }
+
+    
+   @*Take Quiz Modal Dialog*@
+    private void TakeQuizDialog(List<LinksQuiz> quizModule)
+    {
+
+        var options = new MudBlazor.DialogOptions { };
+        DialogService.Show<TakeQuizDialog>("Take Quiz",  options);
+
     }
 
     @*Take Quiz Modal Dialog*@
-    private void TakeQuizDialog()
+    private void AssignmentsDialog(List<LinksAssignment> asgnModule)
     {
         var options = new MudBlazor.DialogOptions { };
-        DialogService.Show<TakeQuizDialog>("Take Quiz", options);
-    }
-
-    @*Take Quiz Modal Dialog*@
-    private void AssignmentsDialog()
-    {
-        var options = new MudBlazor.DialogOptions { };
-        DialogService.Show<AssignmentsDialog>("Assignments", options);
+        DialogService.Show<TakeQuizDialog>("Take Assignemnt",  options);
     }
 
 }

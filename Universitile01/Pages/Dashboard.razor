@@ -71,7 +71,7 @@
     </div>
 
     <div class="row">
-        <AuthorizeView Roles="Student, Teacher">
+       @* <AuthorizeView Roles="Student, Teacher">
             <Authorized>
 				<div class="col-8" style="color:white; height:400px">
 					<RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll">
@@ -90,14 +90,14 @@
 											<MudText><b>@announcement.Message</b></MudText>
 										</MudBadge>
 									}
-									@*<MudText Typo="Typo.body2">@announcement.Message</MudText>*@
+									<MudText Typo="Typo.body2">@announcement.Message</MudText>
 								</MudCardContent>
 							</MudCard>
 						</Template>
 					</RadzenDataList>
 				</div>
             </Authorized>
-        </AuthorizeView>
+        </AuthorizeView>*@
 
         <AuthorizeView Roles="Student">
             <Authorized>
@@ -202,7 +202,10 @@
         var userId = getUserId();
         events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
-        string userRole = getRole();
+        //announcements = await Db.Announcements
+        //    .Include(a => a.UsersHasAnnouncements)
+        //    .Where(a => a.UsersHasAnnouncements.Any(u => u.AspnetusersId == userId.ToString()))
+        //    .ToListAsync();
         async Task<string> getUserName()
         {
             var user = (await authenticationStateTask).User;
@@ -265,6 +268,7 @@
             connection.Close();
         }
 
+
         string annsql = "SELECT * FROM announcements q JOIN users_has_announcements r ON q.announcements_id = r.announcements_announcements_id WHERE r.aspnetroles_Id ='" + userRole.ToString() + "'";
 
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
@@ -288,6 +292,7 @@
         }
 
         //Get Student Modules
+
         string dashstsql = "SELECT m.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashstsql, connection))
         {

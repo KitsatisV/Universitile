@@ -1,18 +1,29 @@
-﻿<AuthorizeView Roles="Student, Teacher">
+﻿@using Universitile01.Models;
+@using System.Text;
+@using Universitile01.Data;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+
+
+
+<AuthorizeView Roles="Student, Teacher">
     <Authorized>
         <MudDialog Style="background-color:black; color:aliceblue">
             <DialogContent>
-                <MudDataGrid Items="@data" T="LinkModel" Style="background-color:#12080c;">
+                <MudDataGrid Items="@asgnModules" T="LinksAssignment" Style="background-color:#12080c;">
                     <Columns>
-                        <MudButton Disabled="false" Color="@Color.Error" OnClick="@AddNewLink">Add new Link</MudButton>
-                        <PropertyColumn Property="x => x.Name" />
+                        <MudButton Disabled="false" Color="@Color.Error" OnClick="() => AddNewLink(asgnModules)">Add new Link</MudButton>
+                        <PropertyColumn Property="x => x.AssignmentId.ToString()" />
                         @*URL column*@
                         <TemplateColumn Context="a">
                             <HeaderTemplate>
                                 <strong>URL</strong>
                             </HeaderTemplate>
                             <CellTemplate>
-                                <MudLink Href="@a.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Assignment Link</MudLink>
+                                <MudLink Href="@a.Item.Assignments" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Assignment Link</MudLink>
                             </CellTemplate>
                         </TemplateColumn>
                         <AuthorizeView Roles="Teacher">
@@ -38,7 +49,7 @@
                                         Delete
                                     </HeaderTemplate>
                                     <CellTemplate>
-                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(d.Item))"></MudButton>
+                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit" OnClick="@(() => Task.CompletedTask)"></MudButton>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Authorized>
@@ -55,39 +66,80 @@
 
 
 @code {
+    private string userId;
+    private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private List<LinksAssignment> asgnModules = new List<LinksAssignment>();
+    private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
+    protected override async Task OnInitializedAsync()
+    {
+
+        var userId = getUserId();
+        async Task<string> getUserName()
+        {
+            var user = (await authenticationStateTask).User;
+            return user.Identity.Name;
+        }
+        async Task<string> getUserId()
+        {
+            var user = (await authenticationStateTask).User;
+            var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+            return userid;
+        }
+
+        MySqlConnection connection = new MySqlConnection(connect);
+        string combinedASql = "SELECT m.* FROM modules m INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN aspnetusers u ON u.Id = t.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "' JOIN links_quiz ON links_quiz.modules_module_id = m.module_id JOIN quizzes ON quizzes.quiz_id = links_quiz.quiz_id";
+        using (MySqlCommand command = new MySqlCommand(combinedASql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(combinedASql, connection);
+            sqlcmd.CommandText = combinedASql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Module mod = new Module();
+                mod.ModuleId = (Int32)rdr["module_id"];
+                mod.ModuleName = rdr["module_name"].ToString();
+                mod.ModuleDescription = rdr["module_description"].ToString();
+                mod.ModuleDuration = (Int32)rdr["module_duration"];
+                mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+
+                LinksAssignment asgn = new LinksAssignment();
+                asgn.ModulesModuleId = rdr["modules_module_id"] == DBNull.Value ? 0 : (Int32)rdr["modules_module_id"];
+                asgn.AssignmentId = rdr["assignment_id"] == DBNull.Value ? 0 : (Int32)rdr["assignment_id"];
+                asgn.Assignments = rdr["assignments"].ToString();
+                asgnModules.Add(asgn);
+            }
+
+            rdr.Close();
+            connection.Close();
+        }
+
+    }
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
 
-    //Links hardcoded
-    public class LinkModel
-    {
-        public LinkModel(string name, string url)
-        {
-            Name = name;
-            Url = url;
-        }
 
-        public string Name { get; set; }
-        public string Url { get; set; }
-    }
-    List<LinkModel> data = new List<LinkModel> {
-            new LinkModel ("Link 1","https://www.example.com/link1" ),
-            new LinkModel ("Link 2","https://www.example.com/link2" ),
-            new LinkModel ("Link 3","https://www.example.com/link3" )
-    };
 
     //Add new Link row
-    void AddNewLink()
+    void AddNewLink(List<LinksAssignment> asgnModules)
     {
-        data.Add(new LinkModel("New Link", ""));
+        var newLink = new LinksAssignment();
+        asgnModules.Add(newLink);
+        Db.LinksAssignments.Add(newLink);
+        Db.SaveChanges();
     }
 
     //Delete Link row
-    void DeleteLink(LinkModel item)
+    void DeleteLink(LinksAssignment item)
+    
     {
-        data.Remove(item);
+        asgnModules.Remove(item);
+        Db.LinksAssignments.Remove(item);
+        Db.SaveChanges();
     }
-
 }
