@@ -11,7 +11,7 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @layout AdminLayout
 
-<AuthorizeView Context="ctx" Roles="admin">
+<AuthorizeView Context="ctx" Roles="Admin">
     <Authorized>
 <MudDataGrid T="TeacherstoModules" Items="@Teacherssf" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
              Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
