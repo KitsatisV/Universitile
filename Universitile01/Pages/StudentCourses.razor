@@ -39,7 +39,7 @@
         </MudDataGrid>
 
 
-        @code {
+    @code {
         private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
         private List<PersonalInfo> Students = new List<PersonalInfo>();
         private List<StudentstoCourse> Studentsf = new List<StudentstoCourse>();
@@ -50,6 +50,7 @@
         private bool _readOnly;
         private List<string> _events = new();
         private List<string> aspnetusersid = new List<string>();
+        private List<string> aspnetusersid2 = new List<string>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -146,6 +147,73 @@
                 throw;
             }
             }
+            string sqlstudentsNN = "SELECT ur.first_name, ur.last_name, ur.aspnetusers_Id, c.course_Id, c.course_name FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId LEFT JOIN students s ON k.Id = s.aspnetusers_Id LEFT JOIN courses c ON s.courses_course_id = c.course_id WHERE u.RoleId = '9a2104f0-43b7-4cdc-b125-f667fc272be7' AND s.aspnetusers_Id IS NOT NULL";
+            using (MySqlCommand command = new MySqlCommand(sqlstudentsNN, connection))
+            {
+
+                try
+                {
+                    connection.Open();
+                    MySqlCommand sqlcmd = new MySqlCommand(sqlstudentsNN, connection);
+                    sqlcmd.CommandText = sqlstudentsNN;
+                    sqlcmd.CommandType = CommandType.Text;
+                    MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        StudentstoCourseAs mod = new StudentstoCourseAs();
+                        mod.Id = rdr["aspnetusers_Id"].ToString();
+                        mod.FirstName = rdr["first_name"].ToString();
+                        mod.LastName = rdr["last_name"].ToString();
+                        mod.CourseName = rdr["course_name"].ToString();
+                        mod.CourseId = (Int32)rdr["course_Id"];
+                        Studentsfas.Add(mod);
+                    }
+                    // always call Close when done reading.
+                    rdr.Close();
+                    // Close the connection when done with it.
+                    connection.Close();
+                }
+
+                catch
+                {
+                    throw;
+                }
+            }
+            //foreach (string a in aspnetusersid2)
+            //{
+            //    string noncoursestudents2 = "SELECT * FROM personal_info WHERE aspnetusers_Id ='" + a + "'";
+
+            //    using (MySqlCommand command = new MySqlCommand(noncoursestudents2, connection))
+            //    {
+
+            //        try
+            //        {
+            //            connection.Open();
+            //            MySqlCommand sqlcmd = new MySqlCommand(noncoursestudents2, connection);
+            //            sqlcmd.CommandText = noncoursestudents2;
+            //            sqlcmd.CommandType = CommandType.Text;
+            //            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            //            while (rdr.Read())
+            //            {
+            //                StudentstoCourseAs mod = new StudentstoCourseAs();
+            //                mod.Id = a;
+            //                mod.FirstName = rdr["first_name"].ToString();
+            //                mod.LastName = rdr["last_name"].ToString();
+            //                Studentsfas.Add(mod);
+
+            //            }
+            //            // always call Close when done reading.
+            //            rdr.Close();
+            //            // Close the connection when done with it.
+            //            connection.Close();
+            //        }
+            //        catch
+            //        {
+            //            throw;
+            //        }
+            //    }
+            //}
+
         }
 
         void Delete(StudentstoCourse pers)
@@ -223,10 +291,10 @@
             public string? CourseId { get; set; }
         }
 
-        }
+    }
     </MudTabPanel>
     <MudTabPanel Text="Assigned Students">
-        <MudDataGrid T="StudentstoCourse" Items="@Studentsf" ReadOnly="false" EditMode="@(_isCellEditMode2 ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+        <MudDataGrid T="StudentstoCourseAs" Items="@Studentsfas" ReadOnly="false" EditMode="@(_isCellEditMode2 ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
                      Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
             <Columns>
                 <PropertyColumn Property="x => x.FirstName" Title="First Name" IsEditable="false" />
@@ -244,7 +312,7 @@
                 <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
                     <CellTemplate>
                         <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteAssigned(@context.Item))" />
-                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => SaveAssigned(@context.Item))" />
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
@@ -263,8 +331,8 @@
             try
             {
             MySqlConnection connection = new MySqlConnection(connectionString);
-            string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
-            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            string sqldelstudent = "DELETE FROM aspnetusers WHERE Id = @Id";
+            using (MySqlCommand command = new MySqlCommand(sqldelstudent, connection))
             {
                 command.Parameters.AddWithValue("@Id", pers.Id);
                 connection.Close();
@@ -293,7 +361,7 @@
             MySqlDataReader rdr = sqlcmd.ExecuteReader();
             while (rdr.Read())
             {
-                pers.CourseId = rdr["course_id"].ToString();
+                pers.CourseId = (Int32)rdr["course_id"];
             }
             rdr.Close();
             connection.Close();
@@ -302,7 +370,7 @@
 
             try
             {
-            string sql = "INSERT INTO students (aspnetusers_Id, courses_course_id) VALUES (@Id, @CourseId)";
+            string sql = "UPDATE Students SET courses_course_id = @CourseId WHERE aspnetusers_Id = @Id";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
                 command.Parameters.AddWithValue("@Id", pers.Id);
@@ -330,9 +398,8 @@
 
             public string? CourseName { get; set; }
 
-            public string? CourseId { get; set; }
+            public int? CourseId { get; set; }
         }
-
         }
     </MudTabPanel>
 </MudTabs>
