@@ -39,7 +39,9 @@
 					<MudAvatar Style="height:7rem; width:7rem;">VK</MudAvatar>
 				</RadzenColumn>
 				<RadzenColumn Size="10" Style="background-color:black">
-					Info
+					<RadzenCard Style="width:stretch; height:stretch">
+
+					</RadzenCard>
 				</RadzenColumn>
 			</Authorized>
 		</AuthorizeView>
@@ -221,7 +223,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		
+
 		var userId = getUserId();
 		async Task<string> getUserName()
 		{
@@ -237,7 +239,7 @@
 
 		RevenueData absence = new RevenueData();
 		RevenueData precence = new RevenueData();
-		
+
 
 		string gradessql = "SELECT g.grade, m.module_name FROM grades g JOIN modules m ON g.modules_module_id = m.module_id WHERE g.students_aspnetusers_Id ='" + userId.Result.ToString() + "'";
 		MySqlConnection connection = new MySqlConnection(connect);
@@ -345,8 +347,6 @@
 			revenue.Add(precence);
 			rdr.Close();
 			connection.Close();
-
-			
 		}
 	}
 
@@ -355,5 +355,40 @@
 		var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
 		DialogService.Show<GradesDialog>("Simple Dialog", options);
 	}
-}
+
+	//Temp Back End
+	public class TempUser
+	{
+		public TempUser(string name, string middleName, string surname, string email, string landline, string mobile, string address, string school, string course, string doB, string sex)
+		{
+			Name = name;
+			MiddleName = middleName;
+			Surname = surname;
+			Email = email;
+			Landline = landline;
+			Mobile = mobile;
+			Address = address;
+			School = school;
+			Course = course;
+			DoB = doB;
+			Sex = sex;
+		}
+
+		public string Name { get; set; }
+		public string MiddleName { get; set; }
+		public string Surname { get; set; }
+		public string Email { get; set; }
+		public string Landline { get; set; }
+		public string Mobile { get; set; }
+		public string Address { get; set; }
+		public string School { get; set; }
+		public string Course { get; set; }
+		public string DoB { get; set; }
+		public string Sex { get; set; }
+	}
+
+	new List<TempUser> users = new List<TempUser>
+	{
+		new TempUser("Vasileios", "", "Kitsatis", "vkitsatis@gmail.com", "2321023210", "6945752572", "Kithairwna 1b", "UoD", "Computer Science", "21/09/98", "Male")
+	};
 }
