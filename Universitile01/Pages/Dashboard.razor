@@ -192,8 +192,8 @@
     private List<Module> myModules = new List<Module>();
     private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
-	[CascadingParameter]
-	private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -210,6 +210,13 @@
             var user = (await authenticationStateTask).User;
             return user.Identity.Name;
         }
+
+        //Get User's role
+        //async Task<string> getRole()
+        //{
+        //    return ((await authenticationStateTask).User.IsInRole("Teacher")) ? "Teacher" : "Student";
+        //}
+
         async Task<string> getUserId()
         {
             var user = (await authenticationStateTask).User;
