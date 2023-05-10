@@ -1,0 +1,243 @@
+﻿@page "/AdminAnnouncements"
+@using MudBlazor
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+@layout AdminLayout
+
+<AuthorizeView Context="ctx" Roles="admin">
+    <Authorized>
+<h3>AdminAnnouncements</h3>
+
+<MudDataGrid T="CreateAnnouncement" Items="@Announcements" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+    <Columns>
+        <PropertyColumn Property="x => x.Message" Title="Message" IsEditable="true" />
+        <PropertyColumn Property="x => x.Importance" Title="Importance" IsEditable="true">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.Importance" Immediate="true" Required RequiredError="You must select a Position!!!">
+                    @foreach (Boot asdas in Boots)
+                    {
+                    <MudSelectItem Value="asdas.imp"/>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.role" Title="Role teacher/student" IsEditable="true">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.role" Immediate="true" Required RequiredError="You must select a Position!!!">
+                    @foreach (Role eoro in Roles2){
+                        <MudSelectItem Value="eoro.Name"/>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.today" Title="Date" IsEditable="false" />
+    
+       <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
+        <CellTemplate>
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
+        </CellTemplate>
+    </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+<MudButton OnClick="@AddEmptyRow" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    private bool _isCellEditMode;
+    new List<CreateAnnouncement> Announcements = new List<CreateAnnouncement>();
+    new List<Role> Roles2 = new List<Role>();
+    new List<Boot> Boots = new List<Boot>();
+    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+
+    protected override async Task OnInitializedAsync()
+    {
+        //last minute code
+        Role Roles = new Role();
+        Roles.Name = "student";
+        Roles2.Add(Roles);
+        Role Rolesw = new Role();
+        Rolesw.Name = "teacher";
+        Roles2.Add(Rolesw);
+
+        Boot Boots1 = new Boot();
+        Boots1.imp = "true";
+        Boots.Add(Boots1);
+        Boot Boots2 = new Boot();
+        Boots2.imp = "false";
+        Boots.Add(Boots2);
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string annsql = "SELECT a.announcements_id, a.date, a.Message, a.Importance, r.Id AS Id FROM announcements a LEFT JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id LEFT JOIN aspnetroles r ON uha.aspnetroles_Id = r.Id ORDER BY a.date DESC";
+        using (MySqlCommand command = new MySqlCommand(annsql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(annsql, connection);
+            sqlcmd.CommandText = annsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                CreateAnnouncement mod = new CreateAnnouncement(); 
+                if ((Boolean)rdr["Importance"])
+                {
+                    mod.Importance = "true";
+                }
+                else mod.Importance = "false";
+                mod.Message = rdr["Message"].ToString();
+                mod.today = (DateTime)rdr["date"];
+                mod.Id = (Int32)rdr["announcements_id"];
+                if (rdr["Id"].ToString() == "4aff1f28-c6d5-4297-96cf-b9371ae3d81d")
+                {
+                    mod.role = "teacher";
+                }
+                else if (rdr["Id"].ToString() == "9a2104f0-43b7-4cdc-b125-f667fc272be7")
+                {
+                    mod.role = "student";
+                }
+                else
+                {
+                    mod.role = string.Empty;
+                }
+                Announcements.Add(mod);
+
+            }
+            rdr.Close();
+            connection.Close();
+
+        }
+    }
+
+    void Delete(CreateAnnouncement ann)
+    {
+        try
+        {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sql = "DELETE FROM announcements WHERE announcements_id = @Id";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", ann.Id);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            Announcements.Remove(ann);
+
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    void Save(CreateAnnouncement ann)
+    {
+        int lastid = 0;
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string sqlfindcId = "INSERT INTO announcements (date, Message, Importance) VALUES (@date, @msg , @importance)";
+        using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+        {
+            try
+            {
+                command.Parameters.AddWithValue("@date", ann.today);
+                command.Parameters.AddWithValue("@msg", ann.Message);
+                if (ann.Importance == "true")
+                {
+                    command.Parameters.AddWithValue("@importance", true);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@importance", false);
+                }
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch
+            {
+                //probably int isnt 0-1    
+            }
+        }
+        string sqlidfromann = "SELECT announcements_id FROM announcements";
+        using (MySqlCommand command = new MySqlCommand(sqlidfromann, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(sqlidfromann, connection);
+            sqlcmd.CommandText = sqlidfromann;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    lastid = (Int32)rdr["announcements_id"];
+                }
+            rdr.Close();
+            connection.Close();
+        }
+        string sqlrolehasann = "INSERT INTO users_has_announcements(announcements_announcements_id,aspnetroles_Id) VALUES (@annid, @roleid)";
+        using (MySqlCommand command = new MySqlCommand(sqlrolehasann, connection))
+        {
+            try
+            {
+                command.Parameters.AddWithValue("@annid", lastid);
+                if (ann.role == "teacher")
+                {
+                    command.Parameters.AddWithValue("@roleid", "4aff1f28-c6d5-4297-96cf-b9371ae3d81d");
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@roleid", "9a2104f0-43b7-4cdc-b125-f667fc272be7");            
+                }
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch
+            {
+                throw; 
+            }
+        }
+    }
+    async Task AddEmptyRow()
+    {
+        CreateAnnouncement mod = new CreateAnnouncement()
+            {
+                today = DateTime.Now,
+                Message = "",
+                Importance = "false",
+                role = "student",
+            };
+        Announcements.Add(mod);
+    }
+
+    public class CreateAnnouncement
+    {
+        public int? Id { get; set; }
+        public DateTime? today { get; set; }
+        public string? Message { get; set; }
+        public string? Importance { get; set; }
+        public string? role { get; set;}
+    }
+
+    public class Role
+    {
+        public string? Name { get; set; }
+    }
+
+    public class Boot
+    {
+        public string? imp { get; set; }
+    }
+}

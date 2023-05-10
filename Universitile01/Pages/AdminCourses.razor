@@ -9,38 +9,204 @@
 @inject TeacherService TeacherService
 @using Microsoft.EntityFrameworkCore
 @inject AuthenticationStateProvider _authenticationStateProvider
+@layout AdminLayout
+
+<AuthorizeView Context="ctx" Roles="admin">
+    <Authorized>
+
+<MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
+    @*Panel to edit Modules*@
+    <MudTabPanel Text="Edit Modules">
+        <MudDataGrid T="Module" Items="@Modules" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+                     StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+                     Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+            <Columns>
+                <PropertyColumn Property="x => x.ModuleId" Title="Id" IsEditable="false" Hidden="true" />
+                <PropertyColumn Property="x => x.ModuleName" Title="Name" IsEditable="true" />
+                <PropertyColumn Property="x => x.ModuleDescription" Title="Description" IsEditable="true" />
+                <PropertyColumn Property="x => x.ModuleDuration" Title="Semesters" IsEditable="true" />
+                <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Belongs in Course" IsEditable="false">
+                    <EditTemplate>
+                        <MudSelect @bind-Value="context.Item.CoursesCourse.CourseName" Immediate="true" Required RequiredError="You must select a Position!!!">
+                            @foreach (Course coursed in Courses)
+                            {
+                                <MudSelectItem Value="coursed.CourseName" />
+                            }
+                        </MudSelect>
+                    </EditTemplate>
+                </PropertyColumn>
+                <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+
+        <MudButton OnClick="@AddEmptyRow" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+    </MudTabPanel>
+
+    @*Panel to edit Courses*@
+    <MudTabPanel Text="Edit Courses">
+        <MudDataGrid T="Course" Items="@Courses" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+                     StartedEditingItem="@StartedEditingCourse" CanceledEditingItem="@CanceledEditingCourse" CommittedItemChanges="@CommittedCourseChanges"
+                     Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+            <Columns>
+                <PropertyColumn Property="x => x.CourseId" Title="Id" IsEditable="false" Hidden="true" />
+                <PropertyColumn Property="x => x.CourseName" Title="Name" IsEditable="true" />
+                <PropertyColumn Property="x => x.CourseDescription" Title="Description" IsEditable="true" />
+                <PropertyColumn Property="x => x.CourseDuration" Title="Semesters" IsEditable="true" />
+                <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteCourse(@context.Item))" />
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+        <MudButton OnClick="@AddEmptyRowCourses" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+    </MudTabPanel>
+    
+   
 
 
-<MudDataGrid T="Module" Items="@Modules" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
-             StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
-             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
-    <Columns>
-        <PropertyColumn Property="x => x.ModuleId" Title="Id" IsEditable="false" Hidden="true"/>
-        <PropertyColumn Property="x => x.ModuleName" Title="Name" IsEditable="true" />
-        <PropertyColumn Property="x => x.ModuleDescription" Title="Description" IsEditable="true" />
-        <PropertyColumn Property="x => x.ModuleDuration" Title="Semesters" IsEditable="true" />
-        <PropertyColumn Property="x => x.CoursesCourse.CourseName" Title="Belongs in Course"  IsEditable="false" >
-            <EditTemplate>
-                <MudSelect @bind-Value="context.Item.CoursesCourse.CourseName" Required RequiredError="You must select a Position!!!" >
-                @foreach (Course coursed in Courses)
+
+
+
+    @code{
+        async Task AddEmptyRowCourses()
+        {
+            courid = courid + 1;
+            Course cour = new Course()
                 {
-                        <MudSelectItem Value="coursed.CourseName"  />
-                }
-                </MudSelect>
-            </EditTemplate>
-         </PropertyColumn>
-        <TemplateColumn Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
-        <CellTemplate>
-            <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
-        </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-</MudDataGrid>
+                    CourseName = "",
+                    CourseDescription = "",
+                    CourseDuration = 0,
+                };
+            Courses.Add(cour); // add the empty Course to the list
 
-<MudButton OnClick="@AddEmptyRow" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "INSERT INTO courses (course_name, course_description, course_duration) VALUES (@CourseName, @CourseDescription, @CourseDuration)";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CourseName", cour.CourseName);
+                    command.Parameters.AddWithValue("@CourseDescription", cour.CourseDescription);
+                    command.Parameters.AddWithValue("@CourseDuration", cour.CourseDuration);
+
+                    await command.ExecuteNonQueryAsync();
+                    connection.Close();
+                }
+            }
+        }
+
+        void DeleteCourse(Course cour)
+        {
+            try
+            {
+                MySqlConnection connection = new MySqlConnection(connectionString);
+                string sql = "DELETE FROM courses WHERE course_id = @courseId";
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                {
+                command.Parameters.AddWithValue("@courseId", cour.CourseId);
+                    connection.Close();
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+                Courses.Remove(cour);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        void StartedEditingCourse(Course cour)
+        {
+            try
+            {
+                _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(cour)}");
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        void CanceledEditingCourse(Course cour)
+        {
+            try
+            {
+            _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(cour)}");
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        async Task CommittedCourseChanges(Course cour)
+        {
+            //MySqlConnection connection = new MySqlConnection(connectionString);
+            //string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + cour.CoursesCourse.CourseName + "'";
+            //string courseid = "";
+            //using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
+            //{
+            //    connection.Open();
+            //    MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
+            //    sqlcmd.CommandText = sqlfindcId;
+            //    sqlcmd.CommandType = CommandType.Text;
+            //    MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            //    while (rdr.Read())
+            //    {
+            //        courseid = rdr["course_id"].ToString();
+            //    }
+            //}
+
+
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            try
+            {
+                //string selectExistingModQuery = "SELECT * FROM courses WHERE course_Id = @courseId";
+                //using MySqlCommand selectExistingModCommand = new MySqlCommand(selectExistingModQuery, connection);
+                //selectExistingModCommand.Parameters.AddWithValue("@courseId", cour.CourseId);
+                //connection.Close();
+                //connection.Open();
+                //using MySqlDataReader reader = selectExistingModCommand.ExecuteReader();
+                courid++;
+                string updateExistingModQuery = "UPDATE courses SET course_name = @courseName, course_description = @courseDescription, course_duration = @courseDuration WHERE course_id = @courseId"; //course_id = (SELECT course_id FROM courses WHERE course_name = @courseName) WHERE module_id = @moduleId
+                using MySqlCommand updateExistingModCommand = new MySqlCommand(updateExistingModQuery, connection);
+                updateExistingModCommand.Parameters.AddWithValue("@courseName", cour.CourseName);
+                updateExistingModCommand.Parameters.AddWithValue("@courseDescription", cour.CourseDescription);
+                updateExistingModCommand.Parameters.AddWithValue("@courseDuration", cour.CourseDuration);
+                updateExistingModCommand.Parameters.AddWithValue("@courseId", courid);
+                connection.Close();
+                connection.Open();
+                await updateExistingModCommand.ExecuteNonQueryAsync();
+                connection.Close();
+
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+    }
+</MudTabs>
+
+
+    </Authorized>
+</AuthorizeView>
+
+
 
 @code {
     public static int modid;
+    public static int courid;
     private bool _readOnly;
     private bool _isCellEditMode;
     private List<string> _events = new();
@@ -57,7 +223,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-
+        //Populate the Modules list
         MySqlConnection connection = new MySqlConnection(connectionString);
         string sqlModules = "SELECT m.*, c.course_name FROM modules m INNER JOIN courses c ON m.courses_course_id = c.course_id;";
         using (MySqlCommand command = new MySqlCommand(sqlModules, connection))
@@ -96,6 +262,7 @@
                 throw;
             }
         }
+
         string coursessql = "SELECT * FROM courses";
         using (MySqlCommand command = new MySqlCommand(coursessql, connection))
         {
@@ -111,6 +278,10 @@
                 {
                     Course mod = new Course();
                     mod.CourseId = (Int32)rdr["course_id"];
+                    if (courid <= (Int32)rdr["course_id"])
+                    {
+                        courid = (Int32)rdr["course_id"] + 1;
+                    }
                     mod.CourseName = rdr["course_name"].ToString();
                     mod.CourseDescription = rdr["course_description"].ToString();
                     mod.CourseDuration = (Int32)rdr["course_duration"];
@@ -178,7 +349,7 @@
         {
             throw;
         }
-        
+
     }
 
     // events
@@ -230,15 +401,13 @@
 
     async Task AddEmptyRow()
     {
-        modid = modid + 1;
         Module mod = new Module()
             {
-            ModuleId = modid,
-            ModuleName = "",
-            ModuleDescription = "",
-            ModuleDuration = 0,
-            CoursesCourseId = 0,
-            CoursesCourse = new Course { CourseName = "" }
+                ModuleName = "",
+                ModuleDescription = "",
+                ModuleDuration = 0,
+                CoursesCourseId = 0,
+                CoursesCourse = new Course { CourseName = "" }
             };
         Modules.Add(mod); // add the empty Module to the list
 
@@ -246,11 +415,10 @@
         {
             connection.Open();
 
-            string query = "INSERT INTO Modules (module_id, module_name, module_description, module_duration, courses_course_id) VALUES (@ModuleId, @ModuleName, @ModuleDescription, @ModuleDuration, @CoursesCourseId)";
+            string query = "INSERT INTO Modules (module_name, module_description, module_duration, courses_course_id) VALUES (@ModuleName, @ModuleDescription, @ModuleDuration, @CoursesCourseId)";
 
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@ModuleId", mod.ModuleId);
                 command.Parameters.AddWithValue("@ModuleName", mod.ModuleName);
                 command.Parameters.AddWithValue("@ModuleDescription", mod.ModuleDescription);
                 command.Parameters.AddWithValue("@ModuleDuration", mod.ModuleDuration);

@@ -1,24 +1,77 @@
 ﻿@page "/Admin"
-<h3>Admin</h3>
+
 @layout AdminLayout
 
+<AuthorizeView Roles="admin">
+    <Authorized>
+        <h3>Admin</h3>
+        <MudGrid Spacing="2" Justify="Justify.Center">
+            <MudItem>
+                <MudPaper>
+                    <MudCard Outlined="false">
+                        <MudCardContent>
+                            <MudText>Account Register</MudText>
+                            <MudText Typo="Typo.body2">Register new Users</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="Identity/Account/Register" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+            <MudItem>
+                <MudPaper>
+                    <MudCard Outlined="false">
+                        <MudCardContent>
+                            <MudText>Modules and Courses</MudText>
+                            <MudText Typo="Typo.body2">Access the Courses and Modules DB tables.</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="admincoursesmodules" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+            <MudItem>
+                <MudPaper>
+                    <MudCard Outlined="false">
+                        <MudCardContent>
+                            <MudText>Students to Courses</MudText>
+                            <MudText Typo="Typo.body2">Assign Courses to Students</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="Studentcourses" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+            <MudItem>
+                <MudPaper>
+                    <MudCard Outlined="false">
+                        <MudCardContent>
+                            <MudText>Teachers to Modules</MudText>
+                            <MudText Typo="Typo.body2">Assign Teachers to Modules</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="TeacherModules" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+            <MudItem>
+                <MudPaper>
+                    <MudCard Outlined="false">
+                        <MudCardContent>
+                            <MudText>Announcements</MudText>
+                            <MudText Typo="Typo.body2">Add, Edit and assign announcements</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="AdminAnnouncements" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </Authorized>
+</AuthorizeView>
 
-<MudPaper Outlined="false" >
-    <MudStack Justify="@Justify.Center" Row="true">
-        <MudPaper Class="pa-2 mud-theme-secondary">
-            <MudCard Outlined="false">
-                <MudCardContent>
-                    <MudText>Modules</MudText>
-                    <MudText Typo="Typo.body2">Access the Courses and Modules DB tables.</MudText>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Href="admincoursesmodules" Variant="MudBlazor.Variant.Text" Color="Color.Primary">Access</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudPaper>
-    </MudStack>
-</MudPaper>
-
-@code {
-
-}

@@ -1,0 +1,247 @@
+﻿@page "/TeacherModules"
+@using MudBlazor
+@using System.Text;
+@using Universitile01.Data;
+@inject IDialogService DialogService
+@using Universitile01.Models;
+@using Universitile01.Services;
+@inject UniversitiledatabaseContext Db
+@inject TeacherService TeacherService
+@using Microsoft.EntityFrameworkCore
+@inject AuthenticationStateProvider _authenticationStateProvider
+@layout AdminLayout
+
+<AuthorizeView Context="ctx" Roles="admin">
+    <Authorized>
+<MudDataGrid T="TeacherstoModules" Items="@Teacherssf" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
+             Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+    <Columns>
+        <PropertyColumn Property="x => x.ModuleName" Title="Module Name" IsEditable="false" />
+        <PropertyColumn Property="x => x.FullName" Title="Teacher Name" IsEditable="true">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.FullName" Immediate="true" Required RequiredError="You must select a Position!!!">
+                    @foreach (Teacher teaches in Teach)
+                    {
+                        <MudSelectItem Value="teaches.FullName"></MudSelectItem>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
+        <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
+                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+    </Authorized>
+</AuthorizeView>
+
+@code{
+    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+    private List<PersonalInfo> Students = new List<PersonalInfo>();
+    private List<TeacherstoModules> Teacherssf = new List<TeacherstoModules>();
+    private List<Teacher> Teach = new List<Teacher>();
+    private List<string> aspnetusersid = new List<string>();
+    private bool _editTriggerRowClick;
+    private bool _isCellEditMode;
+    private bool _readOnly;
+    private List<string> _events = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string sqlteachers = "SELECT ur.aspnetusers_Id FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId WHERE u.RoleId = '4aff1f28-c6d5-4297-96cf-b9371ae3d81d'";
+        using (MySqlCommand command = new MySqlCommand(sqlteachers, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(sqlteachers, connection);
+                sqlcmd.CommandText = sqlteachers;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    aspnetusersid.Add(rdr["aspnetusers_Id"].ToString());
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+
+            catch
+            {
+                throw;
+            }
+        }
+
+
+        foreach (string a in aspnetusersid)
+        {
+            string noncoursestudents = "SELECT * FROM personal_info WHERE aspnetusers_Id ='" + a + "'";
+
+            using (MySqlCommand command = new MySqlCommand(noncoursestudents, connection))
+            {
+
+                try
+                {
+                    connection.Open();
+                    MySqlCommand sqlcmd = new MySqlCommand(noncoursestudents, connection);
+                    sqlcmd.CommandText = noncoursestudents;
+                    sqlcmd.CommandType = CommandType.Text;
+                    MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Teacher mod = new Teacher();
+                        mod.Id = a;
+                        mod.FirstName = rdr["first_name"].ToString();
+                        mod.LastName = rdr["last_name"].ToString();
+                        mod.FullName = mod.LastName + " " + mod.FirstName;
+                        Teach.Add(mod);
+                    }
+                    // always call Close when done reading.
+                    rdr.Close();
+                    // Close the connection when done with it.
+                    connection.Close();
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+        }
+        string coursessql = "SELECT m.module_id, m.module_name, c.course_name FROM modules m JOIN courses c ON m.courses_course_id = c.course_id WHERE NOT EXISTS (  SELECT 1 FROM teachers t WHERE t.modules_module_id = m.module_id)";
+        using (MySqlCommand command = new MySqlCommand(coursessql, connection))
+        {
+
+            try
+            {
+                connection.Open();
+                MySqlCommand sqlcmd = new MySqlCommand(coursessql, connection);
+                sqlcmd.CommandText = coursessql;
+                sqlcmd.CommandType = CommandType.Text;
+                MySqlDataReader rdr = sqlcmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    TeacherstoModules mod = new TeacherstoModules();
+                    mod.ModuleId = (Int32)rdr["module_id"];
+                    mod.CourseName = rdr["course_name"].ToString();
+                    mod.ModuleName = rdr["module_name"].ToString();
+                    Teacherssf.Add(mod);
+
+                }
+                // always call Close when done reading.
+                rdr.Close();
+                // Close the connection when done with it.
+                connection.Close();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+    }
+
+
+
+    void Delete(TeacherstoModules pers)
+    {
+        try
+        {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            string sql = "DELETE FROM teacher WHERE Id = @Id";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.ModuleId);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+            Teacherssf.Remove(pers);
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    void Save(TeacherstoModules pers)
+    {
+
+        MySqlConnection connection = new MySqlConnection(connectionString);
+        string[] splitname = pers.FullName.Split(' ');
+        string lastname = splitname[0];
+        string name = splitname[1];
+        string aspnetuserid = "";
+        string sqlfullname2id = "SELECT aspnetusers_id FROM personal_info WHERE first_name = '" + name + "' AND last_name = '" + lastname + "'";
+        using (MySqlCommand command = new MySqlCommand(sqlfullname2id, connection))
+        {
+            MySqlCommand sqlcmd = new MySqlCommand(sqlfullname2id, connection);
+            sqlcmd.CommandText = sqlfullname2id;
+            sqlcmd.CommandType = CommandType.Text;
+            connection.Open();
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                aspnetuserid = rdr["Aspnetusers_Id"].ToString();
+
+            }
+            // always call Close when done reading.
+            rdr.Close();
+            // Close the connection when done with it.
+            connection.Close();
+        }
+        try
+        {
+            string sql = "INSERT INTO teachers (modules_module_id, aspnetusers_Id) VALUES (@moduleId, @userId)";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@moduleId", pers.ModuleId);
+                command.Parameters.AddWithValue("@userId", aspnetuserid);
+
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public class TeacherstoModules
+    {
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string? ModuleName { get; set; }
+
+        public int? ModuleId { get; set; }
+
+        public string? CourseName { get; set; }
+
+        public string? FullName { get; set; }
+    }
+
+    public class Teacher
+    {
+        public string Id { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string FullName { get; set; }
+    }
+}
