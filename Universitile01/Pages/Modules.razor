@@ -8,19 +8,19 @@
 @using Microsoft.EntityFrameworkCore
 @inject AuthenticationStateProvider _authenticationStateProvider
 
-<body>
 
-    <AuthorizeView>
+<PageTitle>Modules</PageTitle>
+
+<body>
+    <AuthorizeView Roles="Student, Teacher">
         <Authorized>
             <RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%) ">
                 @foreach (Module module in stModules)
                 {
-
-
                     PersonalInfo teacher = moduleTeacherMap.ContainsKey(module.ModuleId) ? moduleTeacherMap[module.ModuleId] : null;
                     <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
                         <RadzenColumn Size="12" Style="justify-self:center; align-self:center">
-                            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="width:480px; height:350; background-color:#12080c">
+                            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="width:480px; height:355px; background-color:#12080c">
                                 <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
                                     <RadzenStack Gap="0" Style="align-self:center">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Module</b></RadzenText>
@@ -28,29 +28,20 @@
                                         <RadzenText TextStyle="TextStyle.Body2">@module.ModuleId</RadzenText>
                                     </RadzenStack>
                                 </RadzenStack>
-                                <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:185px; width:100%">
+                                <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:225px; width:100%">
                                     <RadzenRow RowGap="0">
                                         <RadzenColumn SizeXS="8">
-
-                                            @*<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Body1">@module.CoursesCourse.CourseName</RadzenText>*@
-
-
-
-                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Direction</RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Body1">@teacher.FirstName @teacher.LastName</RadzenText>
-
-
-
-
+                                         <AuthorizeView Roles="Student">
+                                             <Authorized Context="t">
+                                                 <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body1">@teacher.FirstName @teacher.LastName</RadzenText>
+                                             </Authorized>
+                                         </AuthorizeView>
+                                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText>
                                         </RadzenColumn>
                                         <RadzenColumn SizeXS="4">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%" Color="Color.Secondary" OnClick="SupportingMaterialDialog">Supporting Material</MudButton>
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:105%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Take Quiz</MudButton>
-                                        </RadzenColumn>
-                                        <RadzenColumn SizeXS="4">
-                                            
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px;" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Quiz</MudButton>
                                         </RadzenColumn>
                                     </RadzenRow>
                                 </RadzenCard>
@@ -75,8 +66,6 @@
     private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
     private Dictionary<int, PersonalInfo> moduleTeacherMap = new Dictionary<int, PersonalInfo>();
     @inject IDialogService DialogService
-
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -129,13 +118,31 @@
             rdr.Close();
             connection.Close();
         }
-    }
+        string combinedTSql = "SELECT m.* FROM modules m  INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN aspnetusers u ON u.Id = t.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
+        using (MySqlCommand command = new MySqlCommand(combinedTSql, connection))
+        {
+            connection.Open();
+            MySqlCommand sqlcmd = new MySqlCommand(combinedTSql, connection);
+            sqlcmd.CommandText = combinedTSql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySqlDataReader rdr = sqlcmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Module mod = new Module();
+                mod.ModuleId = (Int32)rdr["module_id"];
+                mod.ModuleName = rdr["module_name"].ToString();
+                mod.ModuleDescription = rdr["module_description"].ToString();
+                mod.ModuleDuration = (Int32)rdr["module_duration"];
+                mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+                stModules.Add(mod);
 
-    @*Module Info Modal Dialog*@
-    private void SupportingMaterialDialog()
-    {
-        var options = new MudBlazor.DialogOptions { };
-        DialogService.Show<SupportingMaterialDialog>("Supporting Material", options);
+
+            }
+
+            rdr.Close();
+            connection.Close();
+        
+        }
     }
 
     @*Take Quiz Modal Dialog*@

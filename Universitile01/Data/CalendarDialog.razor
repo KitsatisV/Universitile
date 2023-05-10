@@ -1,12 +1,18 @@
-﻿<MudDialog Style="background-color:black; color:aliceblue" >
-    <DialogContent>
-        @ContentText
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-    </DialogActions>
-</MudDialog>
+﻿<AuthorizeView>
+    <Authorized>
+        <MudDialog Style="background-color:black; color:aliceblue">
+            <DialogContent>
+                @ContentText
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="Cancel">Cancel</MudButton>
+                <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </Authorized>
+</AuthorizeView>
+
+
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }

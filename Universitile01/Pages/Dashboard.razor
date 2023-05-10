@@ -1,4 +1,4 @@
-﻿@page "/Dashboard"
+@page "/Dashboard"
 @using System.Text;
 @inject IDialogService DialogService
 @using Universitile01.Models;
@@ -218,6 +218,7 @@
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
         }
+      
         string getRole()
         {
             string sql = "SELECT r.Id FROM aspnetusers u JOIN aspnetuserroles ur ON u.Id = ur.UserId JOIN aspnetroles r ON ur.RoleId = r.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
@@ -233,7 +234,7 @@
                 {
                     role = rdr["Id"].ToString();
                 }
-                
+
                 // always call Close when done reading.
                 rdr.Close();
                 // Close the connection when done with it.
@@ -241,6 +242,7 @@
                 return role;
             }
         }
+
         string dashteachsql = "SELECT m.* FROM modules m INNER JOIN teachers s ON m.module_id = s.modules_module_id INNER JOIN aspnetusers u ON s.aspnetusers_Id = u.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
@@ -265,7 +267,9 @@
             // Close the connection when done with it.
             connection.Close();
         }
+
         string annsql = "SELECT * FROM announcements q JOIN users_has_announcements r ON q.announcements_id = r.announcements_announcements_id WHERE r.aspnetroles_Id ='" + userRole.ToString() + "'";
+
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashteachsql, connection))
         {
             connection.Open();
