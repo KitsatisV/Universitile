@@ -12,6 +12,9 @@
 @layout AdminLayout
 @*StartedEditingItem="@StartedEditingCourses" CanceledEditingItem="@CanceledEditingCourses" CommittedItemChanges="@CommittedItemChanges"*@
 
+<AuthorizeView Context="ctx" Roles="admin">
+    <Authorized>
+
 <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
     <MudTabPanel Text="Unassigned Students">
         <MudDataGrid T="StudentstoCourse" Items="@Studentsf" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
@@ -364,3 +367,6 @@
         }
     </MudTabPanel>
 </MudTabs>
+
+    </Authorized>
+</AuthorizeView>

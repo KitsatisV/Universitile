@@ -11,6 +11,9 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @layout AdminLayout
 
+<AuthorizeView Context="ctx" Roles="admin">
+    <Authorized>
+
 <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
     @*Panel to edit Modules*@
     <MudTabPanel Text="Edit Modules">
@@ -60,9 +63,13 @@
                 </TemplateColumn>
             </Columns>
         </MudDataGrid>
+        <MudButton OnClick="@AddEmptyRowCourses" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
     </MudTabPanel>
+    
+   
 
-    <MudButton OnClick="@AddEmptyRowCourses" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
+
+
 
 
     @code{
@@ -192,7 +199,8 @@
 </MudTabs>
 
 
-
+    </Authorized>
+</AuthorizeView>
 
 
 

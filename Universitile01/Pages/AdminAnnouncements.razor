@@ -11,7 +11,8 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @layout AdminLayout
 
-
+<AuthorizeView Context="ctx" Roles="admin">
+    <Authorized>
 <h3>AdminAnnouncements</h3>
 
 <MudDataGrid T="CreateAnnouncement" Items="@Announcements" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
@@ -48,7 +49,8 @@
     </Columns>
 </MudDataGrid>
 <MudButton OnClick="@AddEmptyRow" Color="@Color.Success" Class="add-item-btn">Add Item</MudButton>
-
+    </Authorized>
+</AuthorizeView>
 
 
 @code {

@@ -11,6 +11,8 @@
 @inject AuthenticationStateProvider _authenticationStateProvider
 @layout AdminLayout
 
+<AuthorizeView Context="ctx" Roles="admin">
+    <Authorized>
 <MudDataGrid T="TeacherstoModules" Items="@Teacherssf" ReadOnly="false" EditMode="@(_isCellEditMode ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
              Bordered="true" Dense="true" EditTrigger="@(true ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
     <Columns>
@@ -33,7 +35,8 @@
         </TemplateColumn>
     </Columns>
 </MudDataGrid>
-
+    </Authorized>
+</AuthorizeView>
 
 @code{
     private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";

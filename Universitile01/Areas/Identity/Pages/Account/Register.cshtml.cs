@@ -7,10 +7,12 @@ using Universitile01.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Runtime.InteropServices;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Universitile01.Areas.Identity.Pages.Account
 {
-	public class RegisterModel : PageModel
+    [Authorize(Roles = "admin")]
+    public class RegisterModel : PageModel
 	{
 		private readonly SignInManager<IdentityUser> _signInManager;
 		private readonly UserManager<IdentityUser> _userManager;
