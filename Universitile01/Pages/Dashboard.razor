@@ -215,6 +215,7 @@
         //    return ((await authenticationStateTask).User.IsInRole("Teacher")) ? "Teacher" : "Student";
         //}
 
+        //Get User's userID
         async Task<string> getUserId()
         {
             var user = (await authenticationStateTask).User;
@@ -292,6 +293,8 @@
             rdr.Close();
             connection.Close();
         }
+
+        //Get Student Modules
         string dashstsql = "SELECT m.* FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(dashstsql, connection))
         {
@@ -315,6 +318,7 @@
             connection.Close();
         }
 
+        //Get Teachers
         string teachsql = "SELECT pi.* FROM personal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection))
         {
@@ -342,6 +346,8 @@
             rdr.Close();
             connection.Close();
         }
+
+        //Get Students
         string studsql = "SELECT pi.* FROM personal_info pi JOIN teachers t ON pi.aspnetusers_Id = t.aspnetusers_Id JOIN modules m ON t.modules_module_id = m.module_id JOIN courses c ON m.courses_course_id = c.course_id JOIN students s ON c.course_id = s.courses_course_id AND s.aspnetusers_Id ='" + userId.Result.ToString() + "'";//query
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(studsql, connection))
         {
