@@ -43,32 +43,71 @@
 				<RadzenColumn Size="10" Style="background-color:black">
 					<RadzenCard Style="width:stretch; height:stretch">
 						<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-							<RadzenColumn Size="4" Style="justify-content:center; align-content:center; padding-left:1vw">
-								<pre style="font-family:'Times New Roman', Times, serif; color:whitesmoke; font-size:1rem">
-Full Name:		@user.Name @user.MiddleName @user.Surname
-
-Sex:				@user.Sex
-
-Date of Birth:		@user.DoB
-								</pre>
+							<RadzenColumn Size="4" Style="justify-content:center; align-content:center; padding:1vw">
+								<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="color:white">
+									<RadzenColumn Size="6" Style="justify-content:left">
+										Full Name:
+										<br />
+										<br />
+										Sex:
+										<br />
+										<br />
+										Date of Birth:
+									</RadzenColumn>
+									<RadzenColumn Size="6" Style="justify-content:right">
+										@user.Name @user.MiddleName @user.Surname
+										<br />
+										<br />
+										@user.Sex
+										<br />
+										<br />
+										@user.DoB
+									</RadzenColumn>
+								</RadzenRow>
 							</RadzenColumn>
 							<RadzenColumn Size="4" Style="justify-content:center; align-content:center; padding-left:1vw">
-								<pre style="font-family:'Times New Roman', Times, serif; color:whitesmoke; font-size:1rem">
-School:		@user.School
-
-Course:		@user.Course
-
-Email:		@user.Email
-								</pre>
+								<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="color:white">
+									<RadzenColumn Size="6" Style="justify-content:left">
+										School:
+										<br />
+										<br />
+										Course:
+										<br />
+										<br />
+										Email:
+									</RadzenColumn>
+									<RadzenColumn Size="6" Style="justify-content:right">
+										@user.School
+										<br />
+										<br />
+										@user.Course
+										<br />
+										<br />
+										@user.Email
+									</RadzenColumn>
+								</RadzenRow>
 							</RadzenColumn>
 							<RadzenColumn Size="4" Style="justify-content:center; align-content:center; padding-left:1vw; padding-right:1vw">
-								<pre style="font-family:'Times New Roman', Times, serif; color:whitesmoke; font-size:1rem">
-Address:		@user.Address
-
-Landline:	@user.Landline
-
-Mobile:		@user.Mobile
-								</pre>
+								<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="color:white">
+									<RadzenColumn Size="6" Style="justify-content:left">
+										Address:
+										<br />
+										<br />
+										Landline:
+										<br />
+										<br />
+										Mobile:
+									</RadzenColumn>
+									<RadzenColumn Size="6" Style="justify-content:right">
+										@user.Address
+										<br />
+										<br />
+										@user.Landline
+										<br />
+										<br />
+										@user.Mobile
+									</RadzenColumn>
+								</RadzenRow>
 							</RadzenColumn>
 						</RadzenRow>
 					</RadzenCard>
@@ -195,7 +234,7 @@ Mobile:		@user.Mobile
 						<MudTabPanel Text="Teachers">
 							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								<RadzenColumn Size="12">
-									<MudDataGrid T="PersonalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+									<MudDataGrid T="PersonalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="54vh" FixedHeader="true">
 										<ToolBarContent>
 											<MudText Typo="Typo.h5" Style="color:white">Sessions Table</MudText>
 										</ToolBarContent>
