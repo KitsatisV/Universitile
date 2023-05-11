@@ -15,7 +15,7 @@
             <DialogContent>
                 <MudDataGrid Items="@asgnModules" T="LinksAssignment" Style="background-color:#12080c;">
                     <Columns>
-                        <MudButton Disabled="false" Color="@Color.Error" OnClick="() => AddNewLink(asgnModules)">Add new Link</MudButton>
+                        <MudButton Disabled="false" Color="@Color.Error" OnClick="AddNewLink">Add new Link</MudButton>
                         <PropertyColumn Property="x => x.AssignmentId.ToString()" />
                         @*URL column*@
                         <TemplateColumn Context="a">
@@ -23,7 +23,7 @@
                                 <strong>URL</strong>
                             </HeaderTemplate>
                             <CellTemplate>
-                                <MudLink Href="@a.Item.Assignments" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Assignment Link</MudLink>
+                                <MudTextField @bind-Value="a.Item.Assignments" Label="Edit Link" Color="Color.White" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
                             </CellTemplate>
                         </TemplateColumn>
                         <AuthorizeView Roles="Teacher">
@@ -31,7 +31,7 @@
                                 @*Edit textfield column*@
                                 <TemplateColumn Context="b">
                                     <CellTemplate>
-                                        <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
+                                        <MudTextField Label="Edit Link" Color="Color.White" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
                                     </CellTemplate>
                                 </TemplateColumn>
                                 @*Edit button column*@
@@ -40,7 +40,7 @@
                                         Edit
                                     </HeaderTemplate>
                                     <CellTemplate>
-                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
+                                        <MudButton Color="Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit" OnClick="@(() => SaveChanges(c.Item))">Edit</MudButton>
                                     </CellTemplate>
                                 </TemplateColumn>
                                 @*Edit delete button column*@
@@ -49,7 +49,7 @@
                                         Delete
                                     </HeaderTemplate>
                                     <CellTemplate>
-                                        <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit" OnClick="@(() => Task.CompletedTask)"></MudButton>
+                                        <MudButton Color="Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteLink(d.Item))">Delete</MudButton>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Authorized>
@@ -66,21 +66,20 @@
 
 
 @code {
-    private string userId;
-    private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-    private List<LinksAssignment> asgnModules = new List<LinksAssignment>();
-    private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
-    protected override async Task OnInitializedAsync()
-    {
+        @code {
+        private string userId;
+        private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
+        List<LinksAssignment> asgnModules = new List<LinksAssignment>();
+        private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
 
-        var userId = getUserId();
-        async Task<string> getUserName()
+        protected override async Task OnInitializedAsync()
         {
-            var user = (await authenticationStateTask).User;
-            return user.Identity.Name;
+            userId = await getUserId();
+            await getAssignments();
         }
+
         async Task<string> getUserId()
         {
             var user = (await authenticationStateTask).User;
@@ -88,58 +87,137 @@
             return userid;
         }
 
-        MySqlConnection connection = new MySqlConnection(connect);
-        string combinedASql = "SELECT m.* FROM modules m INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN aspnetusers u ON u.Id = t.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "' JOIN links_quiz ON links_quiz.modules_module_id = m.module_id JOIN quizzes ON quizzes.quiz_id = links_quiz.quiz_id";
-        using (MySqlCommand command = new MySqlCommand(combinedASql, connection))
+        async Task getAssignments()
         {
-            connection.Open();
-            MySqlCommand sqlcmd = new MySqlCommand(combinedASql, connection);
-            sqlcmd.CommandText = combinedASql;
-            sqlcmd.CommandType = CommandType.Text;
-            MySqlDataReader rdr = sqlcmd.ExecuteReader();
-            while (rdr.Read())
+            using (MySqlConnection connection = new MySqlConnection(connect))
             {
-                Module mod = new Module();
-                mod.ModuleId = (Int32)rdr["module_id"];
-                mod.ModuleName = rdr["module_name"].ToString();
-                mod.ModuleDescription = rdr["module_description"].ToString();
-                mod.ModuleDuration = (Int32)rdr["module_duration"];
-                mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+                string combinedASql = "SELECT m.* FROM modules m INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN aspnetusers u ON u.Id = t.aspnetusers_Id WHERE u.Id = @userId JOIN links_quiz ON links_quiz.modules_module_id = m.module_id JOIN quizzes ON quizzes.quiz_id = links_quiz.quiz_id";
 
-                LinksAssignment asgn = new LinksAssignment();
-                asgn.ModulesModuleId = rdr["modules_module_id"] == DBNull.Value ? 0 : (Int32)rdr["modules_module_id"];
-                asgn.AssignmentId = rdr["assignment_id"] == DBNull.Value ? 0 : (Int32)rdr["assignment_id"];
-                asgn.Assignments = rdr["assignments"].ToString();
-                asgnModules.Add(asgn);
+                using (MySqlCommand command = new MySqlCommand(combinedASql, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+                    await connection.OpenAsync();
+                    MySqlDataReader rdr = await command.ExecuteReaderAsync();
+                    while (await rdr.ReadAsync())
+                    {
+                        LinksAssignment asgn = new LinksAssignment();
+                        asgn.ModulesModuleId = rdr["modules_module_id"] == DBNull.Value ? 0 : (Int32)rdr["modules_module_id"];
+                        asgn.AssignmentId = rdr["assignment_id"] == DBNull.Value ? 0 : (Int32)rdr["assignment_id"];
+                        asgn.Assignments = rdr["assignments"].ToString();
+                        asgnModules.Add(asgn);
+                    }
+                }
             }
-
-            rdr.Close();
-            connection.Close();
         }
 
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+        void Submit() => MudDialog.Close(DialogResult.Ok(true));
+        void Cancel() => MudDialog.Cancel();
+
+        //Add new Link row
+        async Task AddNewLink()
+        {
+            var newLink = new LinksAssignment();
+            asgnModules.Add(newLink);
+            Db.LinksAssignments.Add(newLink);
+            await Db.SaveChangesAsync();
+        }
+
+        //Delete Link row
+        async Task DeleteLink(LinksAssignment item)
+        {
+            asgnModules.Remove(item);
+            Db.LinksAssignments.Remove(item);
+            await Db.SaveChangesAsync();
+        }
+
+        //Save changes
+        async Task SaveChanges(LinksAssignment item)
+        {
+            Db.LinksAssignments.Update(item);
+            await Db.SaveChangesAsync();
+        }
     }
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    void Cancel() => MudDialog.Cancel();
 
 
 
-    //Add new Link row
-    void AddNewLink(List<LinksAssignment> asgnModules)
-    {
-        var newLink = new LinksAssignment();
-        asgnModules.Add(newLink);
-        Db.LinksAssignments.Add(newLink);
-        Db.SaveChanges();
-    }
 
-    //Delete Link row
-    void DeleteLink(LinksAssignment item)
-    
-    {
-        asgnModules.Remove(item);
-        Db.LinksAssignments.Remove(item);
-        Db.SaveChanges();
-    }
+
+
+
+    //private string userId;
+    //private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+    //[CascadingParameter]
+    //private Task<AuthenticationState> authenticationStateTask { get; set; }
+    //private List<LinksAssignment> asgnModules = new List<LinksAssignment>();
+    //private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
+    //protected override async Task OnInitializedAsync()
+    //{
+
+    //    var userId = getUserId();
+    //    async Task<string> getUserName()
+    //    {
+    //        var user = (await authenticationStateTask).User;
+    //        return user.Identity.Name;
+    //    }
+    //    async Task<string> getUserId()
+    //    {
+    //        var user = (await authenticationStateTask).User;
+    //        var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+    //        return userid;
+    //    }
+
+    //    MySqlConnection connection = new MySqlConnection(connect);
+    //    string combinedASql = "SELECT m.* FROM modules m INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN aspnetusers u ON u.Id = t.aspnetusers_Id WHERE u.Id = '" + userId.Result.ToString() + "' JOIN links_quiz ON links_quiz.modules_module_id = m.module_id JOIN quizzes ON quizzes.quiz_id = links_quiz.quiz_id";
+    //    using (MySqlCommand command = new MySqlCommand(combinedASql, connection))
+    //    {
+    //        connection.Open();
+    //        MySqlCommand sqlcmd = new MySqlCommand(combinedASql, connection);
+    //        sqlcmd.CommandText = combinedASql;
+    //        sqlcmd.CommandType = CommandType.Text;
+    //        MySqlDataReader rdr = sqlcmd.ExecuteReader();
+    //        while (rdr.Read())
+    //        {
+    //            Module mod = new Module();
+    //            mod.ModuleId = (Int32)rdr["module_id"];
+    //            mod.ModuleName = rdr["module_name"].ToString();
+    //            mod.ModuleDescription = rdr["module_description"].ToString();
+    //            mod.ModuleDuration = (Int32)rdr["module_duration"];
+    //            mod.CoursesCourseId = (Int32)rdr["courses_course_id"];
+
+    //            LinksAssignment asgn = new LinksAssignment();
+    //            asgn.ModulesModuleId = rdr["modules_module_id"] == DBNull.Value ? 0 : (Int32)rdr["modules_module_id"];
+    //            asgn.AssignmentId = rdr["assignment_id"] == DBNull.Value ? 0 : (Int32)rdr["assignment_id"];
+    //            asgn.Assignments = rdr["assignments"].ToString();
+    //            asgnModules.Add(asgn);
+    //        }
+
+    //        rdr.Close();
+    //        connection.Close();
+    //    }
+
+    //}
+    //[CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    //void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    //void Cancel() => MudDialog.Cancel();
+
+
+
+    ////Add new Link row
+    //async void AddNewLink()
+    //{
+    //    var newLink = new LinksAssignment();
+    //    asgnModules.Add(newLink);
+    //    Db.LinksAssignments.Add(newLink);
+    //    await Db.SaveChangesAsync();
+    //}
+    ////Delete Link row
+    //async void DeleteLink(LinksAssignment item)
+    //{
+    //    asgnModules.Remove(item);
+    //    Db.LinksAssignments.Remove(item);
+    //    await Db.SaveChangesAsync();
+    //}
 }
