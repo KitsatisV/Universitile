@@ -1,14 +1,17 @@
 @page "/Dashboard"
+
 @using System.Text;
-@inject IDialogService DialogService
 @using Universitile01.Models;
 @using Universitile01.Services;
 @using MySql.Data.MySqlClient;
 @using System.Data;
+@using Microsoft.EntityFrameworkCore
+
+@inject IDialogService DialogService
 @inject UniversitiledatabaseContext Db
 @inject TeacherService TeacherService
-@using Microsoft.EntityFrameworkCore
 @inject AuthenticationStateProvider _authenticationStateProvider
+@inject NavigationManager _navigationManager
 
 
 <PageTitle>Dashboard</PageTitle>
@@ -46,16 +49,16 @@
 											<RadzenText TextStyle="TextStyle.Body1"><b>@myContext.ModuleName</b></RadzenText>
 										</RadzenStack>
 									</RadzenStack>
-                                    <RadzenCard class="rz-shadow-0 rz-p-8" style="height:61.2%; width:100%; background-color:#2B2C28">
+                                    <RadzenCard class="rz-shadow-0 rz-p-8" style="height:70%; width:100%; background-color:#2B2C28">
 										<RadzenRow RowGap="0">
 											<RadzenColumn SizeXS="12" Style="overflow-y:auto">
                                                 <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-dark rz-display-flex rz-mt-4 rz-mb-0">Description</RadzenText>
 												<RadzenText TextStyle="TextStyle.Body1">@myContext.ModuleDescription</RadzenText>
 											</RadzenColumn>
                                         </RadzenRow>
-                                        <RadzenRow RowGap="0" Style="padding-top:50px">
+                                        <RadzenRow RowGap="0" Style="margin-top:80px">
 											<RadzenColumn SizeXS="12" Style="vertical-align:middle; justify-content:center">
-												<RadzenButton Variant="Radzen.Variant.Text" Text="Go to modules page" Size="ButtonSize.Medium" Style="width:100%" />
+                                                <RadzenButton Variant="Radzen.Variant.Text" Click="OnClickModule" Text="Go to Modules" Size="ButtonSize.Large" Style="width:100%" />
 											</RadzenColumn>
 										</RadzenRow>
 									</RadzenCard>
@@ -214,7 +217,7 @@
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
         }
-      
+
         string getRole()
         {
             string sql = "SELECT r.Id FROM aspnetusers u JOIN aspnetuserroles ur ON u.Id = ur.UserId JOIN aspnetroles r ON ur.RoleId = r.Id WHERE u.Id ='" + userId.Result.ToString() + "'";
@@ -383,5 +386,11 @@
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Session> args)
     {
         args.Attributes["style"] = "background: rgba(255, 0, 0, 0.4)";
+    }
+
+    //Modules Carousel
+    void OnClickModule()
+    {
+        _navigationManager.NavigateTo("/Modules");
     }
 }
