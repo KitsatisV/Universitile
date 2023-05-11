@@ -12,18 +12,18 @@
                                 <strong>URL</strong>
                             </HeaderTemplate>
                             <CellTemplate>
-                                <MudLink Href="@a.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error">Quiz Link</MudLink>
+                                <MudLink Href="@a.Item.Url" Typo="Typo.body2" target="_blank" Underline="Underline.Hover" Color="Color.Error" contenteditable="true">Assignment Link</MudLink>
                             </CellTemplate>
                         </TemplateColumn>
                         <AuthorizeView Roles="Teacher">
                             <Authorized Context="r">
-                                @*Edit textfield column*@
+                                @*@*Edit textfield column
                                 <TemplateColumn Context="b">
                                     <CellTemplate>
                                         <MudTextField Label="Edit Link" Color="white" Variant="MudBlazor.Variant.Filled" FullWidth="true" Immediate="true" Style="background-color: beige; color:black" />
                                     </CellTemplate>
                                 </TemplateColumn>
-                                @*Edit button column*@
+                                Edit button column
                                 <TemplateColumn Context="c">
                                     <HeaderTemplate>
                                         Edit
@@ -32,7 +32,7 @@
                                         <MudButton Color=" Color.Secondary" ButtonType="MudBlazor.ButtonType.Submit" StartIcon="@Icons.Material.Filled.Edit"></MudButton>
                                     </CellTemplate>
                                 </TemplateColumn>
-                                @*Edit delete button column*@
+                                Edit delete button column*@
                                 <TemplateColumn Context="d">
                                     <HeaderTemplate>
                                         Delete
