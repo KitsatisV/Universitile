@@ -62,8 +62,10 @@
 @code {
     private string userId;
     private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
+
     private List<Module> stModules = new List<Module>();
     private List<PersonalInfo> teachInfo = new List<PersonalInfo>();
     private Dictionary<int, PersonalInfo> moduleTeacherMap = new Dictionary<int, PersonalInfo>();

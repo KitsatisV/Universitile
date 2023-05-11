@@ -268,8 +268,10 @@
 {
 	private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 	private string userId;
+
 	[CascadingParameter]
 	private Task<AuthenticationState> authenticationStateTask { get; set; }
+
 	private List<Grade> modGrade = new List<Grade>();
 	private List<Module> stModules = new List<Module>();
 	private List<Module> modules = new List<Module>();

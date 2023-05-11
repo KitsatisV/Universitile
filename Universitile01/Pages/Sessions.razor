@@ -57,6 +57,9 @@
 
 @code
 {
+	[CascadingParameter]
+	private Task<AuthenticationState> authenticationStateTask { get; set; }
+
 	public readonly string str = " - ";
 
 	private void OpenAttendanceDialog(Session session)
