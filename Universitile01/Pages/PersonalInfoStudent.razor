@@ -31,18 +31,18 @@
 	////////////////////////
 	////////////////////////
 	*@
-	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:#131515">
 
 		<AuthorizeView Roles="Student, Teacher">
 			<Authorized>
-				<RadzenColumn Size="2" Style="background-color:black; width:100%; height:; justify-items:center">
+				<RadzenColumn Size="2" Style="background-color:#131515; width:100%; height:100%; justify-items:center">
 					<center>
-						<MudAvatar Style="height:7vw; width:7vw">VK</MudAvatar>
+						<MudAvatar Elevation="10" Variant="MudBlazor.Variant.Outlined" Color="Color.Error" Style="height:7vw; width:7vw; color:white">VK</MudAvatar>
 					</center>
 				</RadzenColumn>
-				<RadzenColumn Size="10" Style="background-color:black">
+				<RadzenColumn Size="10" Style="background-color:#2B2C28">
 					<RadzenCard Style="width:stretch; height:stretch">
-						<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
+						<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:#131515">
 							<RadzenColumn SizeXS="12" SizeLG="4" Style="justify-content:center; align-content:center; padding:1vw">
 								<RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="color:white; border:ridge; border-color:darkslategray; overflow-x:auto">
 									<RadzenColumn Size="6" Style="justify-content:left; padding:0.5vw">
@@ -117,8 +117,8 @@
 
 	</RadzenRow>
 
-	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:black">
-		<RadzenColumn Size="12" Style="background-color:black">
+	<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-color:#131515">
+		<RadzenColumn Size="12" Style="background-color:#131515">
 			<MudTabs Elevation="10" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-10" Centered="true" Color="Color.Dark">
 
 				
@@ -204,7 +204,7 @@
 					<MudTabPanel Text="Students">
 							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								<RadzenColumn Size="12">
-									<MudDataGrid T="PersonalInfo" Items="@studInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="62vh" FixedHeader="true">
+									<MudDataGrid T="PersonalInfo" Items="@studInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, #2B2C28 0%, #131515 90%)" Height="52vh" FixedHeader="true">
 									<ToolBarContent>
 									<MudText Typo="Typo.h5" Style="color:white">Students Table</MudText>
 									</ToolBarContent>
@@ -234,7 +234,7 @@
 						<MudTabPanel Text="Teachers">
 							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								<RadzenColumn Size="12">
-									<MudDataGrid T="PersonalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%)" Height="54vh" FixedHeader="true">
+											<MudDataGrid T="PersonalInfo" Items="@teacherInfo" MultiSelection="false" ReadOnly="true" ShowFilterIcons="true" SortMode="SortMode.Multiple" Style="background-image:linear-gradient(180deg, #2B2C28 0%, #131515 90%)" Height="52vh" FixedHeader="true">
 										<ToolBarContent>
 											<MudText Typo="Typo.h5" Style="color:white">Teachers Table</MudText>
 										</ToolBarContent>
