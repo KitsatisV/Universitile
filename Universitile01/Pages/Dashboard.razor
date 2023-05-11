@@ -102,7 +102,7 @@
         <AuthorizeView Roles="Student">
             <Authorized>
 				<div class="col-4" style="color: white">
-                    <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@personalInfo" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
+                    <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@personalInfo" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
 						<ItemTemplate>
 							<div class="d-flex flex-column flex-column justify-center" style="height:100%">
 								<RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#000901">
