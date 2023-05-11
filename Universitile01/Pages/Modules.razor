@@ -14,13 +14,13 @@
 <body>
     <AuthorizeView Roles="Student, Teacher">
         <Authorized>
-            <RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-image:linear-gradient(180deg, rgb(83, 80, 56) 0%, #1d1d1d 90%) ">
+            <RadzenRow JustifyContent="JustifyContent.SpaceEvenly" AlignItems="Radzen.AlignItems.Center" Gap="0" Style="background-image:linear-gradient(180deg, #2B2C28 0%, #131515 90%); overflow-y:auto; height:90vh">
                 @foreach (Module module in stModules)
                 {
                     PersonalInfo teacher = moduleTeacherMap.ContainsKey(module.ModuleId) ? moduleTeacherMap[module.ModuleId] : null;
                     <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
                         <RadzenColumn Size="12" Style="justify-self:center; align-self:center;">
-                            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="min-width:350px; max-width:450px; height:355px; background-color:#12080c;">
+                            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="min-width:350px; max-width:450px; height:355px; background-color:#131515">
                                 <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
                                     <RadzenStack Gap="0" Style="align-self:center">
                                         <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Module</b></RadzenText>
@@ -29,21 +29,21 @@
                                         @*<RadzenText TextStyle="TextStyle.Body2">@module.CoursesCourse.CourseName</RadzenText>*@
                                     </RadzenStack>
                                 </RadzenStack>
-                                <RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:225px; width:100%; overflow-y:auto">
+                                <RadzenCard class="rz-shadow-0" style="height:225px; width:100%; overflow-y:auto; background-color:#131515">
                                     <RadzenRow RowGap="0">
                                         <RadzenColumn SizeSM="8">
                                             <AuthorizeView Roles="Student">
                                                 <Authorized Context="t">
-                                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
+                                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-dark rz-display-flex rz-mt-4 rz-mb-0">Instructor</RadzenText>
                                                     <RadzenText TextStyle="TextStyle.Body1">@teacher.FirstName @teacher.LastName</RadzenText>
                                                 </Authorized>
                                             </AuthorizeView>
-                                                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-dark rz-display-flex rz-mt-4 rz-mb-0">Module Info</RadzenText>
                                                 <RadzenText TextStyle="TextStyle.Body1" Style="overflow-y:auto">@module.ModuleDescription</RadzenText>
                                         </RadzenColumn>
-                                        <RadzenColumn SizeSM="4" Style="padding:5px">
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px;" Color="Color.Secondary" OnClick="AssignmentsDialog">Assignments</MudButton>
-                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Secondary" OnClick="TakeQuizDialog">Quiz</MudButton>
+                                        <RadzenColumn SizeSM="4" Style="padding:5px; justify-content:space-evenly">
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px;" Color="Color.Error" OnClick="AssignmentsDialog">Assignments</MudButton>
+                                            <MudButton Variant="@MudBlazor.Variant.Outlined" Style="width:100%; margin-top:9px" Color="Color.Error" OnClick="TakeQuizDialog">Quiz</MudButton>
                                         </RadzenColumn>
                                     </RadzenRow>
                                 </RadzenCard>
