@@ -77,19 +77,19 @@
         <AuthorizeView Roles="Student, Teacher">
             <Authorized>
 				<div class="col-8" style="color:white; height:400px">
-					<RadzenDataList WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll">
+                    <RadzenDataList class="bg-transparent" Density="Radzen.Density.Compact" WrapItems="false" AllowPaging="false" Data="@announcements" Count="@announcements.Count()" TItem="Announcement" Style="height:400px; overflow-y:scroll">
 						<Template Context="announcement">
-							<MudCard Style="background-color:#13181b; color:aliceblue">
+                            <MudCard Style="background-color:#131515; color:aliceblue">
 								<MudCardContent>
 									@if (announcement.Importance)
 									{
-                                        <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" Class="my-auto" Origin="Origin.TopLeft" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead == true))">
+                                        <MudBadge Dot="false" Color="Color.Error" Icon="@Icons.Material.TwoTone.ErrorOutline" OnClick="(() => OnClickAnnouncement(announcement))" Class="my-auto" Origin="Origin.TopLeft" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead == true))">
 											<MudText><b>@announcement.Message</b></MudText>
 										</MudBadge>
 									}
 									else
 									{
-										<MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead == true))">
+                                        <MudBadge Dot="true" Color="Color.Success" Class="my-auto" Origin="Origin.TopLeft" OnClick="(() => OnClickAnnouncement(announcement))" Visible="@(!announcement.UsersHasAnnouncements.Any(u => u.IsRead == true))">
 											<MudText><b>@announcement.Message</b></MudText>
 										</MudBadge>
 									}
@@ -392,5 +392,17 @@
     void OnClickModule()
     {
         _navigationManager.NavigateTo("/Modules");
+    }
+
+    //Announcements
+    void OnClickAnnouncement(Announcement announcement)
+    {
+        foreach (UsersHasAnnouncement ann in announcement.UsersHasAnnouncements)
+        {
+            if (ann.AnnouncementsAnnouncementsId == announcement.AnnouncementsId)
+            {
+                ann.IsRead = true;
+            }
+        }
     }
 }
