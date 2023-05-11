@@ -128,7 +128,7 @@
                                         </RadzenRow>
                                         <RadzenRow RowGap="0" Style="margin-top:50px">
 											<RadzenColumn SizeXS="12">
-												<RadzenButton Variant="Radzen.Variant.Text" Text="Email" Size="ButtonSize.Large" Style="width:100%" />
+												<RadzenButton Variant="Radzen.Variant.Text" Text="Copy Email to clipboard" Size="ButtonSize.Large" Style="width:100%" />
 											</RadzenColumn>
 										</RadzenRow>
 									</RadzenCard>
@@ -144,29 +144,25 @@
 		<AuthorizeView Roles="Teacher">
             <Authorized>
 				<div class="col-4" style="color: white">
-                    <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@personalInfo" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#000901; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
+                    <MudCarousel Class="mud-width-full" @ref="_carouselTeachers" ItemsSource="@personalInfo" @bind-SelectedIndex="selectedIndexTeachers" Style="height:400px; background-color:#2B2C28; min-width:fit-content; max-width:489px; justify-self:center" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="false" Context="myContext">
 						<ItemTemplate>
 							<div class="d-flex flex-column flex-column justify-center" style="height:100%">
-								<RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#000901">
-									<RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem" Class="rz-p-4">
+                                <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width:480px; height:100%; background-color:#2B2C28">
+									<RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Stretch" Gap="1rem">
 										<MudAvatar Style="height:100px; width:100px">@myContext.FirstName.First()@myContext.LastName.First()</MudAvatar>
 										<RadzenStack Gap="0" Style="align-self:center">
 											<RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0"><b>Student</b></RadzenText>
 											<RadzenText TextStyle="TextStyle.Body1"><b>@myContext.FirstName @myContext.LastName</b></RadzenText>
-											@*<RadzenText TextStyle="TextStyle.Body2">@myContext.Department</RadzenText>*@
+											@*<RadzenText TextStyle="TextStyle.Body2">@myContext.Course</RadzenText>*@
 										</RadzenStack>
 									</RadzenStack>
-									<RadzenCard class="rz-background-color-danger-lighter rz-shadow-0 rz-border-radius-0 rz-p-8" style="height:61.2%; width:100%">
+                                    <RadzenCard class="rz-shadow-0" style="height:50%; width:100%; background-color:#2B2C28">
 										<RadzenRow RowGap="0">
-											<RadzenColumn SizeXS="8">
-												<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Email</RadzenText>
-												@*<RadzenText TextStyle="TextStyle.Body1" style="color:dodgerblue">@myContext.Aspnetusers.Email</RadzenText>*@
-												<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-light rz-display-flex rz-mt-4 rz-mb-0">Modules</RadzenText>
-												@*<RadzenText TextStyle="TextStyle.Body1">@myContext.Modules</RadzenText>*@
+											<RadzenColumn SizeXS="12" Style="margin-top:30px">
+                                                <RadzenButton Variant="Radzen.Variant.Text" Text="Copy Email to clipboard" Size="ButtonSize.Large" Style="width:100%" />
 											</RadzenColumn>
-											<RadzenColumn SizeXS="4">
-												<RadzenButton Variant="Radzen.Variant.Text" Text="Email" Size="ButtonSize.Small" />
-												<RadzenButton Variant="Radzen.Variant.Text" Text="Live Chat" Size="ButtonSize.Small" />
+                                            <RadzenColumn SizeXS="12" Style="margin-top:15px">
+                                                <RadzenButton Variant="Radzen.Variant.Text" Text="Go to Students" Click="OnClickStudents" Size="ButtonSize.Large" Style="width:100%" />
 											</RadzenColumn>
 										</RadzenRow>
 									</RadzenCard>
@@ -411,5 +407,11 @@
     void OnClickTeacher(string teacherID)
     {
         //Copy email to clipboard
+    }
+
+    //Students Carousel
+    void OnClickStudents()
+    {
+        _navigationManager.NavigateTo("/PersonalInfo");
     }
 }
