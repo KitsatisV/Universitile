@@ -4,9 +4,9 @@
             <DialogContent>
                 <MudTable Items="attendances" FixedHeader="true" Hover="true" Dense="true" Breakpoint="Breakpoint.Sm" Context="ctx" Style="max-height:70vh; background-color:rgb(40, 40, 40); color:aliceblue">
                     <HeaderContent>
-                        <MudTh Style="color:black">Name</MudTh>
-                        <MudTh Style="color:black">Surname</MudTh>
-                        <MudTh Style="color:black">Attendance</MudTh>
+                        <MudTh Style="color:black; background-color:#677DB7">Name</MudTh>
+                        <MudTh Style="color:black; background-color:#677DB7">Surname</MudTh>
+                        <MudTh Style="color:black; background-color:#677DB7">Attendance</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd Style="color:aliceblue" DataLabel="Name">@ctx.SessionEventId.ToString()</MudTd>

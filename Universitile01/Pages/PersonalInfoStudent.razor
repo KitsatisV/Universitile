@@ -209,17 +209,17 @@
 									<MudText Typo="Typo.h5" Style="color:white">Students Table</MudText>
 									</ToolBarContent>
 									<Columns>
-									<PropertyColumn Property="st => st.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="st=> st.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="st => st.Sex" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="st => st.Mobile" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<PropertyColumn Property="st=> st.Landline" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-									<TemplateColumn CellClass="d-flex justify-start" Title="Grades" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black">
-									<CellTemplate>
-									<MudStack Row Style="width:max-content; height:30px">
-									<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Error" OnClick="GradesDIalog">Grades</MudButton>
-									</MudStack>
-									</CellTemplate>
+									<PropertyColumn Property="st => st.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+									<PropertyColumn Property="st=> st.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+									<PropertyColumn Property="st => st.Sex" Title="School" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+									<PropertyColumn Property="st => st.Mobile" Title="Year" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+									<PropertyColumn Property="st=> st.Landline" Title="Module" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+									<TemplateColumn CellClass="d-flex justify-start" Title="Grades" Context="ctx" Sortable="false" Filterable="false" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7">
+										<CellTemplate>
+											<MudStack Row Style="width:max-content; height:30px">
+												<MudButton Size="@Size.Small" Variant="@MudBlazor.Variant.Filled" Color="@Color.Error" OnClick="GradesDIalog">Grades</MudButton>
+											</MudStack>
+										</CellTemplate>
 									</TemplateColumn>
 									</Columns>
 									</MudDataGrid>
@@ -239,12 +239,12 @@
 											<MudText Typo="Typo.h5" Style="color:white">Teachers Table</MudText>
 										</ToolBarContent>
 										<Columns>
-											<PropertyColumn Property="tch => tch.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="tch => tch.MiddleName" Title="Middle Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="tch => tch.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="tch => tch.Sex" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="tch => tch.Landline" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
-											<PropertyColumn Property="tch => tch.Mobile" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black" />
+											<PropertyColumn Property="tch => tch.FirstName" Title="First Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+											<PropertyColumn Property="tch => tch.MiddleName" Title="Middle Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+											<PropertyColumn Property="tch => tch.LastName" Title="Last Name" Sortable="true" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+											<PropertyColumn Property="tch => tch.Sex" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+											<PropertyColumn Property="tch => tch.Landline" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
+											<PropertyColumn Property="tch => tch.Mobile" Sortable="false" Filterable="true" CellStyle="color:white" HeaderStyle="color:black; background-color:#677DB7" />
 										</Columns>
 									</MudDataGrid>
 								</RadzenColumn>
