@@ -226,11 +226,15 @@
 								</RadzenColumn>
 							</RadzenRow>
 						</MudTabPanel>
+					</Authorized>
+				</AuthorizeView>
 						@*
 						////////////////////////
 						TEACHERS TAB
 						////////////////////////
 						*@
+				<AuthorizeView Roles="Student">
+					<Authorized>
 						<MudTabPanel Text="Teachers">
 							<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" Gap="0">
 								<RadzenColumn Size="12">

@@ -11,6 +11,8 @@
 @inject UniversitiledatabaseContext Db
 @inject TeacherService TeacherService
 @inject NavigationManager _navigationManager
+@inject IJSRuntime JSRuntime
+@*@inject IClipboardService ClipboardService*@
 
 
 <PageTitle>Dashboard</PageTitle>
@@ -120,14 +122,17 @@
 										<RadzenRow RowGap="0">
 											<RadzenColumn SizeXS="12">
 												<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-dark rz-display-flex rz-mt-4 rz-mb-0">Email</RadzenText>
-												<RadzenText TextStyle="TextStyle.Body1">hardcoded@back.end@*@myContext.Aspnetusers.Email*@</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body1">@myContext.Aspnetusers.NormalizedEmail</RadzenText>
 												<RadzenText TextStyle="TextStyle.Overline" class="rz-color-primary-dark rz-display-flex rz-mt-4 rz-mb-0">Modules</RadzenText>
-												<RadzenText TextStyle="TextStyle.Body1">Hard, Coded, Modules, For, The, Teacher@*@myContext.Modules*@</RadzenText>
+                                                @foreach (var module in myContext.Aspnetusers.ModulesModules)
+                                                {
+                                                    <RadzenText TextStyle="TextStyle.Body1">@module.ModuleName</RadzenText>
+                                                }
 											</RadzenColumn>
                                         </RadzenRow>
                                         <RadzenRow RowGap="0" Style="margin-top:50px">
 											<RadzenColumn SizeXS="12">
-												<RadzenButton Variant="Radzen.Variant.Text" Text="Copy Email to clipboard" Size="ButtonSize.Large" Style="width:100%" />
+                                                <RadzenButton Variant="Radzen.Variant.Text" Text="Copy Email to clipboard" Click="@OnClickTeacher" Size="ButtonSize.Large" Style="width:100%" />
 											</RadzenColumn>
 										</RadzenRow>
 									</RadzenCard>
@@ -161,7 +166,7 @@
                                                 <RadzenButton Variant="Radzen.Variant.Text" Text="Copy Email to clipboard" Size="ButtonSize.Large" Style="width:100%" />
 											</RadzenColumn>
                                             <RadzenColumn SizeXS="12" Style="margin-top:15px">
-                                                <RadzenButton Variant="Radzen.Variant.Text" Text="Go to Students" Click="OnClickStudents" Size="ButtonSize.Large" Style="width:100%" />
+                                                <RadzenButton Variant="Radzen.Variant.Text" Text="Go to Students" Click="@OnClickStudents" Size="ButtonSize.Large" Style="width:100%" />
 											</RadzenColumn>
 										</RadzenRow>
 									</RadzenCard>
@@ -178,7 +183,7 @@
 </body>
 
 @code {
-
+    private string copyemail;
     private string userId;
     private List<Session> events = new List<Session>();
     private List<Module> modules = new List<Module>();
@@ -212,6 +217,36 @@
             var user = (await authenticationStateTask).User;
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
+        }
+
+        //Get Students
+        string teachsql = "SELECT pi.* FROM personal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
+        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection))
+        {
+            connection.Open();
+            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection);
+            sqlcmd.CommandText = teachsql;
+            sqlcmd.CommandType = CommandType.Text;
+            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                PersonalInfo teach = new PersonalInfo();
+                teach.InfoId = (Int32)rdr["info_id"];
+                var date = DateOnly.FromDateTime((DateTime)rdr["date_of_birth"]);
+                teach.DateOfBirth = date;
+                teach.Sex = (sbyte)rdr["sex"];
+                teach.FirstName = rdr["first_name"].ToString();
+                teach.LastName = rdr["last_name"].ToString();
+                teach.MiddleName = rdr["middle_name"].ToString();
+                teach.Landline = rdr["landline"].ToString();
+                teach.Mobile = rdr["mobile"].ToString();
+                teach.AspnetusersId = rdr["aspnetusers_Id"].ToString();
+                if (!personalInfo.Any(personalInfo => personalInfo.InfoId == teach.InfoId))
+                    personalInfo.Add(teach);
+            }
+            rdr.Close();
+            connection.Close();
         }
 
         string getRole()
@@ -310,37 +345,10 @@
             connection.Close();
         }
 
-        //Get Teachers
-        string teachsql = "SELECT pi.* FROM personal_info pi INNER JOIN students s ON s.aspnetusers_Id = pi.aspnetusers_Id INNER JOIN courses c ON c.course_id = s.courses_course_id INNER JOIN modules m ON m.courses_course_id = c.course_id INNER JOIN teachers t ON t.modules_module_id = m.module_id WHERE t.aspnetusers_Id ='" + userId.Result.ToString() + "'";
-        using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection))
-        {
-            connection.Open();
-            MySql.Data.MySqlClient.MySqlCommand sqlcmd = new MySql.Data.MySqlClient.MySqlCommand(teachsql, connection);
-            sqlcmd.CommandText = teachsql;
-            sqlcmd.CommandType = CommandType.Text;
-            MySql.Data.MySqlClient.MySqlDataReader rdr = sqlcmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                PersonalInfo teach = new PersonalInfo();
-                teach.InfoId = (Int32)rdr["info_id"];
-                var date = DateOnly.FromDateTime((DateTime)rdr["date_of_birth"]);
-                teach.DateOfBirth = date;
-                teach.Sex = (sbyte)rdr["sex"];
-                teach.FirstName = rdr["first_name"].ToString();
-                teach.LastName = rdr["last_name"].ToString();
-                teach.MiddleName = rdr["middle_name"].ToString();
-                teach.Landline = rdr["landline"].ToString();
-                teach.Mobile = rdr["mobile"].ToString();
-                teach.AspnetusersId = rdr["aspnetusers_Id"].ToString();
-                if(!personalInfo.Any(personalInfo=>personalInfo.InfoId == teach.InfoId))
-                    personalInfo.Add(teach);
-            }
-            rdr.Close();
-            connection.Close();
-        }
 
-        //Get Students
-        string studsql = "SELECT pi.* FROM personal_info pi JOIN teachers t ON pi.aspnetusers_Id = t.aspnetusers_Id JOIN modules m ON t.modules_module_id = m.module_id JOIN courses c ON m.courses_course_id = c.course_id JOIN students s ON c.course_id = s.courses_course_id AND s.aspnetusers_Id ='" + userId.Result.ToString() + "'";//query
+
+        //Get Teachers
+        string studsql = "SELECT pi.*,au.NormalizedEmail, m.module_name FROM personal_info pi JOIN teachers t ON pi.aspnetusers_Id = t.aspnetusers_Id JOIN modules m ON t.modules_module_id = m.module_id JOIN courses c ON m.courses_course_id = c.course_id JOIN students s ON c.course_id = s.courses_course_id AND s.aspnetusers_Id ='" + userId.Result.ToString() + "' JOIN aspnetusers au ON pi.aspnetusers_Id = au.Id";
         using (MySql.Data.MySqlClient.MySqlCommand command = new MySql.Data.MySqlClient.MySqlCommand(studsql, connection))
         {
             connection.Open();
@@ -361,8 +369,12 @@
                 stud.Landline = rdr["landline"].ToString();
                 stud.Mobile = rdr["mobile"].ToString();
                 stud.AspnetusersId = rdr["aspnetusers_Id"].ToString();
+                stud.Aspnetusers = new Aspnetuser { NormalizedEmail = rdr["NormalizedEmail"].ToString() };
+                copyemail = stud.Aspnetusers.NormalizedEmail;
+                stud.Aspnetusers.ModulesModules = new List<Module> { new Module { ModuleName = rdr["module_name"].ToString() } };
                 if (!personalInfo.Any(personalInfo => personalInfo.InfoId == stud.InfoId))
                     personalInfo.Add(stud);
+
             }
             rdr.Close();
             connection.Close();
@@ -401,11 +413,30 @@
             }
         }
     }
+    public interface IClipboardService
+    {
+        Task CopyToClipboard(string text);
+    }
+
+    public class ClipboardService : IClipboardService
+    {
+        private readonly IJSRuntime _jsInterop;
+
+        public ClipboardService(IJSRuntime jsInterop)
+        {
+            _jsInterop = jsInterop;
+        }
+
+        public async Task CopyToClipboard(string text)
+        {
+            await _jsInterop.InvokeVoidAsync("navigator.clipboard.writeText", text);
+        }
+    }
 
     //Teachers Carousel
-    void OnClickTeacher(string teacherID)
+    private async Task OnClickTeacher()
     {
-        //Copy email to clipboard
+        //await IClipboardService.CopyToClipboard(copyemail);
     }
 
     //Students Carousel

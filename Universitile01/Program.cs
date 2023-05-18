@@ -10,6 +10,7 @@ using Universitile01.Services;
 using Microsoft.Extensions.Configuration;
 using Universitile01.Models;
 using Microsoft.AspNetCore.Components.Authorization;
+using static Universitile01.Pages.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,7 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<TeacherService, TeacherService>();
 builder.Services.AddScoped<UniversitiledatabaseContext>();
 builder.Services.AddScoped<DataService>();
+builder.Services.AddScoped<IClipboardService, ClipboardService>();
 
 
 
