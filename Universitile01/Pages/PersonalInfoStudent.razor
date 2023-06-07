@@ -270,7 +270,6 @@
 
 @code
 {
-	private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 	private string userId;
 
 	[CascadingParameter]
@@ -317,7 +316,8 @@
 
 
 		string gradessql = "SELECT g.grade, m.module_name FROM grades g JOIN modules m ON g.modules_module_id = m.module_id WHERE g.students_aspnetusers_Id ='" + userId.Result.ToString() + "'";
-		MySqlConnection connection = new MySqlConnection(connect);
+		var connectionString = Configuration.GetConnectionString("UniDb");
+		MySqlConnection connection = new MySqlConnection(connectionString);
 		using (MySqlCommand command = new MySqlCommand(gradessql, connection))
 		{
 			connection.Open();

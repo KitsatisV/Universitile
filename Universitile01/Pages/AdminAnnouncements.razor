@@ -58,7 +58,6 @@
     new List<CreateAnnouncement> Announcements = new List<CreateAnnouncement>();
     new List<Role> Roles2 = new List<Role>();
     new List<Boot> Boots = new List<Boot>();
-    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,6 +76,7 @@
         Boots2.imp = "false";
         Boots.Add(Boots2);
 
+        var connectionString = Configuration.GetConnectionString("UniDb");
         MySqlConnection connection = new MySqlConnection(connectionString);
         string annsql = "SELECT a.announcements_id, a.date, a.Message, a.Importance, r.Id AS Id FROM announcements a LEFT JOIN users_has_announcements uha ON a.announcements_id = uha.announcements_announcements_id LEFT JOIN aspnetroles r ON uha.aspnetroles_Id = r.Id ORDER BY a.date DESC";
         using (MySqlCommand command = new MySqlCommand(annsql, connection))
@@ -122,6 +122,7 @@
     {
         try
         {
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sql = "DELETE FROM announcements WHERE announcements_id = @Id";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
@@ -144,6 +145,7 @@
     void Save(CreateAnnouncement ann)
     {
         int lastid = 0;
+        var connectionString = Configuration.GetConnectionString("UniDb");
         MySqlConnection connection = new MySqlConnection(connectionString);
         string sqlfindcId = "INSERT INTO announcements (date, Message, Importance) VALUES (@date, @msg , @importance)";
         using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))

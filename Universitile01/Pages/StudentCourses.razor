@@ -43,7 +43,6 @@
 
 
         @code {
-        private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
         private List<PersonalInfo> Students = new List<PersonalInfo>();
         private List<StudentstoCourse> Studentsf = new List<StudentstoCourse>();
         private List<Course> Courses = new List<Course>();
@@ -53,7 +52,7 @@
 
         protected override async Task OnInitializedAsync()
         {
-
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sqlstudents = "SELECT ur.* FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId  LEFT JOIN students s ON k.Id = s.aspnetusers_Id WHERE u.RoleId = '9a2104f0-43b7-4cdc-b125-f667fc272be7' AND s.aspnetusers_Id IS NULL";
             using (MySqlCommand command = new MySqlCommand(sqlstudents, connection))
@@ -184,9 +183,10 @@
         {
             try
             {
-            MySqlConnection connection = new MySqlConnection(connectionString);
-            string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
-            using (MySqlCommand command = new MySqlCommand(sql, connection))
+                var connectionString = Configuration.GetConnectionString("UniDb");
+                MySqlConnection connection = new MySqlConnection(connectionString);
+                string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
                 command.Parameters.AddWithValue("@Id", pers.Id);
                 connection.Close();
@@ -194,8 +194,8 @@
                 command.ExecuteNonQuery();
                 connection.Close();
             }
-            Studentsf.Remove(pers);
-            }
+                Studentsf.Remove(pers);
+                }
             catch
             {
             throw;
@@ -204,6 +204,7 @@
 
         void Save(StudentstoCourse pers)
         {
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
             using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
@@ -294,6 +295,7 @@
         {
             try
             {
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sqldelstudent = "DELETE FROM aspnetusers WHERE Id = @Id";
             using (MySqlCommand command = new MySqlCommand(sqldelstudent, connection))
@@ -314,6 +316,7 @@
 
         void SaveAssigned(StudentstoCourseAs pers)
         {
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
             using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))

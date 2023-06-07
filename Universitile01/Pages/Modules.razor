@@ -61,8 +61,6 @@
 
 @code {
     private string userId;
-    private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
-
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -86,7 +84,8 @@
             var userid = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return userid;
         }
-        MySqlConnection connection = new MySqlConnection(connect);
+        var connectionString = Configuration.GetConnectionString("UniDb");
+        MySqlConnection connection = new MySqlConnection(connectionString);
         string combinedSql = "SELECT m.*, pi.first_name, pi.last_name, pi2.first_name AS teacher_first_name, pi2.last_name AS teacher_last_name FROM modules m INNER JOIN courses c ON c.course_id = m.courses_course_id INNER JOIN students s ON s.courses_course_id = c.course_id INNER JOIN aspnetusers u ON u.Id = s.aspnetusers_Id INNER JOIN teachers t ON t.modules_module_id = m.module_id INNER JOIN personal_info pi ON pi.aspnetusers_Id = s.aspnetusers_Id INNER JOIN personal_info pi2 ON pi2.aspnetusers_Id = t.aspnetusers_Id WHERE u.Id ='" + userId.Result.ToString() + "'";
         using (MySqlCommand command = new MySqlCommand(combinedSql, connection))
         {

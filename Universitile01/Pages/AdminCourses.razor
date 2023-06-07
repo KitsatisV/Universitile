@@ -83,7 +83,7 @@
                     CourseDuration = 0,
                 };
             Courses.Add(cour); // add the empty Course to the list
-
+            var connectionString = Configuration.GetConnectionString("UniDb");
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
@@ -106,6 +106,7 @@
         {
             try
             {
+                var connectionString = Configuration.GetConnectionString("UniDb");
                 MySqlConnection connection = new MySqlConnection(connectionString);
                 string sql = "DELETE FROM courses WHERE course_id = @courseId";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
@@ -166,7 +167,7 @@
             //    }
             //}
 
-
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             try
             {
@@ -213,8 +214,6 @@
     private bool _editTriggerRowClick;
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
-    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
-
     private List<Module> Modules = new List<Module>();
     private List<Course> Courses = new List<Course>();
     public static Module mod;
@@ -224,6 +223,7 @@
     protected override async Task OnInitializedAsync()
     {
         //Populate the Modules list
+        var connectionString = Configuration.GetConnectionString("UniDb");
         MySqlConnection connection = new MySqlConnection(connectionString);
         string sqlModules = "SELECT m.*, c.course_name FROM modules m INNER JOIN courses c ON m.courses_course_id = c.course_id;";
         using (MySqlCommand command = new MySqlCommand(sqlModules, connection))
@@ -303,6 +303,7 @@
     }
     async Task CommittedItemChanges(Module mod)
     {
+        var connectionString = Configuration.GetConnectionString("UniDb");
         MySqlConnection connection = new MySqlConnection(connectionString);
         string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + mod.CoursesCourse.CourseName + "'";
         string courseid = "";
@@ -381,6 +382,7 @@
     {
         try
         {
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sql = "DELETE FROM modules WHERE module_id = @moduleId";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
@@ -411,6 +413,7 @@
             };
         Modules.Add(mod); // add the empty Module to the list
 
+        var connectionString = Configuration.GetConnectionString("UniDb");
         using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             connection.Open();

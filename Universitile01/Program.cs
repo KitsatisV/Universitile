@@ -20,7 +20,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddControllers();
 
 //Adding Identity related services
-var cs = builder.Configuration.GetConnectionString("azure");
+var cs = builder.Configuration.GetConnectionString("UniDB");
 builder.Services.AddDbContext<UniversitiledatabaseContext>(options => options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
 
 

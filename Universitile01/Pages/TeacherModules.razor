@@ -39,7 +39,7 @@
 </AuthorizeView>
 
 @code{
-    private string connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+    
     private List<PersonalInfo> Students = new List<PersonalInfo>();
     private List<TeacherstoModules> Teacherssf = new List<TeacherstoModules>();
     private List<Teacher> Teach = new List<Teacher>();
@@ -52,7 +52,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-
+        var connectionString = Configuration.GetConnectionString("UniDb");
         MySqlConnection connection = new MySqlConnection(connectionString);
         string sqlteachers = "SELECT ur.aspnetusers_Id FROM personal_info ur JOIN aspnetusers k ON ur.aspnetusers_Id = k.Id JOIN aspnetuserroles u ON k.Id = u.UserId WHERE u.RoleId = '4aff1f28-c6d5-4297-96cf-b9371ae3d81d'";
         using (MySqlCommand command = new MySqlCommand(sqlteachers, connection))
@@ -154,6 +154,7 @@
     {
         try
         {
+            var connectionString = Configuration.GetConnectionString("UniDb");
             MySqlConnection connection = new MySqlConnection(connectionString);
             string sql = "DELETE FROM teacher WHERE Id = @Id";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
@@ -174,7 +175,7 @@
 
     void Save(TeacherstoModules pers)
     {
-
+        var connectionString = Configuration.GetConnectionString("UniDb");
         MySqlConnection connection = new MySqlConnection(connectionString);
         string[] splitname = pers.FullName.Split(' ');
         string lastname = splitname[0];

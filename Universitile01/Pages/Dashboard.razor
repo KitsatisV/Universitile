@@ -194,7 +194,6 @@
     private int selectedIndexTeachers = 0;
     private List<Announcement> announcements = new List<Announcement>();
     private List<Module> myModules = new List<Module>();
-    private string connect = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -202,7 +201,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connect);
+        var connectionString = Configuration.GetConnectionString("UniDb");
+        MySql.Data.MySqlClient.MySqlConnection connection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
         var userId = getUserId();
         events = await Db.Sessions.ToListAsync();
         modules = await Db.Modules.ToListAsync();
