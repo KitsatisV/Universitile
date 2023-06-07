@@ -9,16 +9,18 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Runtime.InteropServices;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
+using System.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Universitile01.Areas.Identity.Pages.Account
 {
     [Authorize (Roles = "Admin")]
-
     public class RegisterModel : PageModel
 	{
 		private readonly SignInManager<IdentityUser> _signInManager;
 		private readonly UserManager<IdentityUser> _userManager;
-		private string _connectionString = "Server=universtile.mysql.database.azure.com;User ID=azureuser;Password=7TI2K6O0O1ZL6SIUE6BDMGLDK*;Database=universitiledatabase;SslMode=Required;SslCa=DigiCertGlobalRootCA.crt.pem;TlsVersion=TLS 1.2";
+		
 
 		public RegisterModel(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
 		{
@@ -45,8 +47,11 @@ namespace Universitile01.Areas.Identity.Pages.Account
 				{
 					await _signInManager.SignInAsync(identity, isPersistent: false);
 					await _userManager.AddToRoleAsync(identity, Input.Role);
-
-					using (MySqlConnection connection = new MySqlConnection(_connectionString))
+					//get the connection string from secrets.json
+					var builder = new ConfigurationBuilder().AddJsonFile("C:\\Users\\Georg\\AppData\\Roaming\\Microsoft\\UserSecrets\\f471d3c8-093b-4ccb-b658-93df5384d70e\\secrets.json", optional: false, reloadOnChange: false);
+					var configuration = builder.Build();
+					string connectionString = configuration.GetConnectionString("UniDb");					
+                    using (MySqlConnection connection = new MySqlConnection(connectionString))
 					{
 						PersonalInfo per = new PersonalInfo()
 						{
