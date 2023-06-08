@@ -45,12 +45,10 @@ namespace Universitile01.Areas.Identity.Pages.Account
 
 				if (result.Succeeded)
 				{
-					await _signInManager.SignInAsync(identity, isPersistent: false);
+					//await _signInManager.SignInAsync(identity, isPersistent: false);
 					await _userManager.AddToRoleAsync(identity, Input.Role);
 					//get the connection string from secrets.json
-					var builder = new ConfigurationBuilder().AddJsonFile("C:\\Users\\Georg\\AppData\\Roaming\\Microsoft\\UserSecrets\\f471d3c8-093b-4ccb-b658-93df5384d70e\\secrets.json", optional: false, reloadOnChange: false);
-					var configuration = builder.Build();
-					string connectionString = configuration.GetConnectionString("UniDb");					
+					var connectionString = Environment.GetEnvironmentVariable("UNIDb");
                     using (MySqlConnection connection = new MySqlConnection(connectionString))
 					{
 						PersonalInfo per = new PersonalInfo()
@@ -83,7 +81,7 @@ namespace Universitile01.Areas.Identity.Pages.Account
 							connection.Close();
 						}
 					}
-					return LocalRedirect(ReturnUrl);
+					//return LocalRedirect(ReturnUrl);
 
 				}
 			}
