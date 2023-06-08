@@ -1,0 +1,187 @@
+/*
+-- Query: SELECT * FROM universitiledatabase.aspnetusers
+LIMIT 0, 1000
+*/
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('01a0ac69-60b4-4ef6-96ff-622f5fe77370','Markstudent@test.com','MARKSTUDENT@TEST.COM','Markstudent@test.com','MARKSTUDENT@TEST.COM',0,'AQAAAAIAAYagAAAAEEuCluxHsqG17V8EpZSOAT5z6iBCMvd8XJ3ibZhPp+ffd6yebqUUme+K7YEvqXb2Vw==','4KE5MOMT2NCXUAMGMVSDL7BDM7W2A6JG','dcb874fb-518f-4951-8d4f-efa41ea3d4ba',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('06b11bab-bce6-43ce-bf57-7e723fb43ed6','student@alvanos.com','STUDENT@ALVANOS.COM','student@alvanos.com','STUDENT@ALVANOS.COM',0,'AQAAAAIAAYagAAAAEMyUJ9jjSmrW0fzgv9MOs/hoEjgp2U8IXLcF3jJEBqjdMqXwKRWIqjhvfDWxSVstNA==','OH336KUJ6Z6N5JNS6OU46CUE7OGEF2QS','e0dba7f1-ac4f-4dfa-b2a9-f7bd8baed02a',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('0b64e212-0922-45af-8cd9-7d8873bdbc9e','student2@alvanos.com','STUDENT2@ALVANOS.COM','student2@alvanos.com','STUDENT2@ALVANOS.COM',0,'AQAAAAIAAYagAAAAEN2ck8L3FM9XgK4+Dd9egdYW/pN/zHFfEUupie/RA5u3vQ0OShuV5b4ayTcB2zYE5A==','W6TNWZ4KRNOT2ZFT32H4NTTGMPBL4GSD','61f4dc1b-d8af-4be6-a19e-6d2aa3c081fd',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('1e1f5bb8-0746-4083-8e7c-bdd22495e76b','ItPteacher@test.com','ITPTEACHER@TEST.COM','ItPteacher@test.com','ITPTEACHER@TEST.COM',0,'AQAAAAIAAYagAAAAEFNoj45yrDviOOCzz0cqcYuTKMLrF5tLNAXntUXv5NiLFumc7gLvwEnzhAXoNxmA3A==','HO677UVPFP6AL7ELVYLY3U2IRJTWPSNV','b41722a0-9cda-434a-ab04-66379304db38',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('3f0f0a56-9cb6-4f1a-9aa6-d2b46f8a8607','csstudent3@test.com','CSSTUDENT3@TEST.COM','csstudent3@test.com','CSSTUDENT3@TEST.COM',0,'AQAAAAIAAYagAAAAEOCeZffZnbbs3uLe3J56VK1FHjCxDqJwrEgxGsMVNUaJJzr92GB70zqoEUekK7z8LA==','GBB4YU2TJZWECJ3QHCQKTOONBOS7TVJQ','05de0791-2de9-4add-bffb-36189c484724',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('609e7215-7169-4981-aea8-951cbe5dece8','teacher@test.com','TEACHER@TEST.COM','teacher@test.com','TEACHER@TEST.COM',0,'AQAAAAIAAYagAAAAEJqOPVKUq3B2BqTubQdJaTV2MfumEzK5xEQlYHnziiTTwgtYUjUAg79H2C1cTPn7PA==','I3WPJJPBMXTKGF5MLYY4X55RXZPTW2R6','0f14cda6-f912-4d51-99f6-014bc7a8b37f',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('6a5fbd0f-c11c-45c9-9e90-97f11c716e2d','student1@test.com','STUDENT1@TEST.COM','student1@test.com','STUDENT1@TEST.COM',0,'AQAAAAIAAYagAAAAEDG5N+IgAU97Cph3K6l+QmGKO2LTQ8h3mHsnrevfi8Pfi0Z6P4Jxr73iRABa16lY4g==','H2UNRXTSHBYKFTVJGP5EB2IIPGQJSP77','80e7cef9-bb3a-417b-811a-df24aaec7f47',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('709a8169-3ebb-4603-961e-0262bf11d4ec','student@test.com','STUDENT@TEST.COM','student@test.com','STUDENT@TEST.COM',0,'AQAAAAIAAYagAAAAEHEfjLJ7mrLl2gHIfGHI+U+REiMUN1L+lraRzItD52JUP8HJsDe5VTsOoL+67efong==','XYQGSVEKDEIHA22OHCZT4IAVCZSTZ3R5','7982fe60-9a44-429b-a9f3-2986f4ea85c1',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('8434e38e-9857-4944-8f71-abe620b708b6','test@gmail.com','TEST@GMAIL.COM','test@gmail.com','TEST@GMAIL.COM',0,'AQAAAAIAAYagAAAAEDePjtFarILlQzHfwZI1f6A3CgVGkKRC/9h2T5lUFuXFBTosc63UM7pmB+3kjmG++Q==','6EPFWW7OHO43ECH7QI2QYL6YEVPGDEHS','7a03ea56-20a0-471f-afaa-2b647ad45649',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('872d0e37-6832-455b-a891-719b3214cd74','csteacher2@test.com','CSTEACHER2@TEST.COM','csteacher2@test.com','CSTEACHER2@TEST.COM',0,'AQAAAAIAAYagAAAAEGabGhaJpdwhMXgohEL0i0B6jzRTZuKowFurVfrwULfcR91ZIiNDJETObul8OkVZRA==','LCQR4LXLWZX5VIMFS5KGQPFIORZD7LHK','55b6ec17-426e-4705-b862-52a66d8404d7',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('93f0cd81-cac8-45ff-b7b1-4eeeed3263fc','csteacher@test.com','CSTEACHER@TEST.COM','csteacher@test.com','CSTEACHER@TEST.COM',0,'AQAAAAIAAYagAAAAEFLMIe21aNBY797g0nZI27sC+i7jgBycQhzfYtKJN0kOoyLSXV8kjqVryVH5sHLPWg==','GNICZSLAXXZQKHBTAYRLGRT47WY6NAZ3','29dedb34-dd64-4c71-bd94-c7992f6acb18',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('b193b83d-0fa9-4680-afbb-a93d7f825870','test@mail.com','TEST@MAIL.COM','test@mail.com','TEST@MAIL.COM',0,'AQAAAAIAAYagAAAAENIlVYeeLH3FoPPgqq4kSrhYBOClJLikuGagkCV/G2DFiS3fTtMpfP6skq6EsSscwQ==','YI6XHDWKQ3TR6CUSOK5EV767IM6R6A2E','9655f847-04da-4910-85ac-5c8bd4444b1a',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('bcff6ef4-5d7e-42a9-80b6-73e3e38fd752','George.vlachakis@hotmail.com','GEORGE.VLACHAKIS@HOTMAIL.COM','George.vlachakis@hotmail.com','GEORGE.VLACHAKIS@HOTMAIL.COM',1,'AQAAAAIAAYagAAAAEPlk3ONOG8KkneRc5P6maMNGT8dspt9YB3RVkHM0OPVSTPKwCXx37yldMN0avKHxQQ==','XK2VB37XYCVN4CQTF6KQNHOSCSKJZOB7','a21c8e28-7b08-4e85-bbcf-ba19ebf4dd71',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('cb513f66-8459-4c7a-9982-535f767e7fb5','enteacher@test.com','ENTEACHER@TEST.COM','enteacher@test.com','ENTEACHER@TEST.COM',0,'AQAAAAIAAYagAAAAEOwg33z6MWJrA9xbr7EQV4Goe94ddANj5X4hmTK7OhTmu5NtEcaK0cz7O9q+tGLAYw==','2RXY73BRHRFIV6ZYB6CDTZWQ7YVJKI4R','f31d95e5-906d-4f2d-86b4-ee1171cc0923',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('e200badc-71f0-45ba-b6ec-bf8a8f23e955','student1@alvanos.com','STUDENT1@ALVANOS.COM','student1@alvanos.com','STUDENT1@ALVANOS.COM',0,'AQAAAAIAAYagAAAAENOelSZ8ckQXcJMW/TIEQssNnOq3Ntz1PEdC3RRQpy8NSR5gYtRFrjkvfOtr+ux8uA==','FQAN6G5CBWZZQ5KMZZ3EETHRKOSMAB4H','fbb26e20-a789-42b4-b260-b99680dbc8be',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('f791e2ea-afbc-4ebd-9719-9c0ae07c05d9','csstudent@test.com','CSSTUDENT@TEST.COM','csstudent@test.com','CSSTUDENT@TEST.COM',0,'AQAAAAIAAYagAAAAEDhtwoxc9mbHNrBLDbvptR5TEx82nUgvzbhAEufqtZ8AKRCczUptpzAwZ0iO5GyuDA==','O5T5SID4J52O5JDSWBP7DIMDO7WAUSBF','e1cdfa67-e084-44d0-9f46-0fb7aa10603b',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('fa163be0-3c19-415f-ac14-b22cc3c19bd3','csstudent2@test.com','CSSTUDENT2@TEST.COM','csstudent2@test.com','CSSTUDENT2@TEST.COM',0,'AQAAAAIAAYagAAAAENl1RA0k16Q+SkJkRG/mFsd0cZjtJQvaZfYfUrbnhL9Ls0mYPihuJBTX+SGW4ap7Ew==','NMVRUXS44QZHGWXIVMYNA2P37PRMAI5H','59886103-bad9-420d-8915-4800fb4b714a',NULL,0,0,NULL,1,0);
+INSERT INTO `aspnetusers` (`Id`,`UserName`,`NormalizedUserName`,`Email`,`NormalizedEmail`,`EmailConfirmed`,`PasswordHash`,`SecurityStamp`,`ConcurrencyStamp`,`PhoneNumber`,`PhoneNumberConfirmed`,`TwoFactorEnabled`,`LockoutEnd`,`LockoutEnabled`,`AccessFailedCount`) VALUES ('fea73a75-bcc4-4d81-931c-0cf94213262c','csstudent4@test.com','CSSTUDENT4@TEST.COM','csstudent4@test.com','CSSTUDENT4@TEST.COM',0,'AQAAAAIAAYagAAAAEO4sKQAcLk/W8FAsxzfQHNkH8KdFbAQcQxv33sh5fF8+otlWXWputZ2BGouCt2d1pA==','3BDHKKBK6LSLYHWDPZKFEZAD3S5P257Q','53b3aec0-2e2c-40f5-a2bd-d0a6048f7829',NULL,0,0,NULL,1,0);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.announcements
+LIMIT 0, 1000
+*/
+INSERT INTO `announcements` (`announcements_id`,`date`,`Message`,`Importance`) VALUES (27,'2023-05-10 02:49:47','Hello to all students',1);
+INSERT INTO `announcements` (`announcements_id`,`date`,`Message`,`Importance`) VALUES (30,'2023-05-10 16:23:39','Hello to all teachers',1);
+INSERT INTO `announcements` (`announcements_id`,`date`,`Message`,`Importance`) VALUES (33,'2023-05-10 17:30:38','test',1);
+INSERT INTO `announcements` (`announcements_id`,`date`,`Message`,`Importance`) VALUES (34,'2023-05-12 14:13:48','test1',1);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.aspnetroles
+LIMIT 0, 1000
+*/
+INSERT INTO `aspnetroles` (`Id`,`Name`,`NormalizedName`,`ConcurrencyStamp`) VALUES ('1','Admin','ADMIN',NULL);
+INSERT INTO `aspnetroles` (`Id`,`Name`,`NormalizedName`,`ConcurrencyStamp`) VALUES ('4aff1f28-c6d5-4297-96cf-b9371ae3d81d','Teacher','TEACHER',NULL);
+INSERT INTO `aspnetroles` (`Id`,`Name`,`NormalizedName`,`ConcurrencyStamp`) VALUES ('9a2104f0-43b7-4cdc-b125-f667fc272be7','Student','STUDENT',NULL);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.aspnetuserroles
+LIMIT 0, 1000
+*/
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('b193b83d-0fa9-4680-afbb-a93d7f825870','1');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('1e1f5bb8-0746-4083-8e7c-bdd22495e76b','4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('609e7215-7169-4981-aea8-951cbe5dece8','4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('8434e38e-9857-4944-8f71-abe620b708b6','4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('872d0e37-6832-455b-a891-719b3214cd74','4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('93f0cd81-cac8-45ff-b7b1-4eeeed3263fc','4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('cb513f66-8459-4c7a-9982-535f767e7fb5','4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('01a0ac69-60b4-4ef6-96ff-622f5fe77370','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('06b11bab-bce6-43ce-bf57-7e723fb43ed6','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('0b64e212-0922-45af-8cd9-7d8873bdbc9e','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('3f0f0a56-9cb6-4f1a-9aa6-d2b46f8a8607','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('6a5fbd0f-c11c-45c9-9e90-97f11c716e2d','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('709a8169-3ebb-4603-961e-0262bf11d4ec','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('e200badc-71f0-45ba-b6ec-bf8a8f23e955','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('fa163be0-3c19-415f-ac14-b22cc3c19bd3','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `aspnetuserroles` (`UserId`,`RoleId`) VALUES ('fea73a75-bcc4-4d81-931c-0cf94213262c','9a2104f0-43b7-4cdc-b125-f667fc272be7');
+
+/*
+-- Query: SELECT * FROM universitiledatabase.courses
+LIMIT 0, 1000
+*/
+INSERT INTO `courses` (`course_id`,`course_name`,`course_description`,`course_duration`) VALUES (1,'Marketing','This course provides an introduction to the fundamentals of marketing, including understanding customer needs and behaviors, developing effective marketing strategies, and executing marketing plans across various channels.',2);
+INSERT INTO `courses` (`course_id`,`course_name`,`course_description`,`course_duration`) VALUES (2,'Computer Science','This course involves the study of computer systems, programming languages, and algorithms.',3);
+INSERT INTO `courses` (`course_id`,`course_name`,`course_description`,`course_duration`) VALUES (3,'Mathematics','This subject includes courses in algebra, calculus, geometry, and other mathematical disciplines.',3);
+INSERT INTO `courses` (`course_id`,`course_name`,`course_description`,`course_duration`) VALUES (4,'Accounting','This course provides an overview of financial and managerial accounting principles and practices, including financial statement analysis, cost management, and tax compliance.',3);
+INSERT INTO `courses` (`course_id`,`course_name`,`course_description`,`course_duration`) VALUES (5,'Graphic Design','This course teaches students the principles and practices of graphic design, including typography, layout, color theory, and digital design tools.',3);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.modules
+LIMIT 0, 1000
+*/
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (1,'Introduction to Programming','This module provides an introduction to programming concepts, including control structures, functions, arrays, and objects, using a high-level programming language like Python.',1,2);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (2,'Data Structures and Algorithms','This module covers basic data structures such as stacks, queues, and linked lists, as well as more advanced algorithms for sorting, searching, and graph traversal.',1,2);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (3,'Computer Organization and Architecture','This module focuses on the architecture and organization of computer systems, including CPU design, memory hierarchy, and I/O devices.',1,2);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (4,'Database Systems','This module introduces database concepts and management, including data modeling, SQL queries, normalization, and transaction management.',1,2);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (5,'Computer Networks','This module introduces the basic concepts and protocols of computer networks, including TCP/IP, routing, network security, and wireless networks.',2,2);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (6,'Distributed Systems','This module covers the principles and techniques of distributed computing, including distributed algorithms, distributed file systems, and distributed databases.',2,2);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (7,'Calculus I','This module covers the basics of calculus, including limits, derivatives, and integrals.',1,3);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (8,'Linear Algebra','This module introduces the basic concepts of linear algebra, including matrices, systems of linear equations, vector spaces, and linear transformations.',1,3);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (9,'Calculus II','This module covers more advanced topics in calculus, such as series, differential equations, and multivariable calculus.',2,3);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (10,'Probability and Statistics','This module covers the basics of probability theory and statistical inference, including probability distributions, hypothesis testing, and regression analysis.',1,3);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (11,'Abstract Algebra','This module covers the basics of abstract algebra, including group theory, ring theory, and field theory.',1,3);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (12,'Marketing Principles','This module provides an introduction to the fundamental principles of marketing, including the marketing mix, target audience analysis, and segmentation.',1,1);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (13,'Consumer Behavior','This module covers the psychology and behavior of consumers, including motivation, perception, and decision-making.',1,1);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (14,'Marketing Research','This module introduces the methods and techniques used in market research, including surveys, focus groups, and observational research.',1,1);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (15,'Branding and Product Management','This module covers the basics of branding and product management, including brand positioning, brand equity, and product lifecycle management.',1,1);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (16,'Digital Marketing','This module introduces digital marketing strategies, including search engine optimization, pay-per-click advertising, and social media marketing.',1,1);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (17,'Financial Accounting','This module covers the basics of financial accounting, including balance sheets, income statements, and cash flow statements.',3,4);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (18,'Managerial Accounting','This module introduces the principles and techniques of managerial accounting, including cost analysis, budgeting, and performance evaluation.',2,4);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (20,'Taxation','This module introduces the principles of taxation, including income tax, sales tax, and property tax.',2,3);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (21,'Financial Reporting and Analysis','This module covers financial statement analysis, including ratio analysis, trend analysis, and industry analysis.',1,4);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (22,'Introduction to Graphic Design','This module provides an overview of the principles and elements of graphic design, including color theory, typography, and composition.',1,5);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (23,'Digital Illustration','This module introduces the basics of digital illustration, including drawing tools, techniques, and styles.',4,5);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (24,'Design Software','This module covers the basics of design software, including Adobe Photoshop, Illustrator, and InDesign.',1,5);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (25,'Web Design','This module introduces the principles and techniques of web design, including HTML, CSS, and responsive design.',1,5);
+INSERT INTO `modules` (`module_id`,`module_name`,`module_description`,`module_duration`,`courses_course_id`) VALUES (26,'Motion Graphics','This module covers the basics of motion graphics, including animation, visual effects, and storytelling.',2,5);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.grades
+LIMIT 0, 1000
+*/
+INSERT INTO `grades` (`modules_module_id`,`students_aspnetusers_Id`,`grade`) VALUES (1,'709a8169-3ebb-4603-961e-0262bf11d4ec',60);
+INSERT INTO `grades` (`modules_module_id`,`students_aspnetusers_Id`,`grade`) VALUES (2,'709a8169-3ebb-4603-961e-0262bf11d4ec',50);
+INSERT INTO `grades` (`modules_module_id`,`students_aspnetusers_Id`,`grade`) VALUES (3,'709a8169-3ebb-4603-961e-0262bf11d4ec',54);
+INSERT INTO `grades` (`modules_module_id`,`students_aspnetusers_Id`,`grade`) VALUES (4,'709a8169-3ebb-4603-961e-0262bf11d4ec',95);
+INSERT INTO `grades` (`modules_module_id`,`students_aspnetusers_Id`,`grade`) VALUES (5,'6a5fbd0f-c11c-45c9-9e90-97f11c716e2d',26);
+INSERT INTO `grades` (`modules_module_id`,`students_aspnetusers_Id`,`grade`) VALUES (5,'709a8169-3ebb-4603-961e-0262bf11d4ec',76);
+INSERT INTO `grades` (`modules_module_id`,`students_aspnetusers_Id`,`grade`) VALUES (6,'709a8169-3ebb-4603-961e-0262bf11d4ec',45);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.personal_info
+LIMIT 0, 1000
+*/
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (1,'2000-06-14',1,'David','Powell',NULL,'01632 960035','7598 410324','8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (2,'2000-04-26',1,'Doe','John',NULL,'2310123444','6940123444','709a8169-3ebb-4603-961e-0262bf11d4ec');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (3,'1993-01-28',1,'Georgios','Vlachakis',NULL,'231012343','6912345678','bcff6ef4-5d7e-42a9-80b6-73e3e38fd752');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (4,'2089-04-26',1,'Ryan','Stone','David','01632 960416','7504 143458','609e7215-7169-4981-aea8-951cbe5dece8');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (5,'2016-12-05',1,'Eri','Myftari',NULL,'2101425633','6913452392','0b64e212-0922-45af-8cd9-7d8873bdbc9e');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (6,'2016-03-05',1,'Makis','Giantzaklidis',NULL,'2101425634','6913452393','06b11bab-bce6-43ce-bf57-7e723fb43ed6');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (103,'2000-03-07',1,'Vasilis','Kitsatis',NULL,'2101425631','6913452391','e200badc-71f0-45ba-b6ec-bf8a8f23e955');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (104,'1998-02-05',1,'Petros','Svitis','Mariniadhs','2101225630','6913432393','6a5fbd0f-c11c-45c9-9e90-97f11c716e2d');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (105,'1979-02-04',1,'Ioannis','Masmanidis',NULL,'2101155630','6913436493','93f0cd81-cac8-45ff-b7b1-4eeeed3263fc');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (106,'1987-01-23',1,'Andreas','Plageras',NULL,'210185345325230','6913452393246235432','872d0e37-6832-455b-a891-719b3214cd74');
+INSERT INTO `personal_info` (`info_id`,`date_of_birth`,`sex`,`first_name`,`last_name`,`middle_name`,`landline`,`mobile`,`aspnetusers_Id`) VALUES (107,'1990-04-06',2,'Iren','Hovhannisyan',NULL,'141284721','1283712129','cb513f66-8459-4c7a-9982-535f767e7fb5');
+
+/*
+-- Query: SELECT * FROM universitiledatabase.session
+LIMIT 0, 1000
+*/
+INSERT INTO `session` (`event_id`,`tittle`,`date_start`,`date_end`,`modules_module_id`) VALUES (1,'First Class','2023-05-07 00:00:00','2023-05-08 00:00:00',12);
+INSERT INTO `session` (`event_id`,`tittle`,`date_start`,`date_end`,`modules_module_id`) VALUES (2,'Second Class','2023-05-08 00:00:00','2023-05-08 00:00:00',13);
+INSERT INTO `session` (`event_id`,`tittle`,`date_start`,`date_end`,`modules_module_id`) VALUES (3,'Third Class','2023-05-04 00:00:00','2023-05-25 00:00:00',14);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.students
+LIMIT 0, 1000
+*/
+INSERT INTO `students` (`aspnetusers_Id`,`courses_course_id`) VALUES ('0b64e212-0922-45af-8cd9-7d8873bdbc9e',1);
+INSERT INTO `students` (`aspnetusers_Id`,`courses_course_id`) VALUES ('6a5fbd0f-c11c-45c9-9e90-97f11c716e2d',2);
+INSERT INTO `students` (`aspnetusers_Id`,`courses_course_id`) VALUES ('709a8169-3ebb-4603-961e-0262bf11d4ec',2);
+INSERT INTO `students` (`aspnetusers_Id`,`courses_course_id`) VALUES ('06b11bab-bce6-43ce-bf57-7e723fb43ed6',3);
+INSERT INTO `students` (`aspnetusers_Id`,`courses_course_id`) VALUES ('e200badc-71f0-45ba-b6ec-bf8a8f23e955',5);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.session_has_students
+LIMIT 0, 1000
+*/
+INSERT INTO `session_has_students` (`is_present`,`students_aspnetusers_Id`,`session_event_id1`) VALUES (1,'709a8169-3ebb-4603-961e-0262bf11d4ec',1);
+INSERT INTO `session_has_students` (`is_present`,`students_aspnetusers_Id`,`session_event_id1`) VALUES (0,'709a8169-3ebb-4603-961e-0262bf11d4ec',2);
+INSERT INTO `session_has_students` (`is_present`,`students_aspnetusers_Id`,`session_event_id1`) VALUES (0,'709a8169-3ebb-4603-961e-0262bf11d4ec',3);
+
+/*
+-- Query: SELECT * FROM universitiledatabase.teachers
+LIMIT 0, 1000
+*/
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (1,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (2,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (3,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (4,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (5,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (6,'872d0e37-6832-455b-a891-719b3214cd74');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (7,'872d0e37-6832-455b-a891-719b3214cd74');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (8,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (9,'93f0cd81-cac8-45ff-b7b1-4eeeed3263fc');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (10,'609e7215-7169-4981-aea8-951cbe5dece8');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (12,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (13,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (14,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (15,'bcff6ef4-5d7e-42a9-80b6-73e3e38fd752');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (16,'bcff6ef4-5d7e-42a9-80b6-73e3e38fd752');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (17,'872d0e37-6832-455b-a891-719b3214cd74');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (18,'872d0e37-6832-455b-a891-719b3214cd74');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (21,'8434e38e-9857-4944-8f71-abe620b708b6');
+INSERT INTO `teachers` (`modules_module_id`,`aspnetusers_Id`) VALUES (22,'cb513f66-8459-4c7a-9982-535f767e7fb5');
+
+/*
+-- Query: SELECT * FROM universitiledatabase.users_has_announcements
+LIMIT 0, 1000
+*/
+INSERT INTO `users_has_announcements` (`announcements_announcements_id`,`aspnetroles_Id`) VALUES (27,'9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `users_has_announcements` (`announcements_announcements_id`,`aspnetroles_Id`) VALUES (30,'4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
+INSERT INTO `users_has_announcements` (`announcements_announcements_id`,`aspnetroles_Id`) VALUES (33,'9a2104f0-43b7-4cdc-b125-f667fc272be7');
+INSERT INTO `users_has_announcements` (`announcements_announcements_id`,`aspnetroles_Id`) VALUES (34,'4aff1f28-c6d5-4297-96cf-b9371ae3d81d');
