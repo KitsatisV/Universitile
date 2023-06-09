@@ -23,7 +23,7 @@
                 <PropertyColumn Property="x => x.Id" Hidden="true" IsEditable="false"/>
                 <PropertyColumn Property="x => x.PersonalInfos.FirstOrDefault().FirstName" Title="First Name" IsEditable="false" />
                 <PropertyColumn Property="x => x.PersonalInfos.FirstOrDefault().LastName" Title="Last Name" IsEditable="false" />
-                <PropertyColumn Property="x => x.CoursesCourses.FirstOrDefault().CourseName" Title="Belongs in Course" IsEditable="true">
+                <PropertyColumn Property="x => x.CoursesCourses.FirstOrDefault().CourseName" Title="Assign to Course" IsEditable="true">
                     <EditTemplate>
                         <MudSelect @bind-Value="context.Item.CoursesCourses.FirstOrDefault().CourseName" Immediate="true" Required RequiredError="You must select a Position!!!">
                             @foreach (Course coursed in Courses)
@@ -35,8 +35,7 @@
                 </PropertyColumn>
                 <TemplateColumn Hidden="@(false)" CellClass="d-flex justify-end">
                     <CellTemplate>
-@*                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@myContext.Item))" />
-                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Save" OnClick="@(() => Save(@context.Item))" />*@
+                        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(@context.Item))" />
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
@@ -247,74 +246,32 @@
             }
         }
 
-        //void Save(PersonalInfo pers)
-        //{
-        //    var connectionString = Configuration.GetConnectionString("UniDb");
-        //    MySqlConnection connection = new MySqlConnection(connectionString);
-        //    string sqlfindcId = "SELECT course_id FROM courses WHERE course_name = '" + pers.CourseName + "'";
-        //    using (MySqlCommand command = new MySqlCommand(sqlfindcId, connection))
-        //    {
-        //    connection.Open();
-        //    MySqlCommand sqlcmd = new MySqlCommand(sqlfindcId, connection);
-        //    sqlcmd.CommandText = sqlfindcId;
-        //    sqlcmd.CommandType = CommandType.Text;
-        //    MySqlDataReader rdr = sqlcmd.ExecuteReader();
-        //    while (rdr.Read())
-        //    {
-        //        pers.CourseId = rdr["course_id"].ToString();
-        //    }
-        //    rdr.Close();
-        //    connection.Close();
-
-        //    }
-
-        //    try
-        //    {
-            //string sql = "INSERT INTO students (aspnetusers_Id, courses_course_id) VALUES (@Id, @CourseId)";
-            //using (MySqlCommand command = new MySqlCommand(sql, connection))
-            //{
-            //    command.Parameters.AddWithValue("@Id", pers.Id);
-            //    command.Parameters.AddWithValue("@CourseId", pers.CourseId);
-
-            //    connection.Close();
-            //    connection.Open();
-            //    command.ExecuteNonQuery();
-            //    connection.Close();
-            //}
-        //    }
-        //    catch
-        //    {
-        //    throw;
-        //    }
-        //}
-
-
-        //void Delete(PersonalInfo pers)
-        //{
-        //    try
-        //    {
-        //        var connectionString = Configuration.GetConnectionString("UniDb");
-        //        MySqlConnection connection = new MySqlConnection(connectionString);
-        //        string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
-        //        using (MySqlCommand command = new MySqlCommand(sql, connection))
-        //    {
-        //        command.Parameters.AddWithValue("@Id", pers.Id);
-        //        connection.Close();
-        //        connection.Open();
-        //        command.ExecuteNonQuery();
-        //        connection.Close();
-        //    }
-        //        StudentsToCourses.Remove(pers);
-        //        }
-        //    catch
-        //    {
-        //    throw;
-        //    }
-        //}
-
-
-
+        void Delete(Aspnetuser pers)
+        {
+            try
+            {
+                var connectionString = Configuration.GetConnectionString("UniDb");
+                MySqlConnection connection = new MySqlConnection(connectionString);
+                string sql = "DELETE FROM aspnetusers WHERE Id = @Id";
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", pers.Id);
+                connection.Close();
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+                StudentsToCourses.Remove(pers);
+                }
+            catch
+            {
+            throw;
+            }
         }
+
+
+
+    }
     </MudTabPanel>
     <MudTabPanel Text="Assigned Students">
         <MudDataGrid T="StudentstoCourseAs" Items="@Studentsfas" ReadOnly="false" EditMode="@(_isCellEditMode2 ? MudBlazor.DataGridEditMode.Cell : MudBlazor.DataGridEditMode.Form)"
